@@ -1,1 +1,32 @@
-test
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+input {
+   border-radius: 3px;
+}
+</style>
+</head>
+<body>
+  <div style="margin-bottom: 1rem">
+    <a class="link" href="index.html">Back to Main Page</a>
+  </div>
+  <div style="margin-bottom: 2rem">
+    <form class="form">
+      <fieldset>
+        <legend>Enter a New Actor</legend>
+        <label for="fname">First Name:</label><br>
+        <input type="text" name="fname" id="fnameInput" required="required" class="input" style="margin-left:0px;width:200px"><br>
+        <label for="lname">Last Name:</label><br>
+        <input type="text" name="lname" id="lnameInput" required="required" class="input" style="margin-left:0px;width:200px"><br>
+        <label for="birthday">Birthday:</label><br>
+        <input type="date" name="birthday" id="birthdayInput" required="required" class="input" style="margin-left:0px"><br>
+        <label for="imdb">IMDB Page:</label><br>
+        <input type="text" name="imdb" id="imdbInput" required="required" class="input" style="margin-left:0px;width:600px"><br>
+        <input id="addActorSubmit" type="submit" style="margin:0.5rem 0 0.2rem;">
+      </fieldset>
+    </form>
+  </div>
+</body>
+</html>
+
