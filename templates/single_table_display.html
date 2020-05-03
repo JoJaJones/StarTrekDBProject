@@ -11,7 +11,7 @@
 {% endblock %}
 
 <form method="POST">
-    {% if len(query_res) > 0 %}
+    {% if query_has_value %}
         <table>
             <thead>
                 <tr>

@@ -86,7 +86,8 @@ def add_affiliations():
     for item in res:
         query_res.append(Row(item[0], item[1:]))
 
-    return render_template("single_field_add_form.html", form=form, query_res=query_res, column_names=columns)
+    return render_template("single_field_add_form.html", form=form, query_res=query_res,
+                           column_names=columns, query_has_value=(len(query_res) > 0))
 
 
 @app.route("/create-table")
