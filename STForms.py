@@ -9,9 +9,11 @@ app.config["SECRET_KEY"] = "tempsecret"
 
 
 class DateSubForm(FlaskForm):
-    month = IntegerField("Month", validators=[validators.Optional()])
-    day = IntegerField("Day", validators=[validators.Optional()])
-    year = IntegerField("Year", validators=[validators.Optional()])
+    month = IntegerField("Month", validators=[validators.Optional(), validators.NumberRange(1, 12)])
+    day = IntegerField("Day", validators=[validators.Optional(), validators.number_range(1, 31)])
+    year = IntegerField("Year", validators=[validators.Optional(),
+                                            validators.number_range(1966,
+                                                                    message="Year must be 1966 or later")])
 
     def clear(self):
         self.month.data = ""

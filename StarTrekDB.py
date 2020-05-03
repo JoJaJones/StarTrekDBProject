@@ -114,8 +114,11 @@ def add_series():
         form.second_field.data.clear()
         end = form.third_field.data
         form.third_field.data.clear()
-        print(start, "\n", end)
+
+        sanitize_date(start)
         start = f"{start['year']}-{start['month']}-{start['day']}"
+
+        sanitize_date(end)
         end = f"{end['year']}-{end['month']}-{end['day']}"
 
         query = "INSERT INTO series(name, start_date, end_date) VALUES (%s, %s, %s)"
@@ -174,3 +177,25 @@ def sanitze_input(user_input):
 def delete_row(table_name, connection, row_num):
     query = f"DELETE FROM {table_name} WHERE id = {row_num}"
     res = execute_query(connection, query)
+
+
+def sanitize_date(date_dict: dict):
+    month = date_dict["month"]
+    day = date_dict["day"]
+    year = date_dict["year"]
+    date = [month, day, year]
+
+    date_is_valid = not any([component is None for component in date])
+    if date_is_valid:
+        date_is_valid &= not (month == 2 and day > 29)
+        date_is_valid &= not (month in [4, 6, 9, 11] and day > 30)
+        is_leap_year = (year % 4) == 0
+        is_leap_year &= ((year % 100) != 0 or (year % 400) == 0)
+        date_is_valid &= not (month == 2 and day == 29 and not is_leap_year)
+
+    if not date_is_valid:
+        date_dict["month"] = date_dict["day"] = date_dict["year"] = None
+        return False
+
+    return True
+
