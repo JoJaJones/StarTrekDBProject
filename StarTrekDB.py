@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from config import SECRET, TABLES
+from config import SECRET, TABLES, TABLES_LIST
 from db_connector.db_connector import connect_to_database, execute_query
 
 app = Flask(__name__)
@@ -13,9 +13,12 @@ def init_DB():
     if password == "picard":
         result = "Tables created: "
         db = connect_to_database()
-        for table in TABLES:
-            query = f"DROP TABLE IF EXISTS {table};"
-            res = execute_query(db, query)
+        for i in range(len(TABLES_LIST)-1, -1, -1):
+            if TABLES_LIST[i] in TABLES:
+                query = f"DROP TABLE IF EXISTS {TABLES_LIST[i]};"
+                res = execute_query(db, query)
+
+        for table in TABLES_LIST:
             query = TABLES[table]
             res = execute_query(db, query)
             print(res)
