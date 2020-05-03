@@ -15,8 +15,8 @@ class Row:
     def __init__(self, id, values):
         self.id = id
         self.table_values = values
-        form = DeleteForm()
-        form.value = id
+        self.form = DeleteForm()
+        self.form.value = id
 
 class DeleteForm(FlaskForm):
     submit = SubmitField("Delete")
