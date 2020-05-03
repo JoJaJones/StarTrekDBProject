@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 from config import SECRET, TABLES, TABLES_LIST
 from db_connector.db_connector import connect_to_database, execute_query
+from STForms import *
 
 app = Flask(__name__)
 
@@ -29,6 +30,16 @@ def init_DB():
                 result += table
 
     return result
+
+
+@app.route("/add-species", methods=["GET", "POST"])
+def add_species():
+    form_fields = {"name": "string"}
+    form = AddForm(form_fields)
+
+
+    return render_template("add_form.html", form=form)
+
 
 
 

@@ -26,5 +26,10 @@ TABLES = {
     "affiliations": "CREATE TABLE affiliations ("
                     "id int(11) NOT NULL AUTO_INCREMENT,"
                     "name varchar(255) NOT NULL,"
-                    "PRIMARY KEY(id))engine=innoDB;"
+                    "PRIMARY KEY(id))engine=innoDB;",
+
+    "species": "CREATE TABLE species ("
+               "id int(11) NOT NULL AUTO_INCREMENT,"
+               "name varchar(11) NOT NULL,"
+               "PRIMARY KEY (id))engine=innoDB;"
 }
