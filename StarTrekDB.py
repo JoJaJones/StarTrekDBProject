@@ -47,8 +47,8 @@ def add_species():
         query = "INSERT INTO species(name) VALUES (%s)"
         res = execute_query(db, query, tuple([species]))
 
-    if "delete_button" in request.form and request.form["delete_button"]:
-        print(request.form["delete_button"].id)
+    if "delete_no" in request.args:
+        print(request.args["delete_no"])
 
     query = "SELECT id, name FROM species"
     res = execute_query(db, query)
