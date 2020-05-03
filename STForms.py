@@ -10,30 +10,5 @@ class SingleFieldForm(FlaskForm):
     field = StringField("")
     submit = SubmitField("Submit")
 
-class AddForm(FlaskForm):
-    def __init__(self, field_dict, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields = []
-        self.init_fields(field_dict)
-        self.fields.append(SubmitField("Submit"))
-
-    def init_fields(self, field_dict):
-        for field in field_dict:
-            if field_dict[field] == "string":
-                self.fields.append(StringField(field))
-
-
-class SelectSingleForm(FlaskForm):
-    def __init__(self, field_dict, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-class SelectMultipleForm(FlaskForm):
+class DoubleFieldForm(FlaskForm):
     pass
-
-def get_field(field_name, field_type):
-    if field_type == "string":
-        return StringField(field_name)
-
-def create_form(field_dict):
-    form = FlaskForm()
-    form["name"] = StringField("Name: ")
