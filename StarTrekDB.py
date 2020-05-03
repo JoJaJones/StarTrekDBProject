@@ -10,14 +10,11 @@ app.config["SECRET_KEY"] = SECRET
 def create_table():
     table = request.args.get("table")
     db = connect_to_database()
-    query = f"DROP TABLE IF EXISTS {table};"
+    query = f"DROP TABLE IF ExISTS {table};"
     results = execute_query(db, query)
-    print(results)
     query = TABLES[table]
     results = execute_query(db, query)
-    print(results)
-    query = f"DESCRIBE {table};"
-    results = execute_query(db, query)
+    return f"{table} table created"
 
 @app.route("/")
 def home():
