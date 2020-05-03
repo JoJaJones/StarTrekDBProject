@@ -7,13 +7,8 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = "tempsecret"
 
 class SingleFieldForm(FlaskForm):
-    field = FormField("")
+    field = StringField("")
     submit = SubmitField("Submit")
-
-    def set_field(self, field_dict):
-        field_name = list(field_dict.keys())[0]
-        field_type = field_dict[field_name]
-        self.field = get_field(field_name, field_type)
 
 class AddForm(FlaskForm):
     def __init__(self, field_dict, *args, **kwargs):
