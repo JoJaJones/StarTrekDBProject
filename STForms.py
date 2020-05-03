@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 from flask_wtf import FlaskForm
-from wtforms import (widgets, StringField, SubmitField, RadioField, SelectMultipleField, FormField,
+from wtforms import (widgets, validators, StringField, SubmitField, RadioField, SelectMultipleField, FormField,
                      IntegerField, SelectField, DateField, TextAreaField)
 
 app = Flask(__name__)
@@ -45,8 +45,8 @@ class LocationForm(FlaskForm):
 
 class SeriesForm(FlaskForm):
     first_field = StringField()
-    second_field = FormField(DateSubForm)
-    third_field = FormField(DateSubForm)
+    second_field = FormField(DateSubForm, validators=[validators.Optional()])
+    third_field = FormField(DateSubForm, validators=[validators.Optional()])
     submit = SubmitField("Submit")
 
 
