@@ -10,14 +10,17 @@ class SingleFieldForm(FlaskForm):
     field = StringField("")
     submit = SubmitField("Submit")
 
-class DeleteForm(FlaskForm):
 
+class Row:
+    def __init__(self, id, values):
+        self.id = id
+        self.table_values = values
+        form = DeleteForm()
+        form.value = id
+
+class DeleteForm(FlaskForm):
     submit = SubmitField("Delete")
 
-    def __init__(self, id, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.id = id
-        self.table_values = []
 
 
 

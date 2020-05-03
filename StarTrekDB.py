@@ -53,8 +53,7 @@ def add_species():
 
     query_res = []
     for item in res:
-        query_res.append(DeleteForm(item[0]))
-        query_res[-1].table_values = item[1:]
+        query_res.append(Row(item[0], item[1:]))
 
     return render_template("single_field_add_form.html", form=form, query_res=query_res)
 
