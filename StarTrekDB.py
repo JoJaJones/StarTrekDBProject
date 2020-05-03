@@ -38,7 +38,7 @@ def add_species():
     form.field.label = "Name: "
     query_res = False
     db = connect_to_database()
-    columns = ["Species Name"]
+    columns = ["Species"]
 
     if form.validate_on_submit():
         species = str(form.field.data)
@@ -48,7 +48,7 @@ def add_species():
         res = execute_query(db, query, tuple([species]))
 
     if "delete_button" in request.form and request.form["delete_button"]:
-        print(request.form["delete_button"])
+        print(request.form["delete_button"].id)
 
     query = "SELECT id, name FROM species"
     res = execute_query(db, query)
