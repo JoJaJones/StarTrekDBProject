@@ -36,17 +36,18 @@ def init_DB():
 @app.route("/add-species", methods=["GET", "POST"])
 def add_species():
     form = SingleFieldForm()
-    form.field.label = "Species Name: "
+    form.first_field.label = "Species Name: "
     query_res = []
     db = connect_to_database()
     columns = ["Species"]
 
     if form.validate_on_submit():
-        species = str(form.field.data)
-        form.field.data = ""
+        name = str(form.first_field.data)
+        form.first_field.data = ""
 
         query = "INSERT INTO species(name) VALUES (%s)"
-        res = execute_query(db, query, tuple([species]))
+        data = tuple([name])
+        res = execute_query(db, query, data)
 
     if "delete_no" in request.args:
         delete_row(columns[0].lower(), db, request.args["delete_no"])
@@ -58,23 +59,25 @@ def add_species():
         query_res.append(Row(item[0], item[1:]))
 
     return render_template("single_field_add_form.html", form=form, query_res=query_res,
-                           column_names=columns, query_has_value=(len(query_res) > 0))
+                           column_names=columns, query_has_value=(len(query_res) > 0),
+                           header="Add a new species to the database")
 
 
 @app.route("/add-affiliations", methods=["GET", "POST"])
 def add_affiliations():
     form = SingleFieldForm()
-    form.field.label = "Affiliation Name: "
+    form.first_field.label = "Affiliation Name: "
     query_res = []
     db = connect_to_database()
     columns = ["Affiliation"]
 
     if form.validate_on_submit():
-        species = str(form.field.data)
-        form.field.data = ""
+        name = str(form.first_field.data)
+        form.first_field.data = ""
 
         query = "INSERT INTO affiliations(name) VALUES (%s)"
-        res = execute_query(db, query, tuple([species]))
+        data = tuple([name])
+        res = execute_query(db, query, data)
 
     if "delete_no" in request.args:
         delete_row(columns[0].lower(), db, request.args["delete_no"])
@@ -86,7 +89,52 @@ def add_affiliations():
         query_res.append(Row(item[0], item[1:]))
 
     return render_template("single_field_add_form.html", form=form, query_res=query_res,
-                           column_names=columns, query_has_value=(len(query_res) > 0))
+                           column_names=columns, query_has_value=(len(query_res) > 0),
+                           header="Add a new affiliation to the database")
+
+
+@app.route("/add-series")
+def add_series():
+    form = SeriesForm()
+    form.first_field.label = "Series Name: "
+    form.second_field.label = "Series Start Date: "
+    form.third_field.label = "Series End Date: "
+
+    query_res = []
+    db = connect_to_database()
+    columns = ["Series", "Start Date", "End Date"]
+
+    if form.validate_on_submit():
+        name = str(form.first_field.data)
+        form.first_field.data = ""
+        start = form.second_field.data
+        form.second_field.data = ""
+        end = form.third_field.data
+        form.third_field.data = ""
+
+        query = "INSERT INTO series(name, start_date, end_date) VALUES (%s, %s, %s)"
+        data = (name, start, end)
+        res = execute_query(db, query, data)
+
+    if "delete_no" in request.args:
+        delete_row(columns[0].lower(), db, request.args["delete_no"])
+
+    query = "SELECT id, name, start_date, end_date FROM series"
+    res = execute_query(db, query)
+
+    for item in res:
+        query_res.append(Row(item[0], item[1:]))
+
+    return render_template("triple_field_add_form.html", form=form, query_res=query_res,
+                           column_names=columns, query_has_value=(len(query_res) > 0),
+                           header="Add a new series to the database")
+
+
+@app.route("/add-location")
+def add_location():
+    form = LocationForm()
+    form.first_field.label = "Location Name: "
+    form.second_field.label = "Location Type: "
 
 
 @app.route("/create-table")
