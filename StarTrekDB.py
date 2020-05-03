@@ -9,7 +9,7 @@ app.config["SECRET_KEY"] = SECRET
 @app.route("/create-all-tables")
 def init_DB():
     password = request.args.get("pass")
-    result = "Invalid password"
+    results = "Invalid password"
     if password == "picard":
         results = "Tables created: "
         db = connect_to_database()
