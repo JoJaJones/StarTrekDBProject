@@ -38,7 +38,7 @@ def add_species():
     form = AddForm(form_fields)
 
 
-    return render_template("add_form.html", form=form)
+    return render_template("add_form.html", form=form, x=len(form.fields))
 
 
 
