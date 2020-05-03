@@ -39,11 +39,11 @@ def add_species():
     query_res = False
 
     if form.validate_on_submit():
-        species = form.field.data
+        species = str(form.field.data)
         form.field.data = ""
         db = connect_to_database()
-        query = "INSERT INTO species(name) VALUES (%s)"
-        res = execute_query(db, query, species)
+        query = f"INSERT INTO species(name) VALUES ({species})"
+        res = execute_query(db, query)
         query = "SELECT name FROM species"
         query_res = execute_query(db, query)
         for item in query_res:
