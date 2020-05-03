@@ -9,7 +9,7 @@ app.config["SECRET_KEY"] = "tempsecret"
 class SingleFieldForm(FlaskForm):
     def __init__(self, field_dict, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        field_name = field_dict.keys()[0]
+        field_name = list(field_dict.keys())[0]
         field_type = field_dict[field_name]
         self.field = get_field(field_name, field_type)
         self.submit = SubmitField("Submit")
