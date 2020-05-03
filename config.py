@@ -33,13 +33,13 @@ TABLES = {
                "name varchar(255) NOT NULL,"
                "PRIMARY KEY (id))engine=innoDB;",
 
-    "locations": "CREATE TABLE species ("
+    "locations": "CREATE TABLE locations ("
                  "id int(11) NOT NULL AUTO_INCREMENT,"
                  "name varchar(255) NOT NULL,"
                  "type varchar(255),"
                  "PRIMARY KEY (id))engine=innoDB;",
 
-    "series": "CREATE TABLE species ("
+    "series": "CREATE TABLE series ("
               "id int(11) NOT NULL AUTO_INCREMENT,"
               "name varchar(255) NOT NULL,"
               "start_date DATE DEFAULT NULL,"

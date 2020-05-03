@@ -17,13 +17,13 @@ def init_DB():
         db = connect_to_database()
         for i in range(len(TABLES_LIST)-1, -1, -1):
             if TABLES_LIST[i] in TABLES:
-                print(TABLES_LIST[i])
+                # print(TABLES_LIST[i])
                 query = f"DROP TABLE IF EXISTS {TABLES_LIST[i]};"
                 res = execute_query(db, query)
 
         for table in TABLES_LIST:
             if table in TABLES:
-                print(table)
+                # print(table)
                 query = TABLES[table]
                 res = execute_query(db, query)
                 print(res)
