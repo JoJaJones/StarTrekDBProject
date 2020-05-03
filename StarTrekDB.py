@@ -49,8 +49,9 @@ def add_species():
         res = execute_query(db, query, tuple([species]))
 
     if "delete_no" in request.args:
-        query = f"DELETE FROM species WHERE id = {request.args['delete_no']}"
-        res = execute_query(db, query)
+        delete_row(columns[0].lower(), db, request.args["delete_no"])
+        # query = f"DELETE FROM species WHERE id = {request.args['delete_no']}"
+        # res = execute_query(db, query)
 
     query = "SELECT id, name FROM species"
     res = execute_query(db, query)
@@ -105,3 +106,12 @@ def create_table():
 @app.route("/")
 def home():
     return "<h1>Welcome to the site</h1>"
+
+
+def sanitze_input(user_input):
+    pass
+
+
+def delete_row(table_name, connection, row_num):
+    query = f"DELETE FROM {table_name} WHERE id = {row_num}"
+    res = execute_query(connection, query)
