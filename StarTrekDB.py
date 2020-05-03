@@ -14,7 +14,7 @@ def init_DB():
         result = "Tables created: "
         db = connect_to_database()
         for table in TABLES:
-            query = f"DROP TABLE IF ExISTS {table};"
+            query = f"DROP TABLE {table};"
             res = execute_query(db, query)
             query = TABLES[table]
             res = execute_query(db, query)
