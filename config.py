@@ -1,5 +1,5 @@
 SECRET = "SJootneelso"
-TABLES_LIST = ["characters", "affiliations", "species", "locations",
+TABLES_LIST = ["characters", "affiliations", "species", "locations", "series",
                "actors", "characters_species", "characters_affiliations", "characters_series",
                "characters_series_locations"]
 TABLES = {
