@@ -14,7 +14,7 @@
 <table>
     {% for item in query_res %}
         <tr>
-            {% for cell in item %}
+            {% for cell in item.data %}
                 <td>cell</td>
             {% endfor %}
             <td>{{item.form.submit()}}</td>
