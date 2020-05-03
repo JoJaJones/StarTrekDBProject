@@ -17,7 +17,7 @@ class DeleteForm(FlaskForm):
     def __init__(self, id, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.id = id
-        self.data = []
+        self.table_values = []
 
 
 
