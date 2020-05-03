@@ -16,7 +16,6 @@ class Row:
         self.id = id
         self.table_values = values
         self.form = DeleteForm()
-        self.form.value = id
 
 class DeleteForm(FlaskForm):
     submit = SubmitField("Delete")
