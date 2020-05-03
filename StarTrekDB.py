@@ -132,7 +132,7 @@ def add_series():
         item = item[1:]
 
         for i in range(1, 3):
-            temp_date = item[i].split("-")
+            temp_date = str(item[i]).split("-")
             temp_date = temp_date[1:] + [temp_date[0]]
             item[i] = "-".join(temp_date)
 
