@@ -128,7 +128,15 @@ def add_series():
     res = execute_query(db, query)
 
     for item in res:
-        query_res.append(Row(item[0], item[1:]))
+        row_id = item[0]
+        item = item[1:]
+        
+        for i in range(1, 3):
+            temp_date = item[i].split("-")
+            temp_date = temp_date[1:] + [temp_date[0]]
+            item[i] = "-".join(temp_date)
+
+        query_res.append(Row(row_id, item))
 
     return render_template("triple_field_add_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
