@@ -50,8 +50,6 @@ def add_species():
 
     if "delete_no" in request.args:
         delete_row(columns[0].lower(), db, request.args["delete_no"])
-        # query = f"DELETE FROM species WHERE id = {request.args['delete_no']}"
-        # res = execute_query(db, query)
 
     query = "SELECT id, name FROM species"
     res = execute_query(db, query)
@@ -79,8 +77,7 @@ def add_affiliations():
         res = execute_query(db, query, tuple([species]))
 
     if "delete_no" in request.args:
-        query = f"DELETE FROM affiliations WHERE id = {request.args['delete_no']}"
-        res = execute_query(db, query)
+        delete_row(columns[0].lower(), db, request.args["delete_no"])
 
     query = "SELECT id, name FROM affiliations"
     res = execute_query(db, query)
