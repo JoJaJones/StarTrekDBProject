@@ -1,11 +1,17 @@
 from flask import Flask, render_template
 from flask_wtf import FlaskForm
 from wtforms import (widgets, StringField, SubmitField, RadioField, SelectMultipleField, FormField,
-                     SelectField, DateField, TextAreaField)
+                     IntegerField, SelectField, DateField, TextAreaField)
 
 app = Flask(__name__)
 
 app.config["SECRET_KEY"] = "tempsecret"
+
+
+class DateSubForm(FlaskForm):
+    month = IntegerField("Month")
+    day = IntegerField("Day")
+    year = IntegerField("Year")
 
 
 class SingleFieldForm(FlaskForm):
@@ -34,8 +40,8 @@ class LocationForm(FlaskForm):
 
 class SeriesForm(FlaskForm):
     first_field = StringField()
-    second_field = DateField()
-    third_field = DateField()
+    second_field = FormField(DateSubForm)
+    third_field = FormField(DateSubForm)
     submit = SubmitField("Submit")
 
 
@@ -49,7 +55,6 @@ class CharacterForm(FlaskForm):
     seventh_field = SelectMultipleField(choices=1)
     add_location = SubmitField("Add Location to Character")
     submit = SubmitField("Submit")
-
 
 
 class AddLocationToCharacter(FlaskForm):

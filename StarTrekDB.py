@@ -110,13 +110,16 @@ def add_series():
         name = str(form.first_field.data)
         form.first_field.data = ""
         start = form.second_field.data
-        form.second_field.data = ""
+        # form.second_field.data = ""
         end = form.third_field.data
-        form.third_field.data = ""
-
-        query = "INSERT INTO series(name, start_date, end_date) VALUES (%s, %s, %s)"
-        data = (name, start, end)
-        res = execute_query(db, query, data)
+        # form.third_field.data = ""
+        
+        print(start)
+        print(end)
+        #
+        # query = "INSERT INTO series(name, start_date, end_date) VALUES (%s, %s, %s)"
+        # data = (name, start, end)
+        # res = execute_query(db, query, data)
 
     if "delete_no" in request.args:
         delete_row(columns[0].lower(), db, request.args["delete_no"])
