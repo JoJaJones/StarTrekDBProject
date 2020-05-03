@@ -62,7 +62,7 @@ def add_species():
 
     return render_template("single_field_add_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
-                           header="Add a new species to the database")
+                           header="Add a new species to the database", target="add-species")
 
 
 @app.route("/add-affiliations", methods=["GET", "POST"])
@@ -92,7 +92,7 @@ def add_affiliations():
 
     return render_template("single_field_add_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
-                           header="Add a new affiliation to the database")
+                           header="Add a new affiliation to the database", target="add-affiliations")
 
 
 @app.route("/add-series", methods=["GET", "POST"])
@@ -144,7 +144,7 @@ def add_series():
 
     return render_template("triple_field_add_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
-                           header="Add a new series to the database")
+                           header="Add a new series to the database", target="add-series")
 
 
 @app.route("/add-location", methods=["GET", "POST"])
