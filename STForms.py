@@ -13,6 +13,11 @@ class DateSubForm(FlaskForm):
     day = IntegerField("Day")
     year = IntegerField("Year")
 
+    def clear(self):
+        self.month.data = ""
+        self.day.data = ""
+        self.year.data = ""
+
 
 class SingleFieldForm(FlaskForm):
     first_field = StringField("")

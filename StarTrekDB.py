@@ -100,7 +100,7 @@ def add_series():
     form = SeriesForm()
     form.first_field.label = "Series Name: "
     form.second_field.label = "Series Start Date: "
-    
+
     form.third_field.label = "Series End Date: "
 
     query_res = []
@@ -111,9 +111,9 @@ def add_series():
         name = str(form.first_field.data)
         form.first_field.data = ""
         start = form.second_field.data
-        form.second_field.data = ""
+        form.second_field.data.clear()
         end = form.third_field.data
-        form.third_field.data = ""
+        form.third_field.data.clear()
         start = f"{start['year']}-{start['month']}-{start['day']}"
         end = f"{end['year']}-{end['month']}-{end['day']}"
 
