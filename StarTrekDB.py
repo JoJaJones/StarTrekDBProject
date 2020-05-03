@@ -114,6 +114,7 @@ def add_series():
         form.second_field.data.clear()
         end = form.third_field.data
         form.third_field.data.clear()
+        print(start, "\n", end)
         start = f"{start['year']}-{start['month']}-{start['day']}"
         end = f"{end['year']}-{end['month']}-{end['day']}"
 

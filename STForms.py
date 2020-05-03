@@ -9,9 +9,9 @@ app.config["SECRET_KEY"] = "tempsecret"
 
 
 class DateSubForm(FlaskForm):
-    month = IntegerField("Month")
-    day = IntegerField("Day")
-    year = IntegerField("Year")
+    month = IntegerField("Month", validators=[validators.Optional()])
+    day = IntegerField("Day", validators=[validators.Optional()])
+    year = IntegerField("Year", validators=[validators.Optional()])
 
     def clear(self):
         self.month.data = ""
@@ -45,8 +45,8 @@ class LocationForm(FlaskForm):
 
 class SeriesForm(FlaskForm):
     first_field = StringField()
-    second_field = FormField(DateSubForm, validators=[validators.Optional()])
-    third_field = FormField(DateSubForm, validators=[validators.Optional()])
+    second_field = FormField(DateSubForm)
+    third_field = FormField(DateSubForm)
     submit = SubmitField("Submit")
 
 
