@@ -102,7 +102,6 @@ def add_series():
     form.second_field.label = "Series Start Date: "
 
     form.third_field.label = "Series End Date: "
-
     query_res = []
     db = connect_to_database()
     columns = ["Series", "Start Date", "End Date"]
