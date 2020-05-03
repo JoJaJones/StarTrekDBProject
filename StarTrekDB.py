@@ -7,6 +7,7 @@ app = Flask(__name__)
 
 app.config["SECRET_KEY"] = SECRET
 
+
 @app.route("/create-all-tables")
 def init_DB():
     password = request.args.get("pass")
@@ -60,6 +61,7 @@ def add_species():
 
     return render_template("single_field_add_form.html", form=form, query_res=query_res, column_names=columns)
 
+
 @app.route("/add-affiliations", methods=["GET", "POST"])
 def add_affiliations():
     form = SingleFieldForm()
@@ -89,7 +91,6 @@ def add_affiliations():
     return render_template("single_field_add_form.html", form=form, query_res=query_res, column_names=columns)
 
 
-
 @app.route("/create-table")
 def create_table():
     table = request.args.get("table")
@@ -99,6 +100,7 @@ def create_table():
     query = TABLES[table]
     results = execute_query(db, query)
     return f"{table} table created"
+
 
 @app.route("/")
 def home():
