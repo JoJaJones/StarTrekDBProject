@@ -95,7 +95,7 @@ def add_affiliations():
                            header="Add a new affiliation to the database")
 
 
-@app.route("/add-series")
+@app.route("/add-series", methods=["GET", "POST"])
 def add_series():
     form = SeriesForm()
     form.first_field.label = "Series Name: "
@@ -113,7 +113,7 @@ def add_series():
         # form.second_field.data = ""
         end = form.third_field.data
         # form.third_field.data = ""
-        
+
         print(start)
         print(end)
         #
@@ -135,7 +135,7 @@ def add_series():
                            header="Add a new series to the database")
 
 
-@app.route("/add-location")
+@app.route("/add-location", methods=["GET", "POST"])
 def add_location():
     form = LocationForm()
     form.first_field.label = "Location Name: "
