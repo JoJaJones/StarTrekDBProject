@@ -1,0 +1,9 @@
+{% extends "single_table_display.html" %}
+
+{% block content_form %}
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <p>{{ form.field.label }}{{ form.field() }}</p>
+    <p>{{ form.submit() }}</p>
+</form>
+{% endblock %}
