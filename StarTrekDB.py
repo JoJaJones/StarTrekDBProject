@@ -38,6 +38,7 @@ def add_species():
     form.field.label = "Name: "
     query_res = False
     db = connect_to_database()
+    columns = ["Species Name"]
 
     if form.validate_on_submit():
         species = str(form.field.data)
@@ -45,8 +46,6 @@ def add_species():
 
         query = "INSERT INTO species(name) VALUES (%s)"
         res = execute_query(db, query, tuple([species]))
-        for item in query_res:
-            print(type(item), item)
 
     query = "SELECT id, name FROM species"
     res = execute_query(db, query)
@@ -55,7 +54,7 @@ def add_species():
     for item in res:
         query_res.append(Row(item[0], item[1:]))
 
-    return render_template("single_field_add_form.html", form=form, query_res=query_res)
+    return render_template("single_field_add_form.html", form=form, query_res=query_res, column_names=columns)
 
 
 

@@ -11,16 +11,27 @@
     <p>{{ form.submit() }}</p>
 </form>
 
-<table>
-    {% for item in query_res %}
-        <tr>
-            {% for cell in item.table_values %}
-                <td>{{cell}}</td>
+<form method="POST">
+    {% if query_res %}
+        <table>
+            <thead>
+                <tr>
+                    {% for value in column_names %}
+                        <th>{{value}}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            {% for item in query_res %}
+                <tr>
+                    {% for cell in item.table_values %}
+                        <td>{{cell}}</td>
+                    {% endfor %}
+                    <td>{{item.form.submit()}}</td>
+                </tr>
             {% endfor %}
-            <td>{{item.form.submit()}}</td>
-        </tr>
-    {% endfor %}
-</table>
+        </table>
+    {% endif}
+</form>
 
 </body>
 </html>
