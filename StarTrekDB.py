@@ -129,7 +129,7 @@ def add_series():
 
     for item in res:
         row_id = item[0]
-        item = item[1:]
+        item = list(item[1:])
 
         for i in range(1, 3):
             temp_date = str(item[i]).split("-")
