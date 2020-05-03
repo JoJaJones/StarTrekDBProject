@@ -37,7 +37,7 @@ def init_DB():
 def add_species():
     form = SingleFieldForm()
     form.field.label = "Species Name: "
-    query_res = False
+    query_res = []
     db = connect_to_database()
     columns = ["Species"]
 
@@ -54,18 +54,18 @@ def add_species():
     query = "SELECT id, name FROM species"
     res = execute_query(db, query)
 
-    query_res = []
     for item in res:
         query_res.append(Row(item[0], item[1:]))
 
-    return render_template("single_field_add_form.html", form=form, query_res=query_res, column_names=columns)
+    return render_template("single_field_add_form.html", form=form, query_res=query_res,
+                           column_names=columns, query_has_value=(len(query_res) > 0))
 
 
 @app.route("/add-affiliations", methods=["GET", "POST"])
 def add_affiliations():
     form = SingleFieldForm()
     form.field.label = "Affiliation Name: "
-    query_res = False
+    query_res = []
     db = connect_to_database()
     columns = ["Affiliation"]
 
@@ -82,7 +82,6 @@ def add_affiliations():
     query = "SELECT id, name FROM affiliations"
     res = execute_query(db, query)
 
-    query_res = []
     for item in res:
         query_res.append(Row(item[0], item[1:]))
 
