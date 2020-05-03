@@ -48,7 +48,8 @@ def add_species():
         res = execute_query(db, query, tuple([species]))
 
     if "delete_no" in request.args:
-        print(request.args["delete_no"])
+        query = f"DELETE FROM species WHERE id = {request.args['delete_no']}"
+        res = execute_query(db, query)
 
     query = "SELECT id, name FROM species"
     res = execute_query(db, query)
