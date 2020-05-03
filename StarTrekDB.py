@@ -42,8 +42,8 @@ def add_species():
         species = str(form.field.data)
         form.field.data = ""
         db = connect_to_database()
-        query = f"INSERT INTO species(name) VALUES ({species})"
-        res = execute_query(db, query)
+        query = "INSERT INTO species(name) VALUES (%s)"
+        res = execute_query(db, query, tuple([species]))
         query = "SELECT name FROM species"
         query_res = execute_query(db, query)
         for item in query_res:
