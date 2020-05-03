@@ -11,6 +11,7 @@ class AddForm(FlaskForm):
         super().__init__(*args, **kwargs)
         self._fields = []
         self.init_fields(field_dict)
+        self._fields.append(SubmitField("Submit"))
 
     def init_fields(self, field_dict):
         for field in field_dict:
