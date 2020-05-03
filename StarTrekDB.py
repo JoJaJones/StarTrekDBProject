@@ -37,23 +37,24 @@ def add_species():
     form = SingleFieldForm()
     form.field.label = "Name: "
     query_res = False
+    db = connect_to_database()
 
     if form.validate_on_submit():
         species = str(form.field.data)
         form.field.data = ""
-        db = connect_to_database()
+
         query = "INSERT INTO species(name) VALUES (%s)"
         res = execute_query(db, query, tuple([species]))
-        query = "SELECT id, name FROM species"
-        res = execute_query(db, query)
-
-        query_res = []
-        for i in range(len(res)):
-            query_res.append(DeleteForm(res[i][0]))
-            query_res[i].data = res[1:]
-
         for item in query_res:
             print(type(item), item)
+
+    query = "SELECT id, name FROM species"
+    res = execute_query(db, query)
+
+    query_res = []
+    for i in range(len(res)):
+        query_res.append(DeleteForm(res[i][0]))
+        query_res[i].data = res[1:]
 
     return render_template("single_field_add_form.html", form=form, query_res=query_res)
 
