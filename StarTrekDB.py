@@ -19,13 +19,14 @@ def init_DB():
                 res = execute_query(db, query)
 
         for table in TABLES_LIST:
-            query = TABLES[table]
-            res = execute_query(db, query)
-            print(res)
-            if result[-2] != ":":
-                result += ", "
+            if table in TABLES:
+                query = TABLES[table]
+                res = execute_query(db, query)
+                print(res)
+                if result[-2] != ":":
+                    result += ", "
 
-            result += table
+                result += table
 
     return result
 
