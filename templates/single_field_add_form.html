@@ -7,9 +7,8 @@
 <body>
 <form method="POST">
     {{ form.hidden_tag() }}
-    {% for field in form.fields %}
-        {{ field.label }}{{ field() }}
-    {% endfor %}
+    {{ form.field.label }}{{ form.field() }}
+    {{ form.submit() }}
 </form>
 
 </body>

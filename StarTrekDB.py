@@ -35,10 +35,9 @@ def init_DB():
 @app.route("/add-species", methods=["GET", "POST"])
 def add_species():
     form_fields = {"name": "string"}
-    form = AddForm(form_fields)
+    form = SingleFieldForm(form_fields)
 
-
-    return render_template("add_form.html", form=form, x=len(form.fields))
+    return render_template("single_field_add_form.html", form=form)
 
 
 
