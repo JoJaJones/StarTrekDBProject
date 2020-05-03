@@ -22,6 +22,3 @@ def create_table():
 @app.route("/")
 def home():
     return "<h1>Welcome to the site</h1>"
-
-if __name__ == "__main__":
-    app.run(debug=True)
