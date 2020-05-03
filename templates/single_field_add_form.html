@@ -7,9 +7,20 @@
 <body>
 <form method="POST">
     {{ form.hidden_tag() }}
-    {{ form.field.label }}{{ form.field() }}
-    {{ form.submit() }}
+    <p>{{ form.field.label }}{{ form.field() }}</p>
+    <p>{{ form.submit() }}</p>
 </form>
+
+<table>
+    {% for item in query_res %}
+        <tr>
+            {% for cell in item %}
+                <td>cell</td>
+            {% endfor %}
+            <td>{{item.form.submit()}}</td>
+        </tr>
+    {% endfor %}
+</table>
 
 </body>
 </html>
