@@ -198,7 +198,14 @@ def add_character():
         data = (first_name, last_name, title, desc, bio)
         res = execute_query(db, query, data)
 
-        query = "SELECT id, fname, lname, title FROM characters"
+        query = f"SELECT id, fname, lname, title FROM characters " \
+                f"WHERE fname = {first_name}"
+        if last_name:
+            query += " AND lname = " + last_name
+        if title:
+            query += " AND title = " + title
+        query += ";"
+
         res = execute_query(db, query).fetchone()
 
         species = form.sixth_field.data
