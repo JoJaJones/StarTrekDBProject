@@ -1,17 +1,19 @@
 {% extends "single_table_display.html" %}
 
 {% block content_form %}
-<div>{{ header }}</div>
 <div>
-<form method="POST">
-    {{ form.hidden_tag() }}
-    <p>{{ form.first_field.label }}{{ form.first_field() }}</p>
-    <p>{{ form.second_field.label }}{{ form.second_field() }}</p>
-    <p>{{ form.third_field.label }}{{ form.third_field() }}</p>
-    <p>{{ form.fourth_field.label }}{{ form.fourth_field() }}</p>
-    <p>{{ form.fifth_field.label }}{{ form.fifth_field() }}</p>
-    <p>{{ form.sixth_field.label }}{{ form.sixth_field() }}</p>
-    <p>{{ form.submit() }}</p>
-</form>
+    <fieldset>
+        <legend>{{ header}}</legend>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <p>{{ form.first_field.label }}{{ form.first_field() }}</p>
+            <p>{{ form.second_field.label }}{{ form.second_field() }}</p>
+            <p>{{ form.third_field.label }}{{ form.third_field() }}</p>
+            <p>{{ form.fourth_field.label }}{{ form.fourth_field() }}</p>
+            <p>{{ form.fifth_field.label }}{{ form.fifth_field() }}</p>
+            <p>{{ form.sixth_field.label }}{{ form.sixth_field() }}</p>
+            <p>{{ form.submit() }}</p>
+        </form>
+    </fieldset>
 </div>
 {% endblock %}

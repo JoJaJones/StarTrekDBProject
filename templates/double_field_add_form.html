@@ -1,13 +1,15 @@
 {% extends "single_table_display.html" %}
 
 {% block content_form %}
-<div>{{ header }}</div>
 <div>
-    <form method="POST">
-        {{ form.hidden_tag() }}
-        <p>{{ form.first_field.label }}{{ form.first_field() }}</p>
-        <p>{{ form.second_field.label }}{{ form.second_field() }}</p>
-        <p>{{ form.submit() }}</p>
-    </form>
+    <fieldset>
+        <legend>{{ header}}</legend>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <p>{{ form.first_field.label }}{{ form.first_field() }}</p>
+            <p>{{ form.second_field.label }}{{ form.second_field() }}</p>
+            <p>{{ form.submit() }}</p>
+        </form>
+    </fieldset>
 </div>
 {% endblock %}
