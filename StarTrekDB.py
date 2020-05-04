@@ -164,22 +164,6 @@ def add_character():
     db = connect_to_database()
     columns = ["First Name", "Last Name", "Title"]
 
-    if form.validate_on_submit():
-        first_name = form.first_field.data
-        form.first_field.data = ""
-        last_name = form.second_field.data
-        form.second_field.data = ""
-        title = form.third_field.data
-        form.third_field.data = ""
-        desc = form.fourth_field.data
-        form.fourth_field.data = ""
-        bio = form.fifth_field.data
-        form.fifth_field.data = ""
-        species = form.sixth_field.data
-        print(type(species), species)
-        series = form.seventh_field.data
-        print(type(series), series)
-
     query = "SELECT id, name FROM species ORDER BY name"
     res = execute_query(db, query)
     species_list = []
@@ -199,6 +183,22 @@ def add_character():
     form.seventh_field.choices = series_list
     display_series = len(series_list) > 0
     columns.append("Series")
+
+    if form.validate_on_submit():
+        first_name = form.first_field.data
+        form.first_field.data = ""
+        last_name = form.second_field.data
+        form.second_field.data = ""
+        title = form.third_field.data
+        form.third_field.data = ""
+        desc = form.fourth_field.data
+        form.fourth_field.data = ""
+        bio = form.fifth_field.data
+        form.fifth_field.data = ""
+        species = form.sixth_field.data
+        print(type(species), species)
+        series = form.seventh_field.data
+        print(type(series), series)
 
     return render_template("add_char_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
