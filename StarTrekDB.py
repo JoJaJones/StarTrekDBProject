@@ -66,7 +66,7 @@ def add_species():
 
 
 @app.route("/add-affiliations", methods=["GET", "POST"])
-def add_affiliations():
+def add_affiliation():
     form = SingleFieldForm()
     form.first_field.label = "Affiliation Name: "
     query_res = []
@@ -151,6 +151,42 @@ def add_location():
     form = LocationForm()
     form.first_field.label = "Location Name: "
     form.second_field.label = "Location Type: "
+    return render_template("AddLocation.html")
+
+
+@app.route("/add-character")
+def add_character():
+    return render_template("AddChar.html")
+
+
+@app.route("/add-actor")
+def add_actor():
+    return render_template("AddActor.html")
+
+
+@app.route("/connect-actor-char")
+def link_actor_char():
+    return render_template("")
+
+
+@app.route("/connect-char-spec")
+def link_char_species():
+    return render_template("")
+
+
+@app.route("/connect-char-aff")
+def link_char_aff():
+    return render_template("")
+
+
+@app.route("/connect-char-series")
+def link_char_series():
+    return render_template("")
+
+
+@app.route("/connect-location")
+def link_to_location():
+    return render_template("")
 
 
 @app.route("/create-table")
@@ -165,8 +201,8 @@ def create_table():
 
 
 @app.route("/")
-def home():
-    return "<h1>Welcome to the site</h1>"
+def index():
+    return render_template("landing_page.html")
 
 
 def sanitze_input(user_input):

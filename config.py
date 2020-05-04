@@ -2,6 +2,8 @@ SECRET = "SJootneelso"
 TABLES_LIST = ["characters", "affiliations", "species", "locations", "series",
                "actors", "characters_species", "characters_affiliations", "characters_series",
                "characters_series_locations"]
+
+
 TABLES = {
     "characters": "CREATE TABLE characters ("
                   "id int(11) NOT NULL AUTO_INCREMENT,"
