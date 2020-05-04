@@ -12,3 +12,7 @@ th {
 input {
     border-radius: 3px;
 }
+
+.delete-button{
+    width: 100%;
+}
