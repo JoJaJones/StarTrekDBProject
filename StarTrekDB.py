@@ -221,7 +221,7 @@ def add_character():
 
     for item in res:
         row_id = item[0]
-        item = list(item[1:])
+        item = list(item[1:]) + ["",""]
         query_res.append(Row(row_id, item))
 
     return render_template("add_char_form.html", form=form, query_res=query_res,
