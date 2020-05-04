@@ -213,6 +213,9 @@ def add_character():
         for ser_id in series:
             link_tables(query_template, db, res[0], ser_id)
 
+    if "delete_no" in request.args:
+        delete_row("characters", db, request.args["delete_no"])
+
     query = "SELECT id, fname, lname, title, description, biography FROM characters ORDER BY name"
     res = execute_query(db, query)
 
