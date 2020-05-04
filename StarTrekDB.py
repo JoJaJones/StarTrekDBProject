@@ -227,7 +227,7 @@ def add_character():
     return render_template("add_char_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="Add New Character", display_species=display_species,
-                           display_series=display_series)
+                           display_series=display_series, target="add-character")
 
 
 @app.route("/add-actor", methods=["GET", "POST"])
