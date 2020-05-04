@@ -47,4 +47,22 @@ TABLES = {
               "start_date DATE DEFAULT NULL,"
               "end_date DATE DEFAULT NULL,"
               "PRIMARY KEY (id))engine=innoDB;",
+
+    "characters_species": "CREATE TABLE characters_species ("
+                          "cid int(11) NOT NULL,"
+                          "sid int(11) NOT NULL,"
+                          "FOREIGN KEY (cid) REFERENCES characters(id)"
+                          "ON DELETE CASCADE ON UPDATE CASCADE,"
+                          "FOREIGN KEY (sid) REFERENCES species(id)"
+                          "ON DELETE CASCADE ON UPDATE CASCADE,"
+                          "PRIMARY KEY (cid, sid))engine=innoDB;",
+
+    "characters_series": "CREATE TABLE characters_series ("
+                         "cid int(11) NOT NULL,"
+                         "sid int(11) NOT NULL,"
+                         "FOREIGN KEY (cid) REFERENCES characters(id)"
+                         "ON DELETE CASCADE ON UPDATE CASCADE,"
+                         "FOREIGN KEY (sid) REFERENCES series(id)"
+                         "ON DELETE CASCADE ON UPDATE CASCADE,"
+                         "PRIMARY KEY (cid, sid))engine=innoDB;"
 }
