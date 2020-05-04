@@ -10,7 +10,7 @@ TABLES = {
                   "fname varchar(255) NOT NULL,"
                   "lname varchar(255) DEFAULT NULL,"
                   "title varchar(255) DEFAULT NULL,"
-                  "desciption text DEFAULT NULL,"
+                  "description text DEFAULT NULL,"
                   "biography text DEFAULT NULL,"
                   "PRIMARY KEY(id))engine=innoDB;",
 
