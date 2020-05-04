@@ -151,40 +151,42 @@ def add_location():
     form = LocationForm()
     form.first_field.label = "Location Name: "
     form.second_field.label = "Location Type: "
-    return render_template("AddLocation.html")
+    return render_template("double_field_add_form.html", form=form,
+                           column_names=["Name", "Type"], query_has_value=False,
+                           header="Add New Location", target="add-location")
 
 
-@app.route("/add-character")
+@app.route("/add-character", methods=["GET", "POST"])
 def add_character():
     return render_template("AddChar.html")
 
 
-@app.route("/add-actor")
+@app.route("/add-actor", methods=["GET", "POST"])
 def add_actor():
     return render_template("AddActor.html")
 
 
-@app.route("/connect-actor-char")
+@app.route("/connect-actor-char", methods=["GET", "POST"])
 def link_actor_char():
     return render_template("LinkActorChar.html")
 
 
-@app.route("/connect-char-spec")
+@app.route("/connect-char-spec", methods=["GET", "POST"])
 def link_char_species():
     return render_template("LinkCharSpecies.html")
 
 
-@app.route("/connect-char-aff")
+@app.route("/connect-char-aff", methods=["GET", "POST"])
 def link_char_aff():
     return render_template("LinkCharAff.html")
 
 
-@app.route("/connect-char-series")
+@app.route("/connect-char-series", methods=["GET", "POST"])
 def link_char_series():
     return render_template("LinkCharSeries.html")
 
 
-@app.route("/connect-location")
+@app.route("/connect-location", methods=["GET", "POST"])
 def link_to_location():
     return render_template("LinkCharSeriesLocation.html")
 
