@@ -166,27 +166,27 @@ def add_actor():
 
 @app.route("/connect-actor-char")
 def link_actor_char():
-    return render_template("")
+    return render_template("LinkActorChar.html")
 
 
 @app.route("/connect-char-spec")
 def link_char_species():
-    return render_template("")
+    return render_template("LinkCharSpecies.html")
 
 
 @app.route("/connect-char-aff")
 def link_char_aff():
-    return render_template("")
+    return render_template("LinkCharAff.html")
 
 
 @app.route("/connect-char-series")
 def link_char_series():
-    return render_template("")
+    return render_template("LinkCharSeries.html")
 
 
 @app.route("/connect-location")
 def link_to_location():
-    return render_template("")
+    return render_template("LinkCharSeriesLocation.html")
 
 
 @app.route("/create-table")
