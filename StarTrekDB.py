@@ -199,11 +199,11 @@ def add_character():
         res = execute_query(db, query, data)
 
         query = f"SELECT id, fname, lname, title FROM characters " \
-                f"WHERE fname = {first_name}"
+                f"WHERE fname = '{first_name}'"
         if last_name:
-            query += " AND lname = " + last_name
+            query += f" AND lname = '{last_name}'"
         if title:
-            query += " AND title = " + title
+            query += f" AND title = '{title}'"
         query += ";"
 
         res = execute_query(db, query).fetchone()
