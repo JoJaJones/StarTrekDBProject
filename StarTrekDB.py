@@ -199,7 +199,7 @@ def add_character():
         res = execute_query(db, query, data)
 
         query = "SELECT id, fname, lname, title FROM characters"
-        res = execute_query(db, query)
+        res = next(execute_query(db, query))
 
         species = form.sixth_field.data
         form.sixth_field.data = []
