@@ -169,8 +169,6 @@ def add_character():
     species_list = []
     for species in res:
         species_list.append((species[0], species[1]))
-        print(species)
-    print(species_list)
     form.sixth_field.choices = species_list
     display_species = len(species_list) > 0
     columns.append("Species")
@@ -195,10 +193,33 @@ def add_character():
         form.fourth_field.data = ""
         bio = form.fifth_field.data
         form.fifth_field.data = ""
+
+        query = "INSERT INTO characters(fname, lname, title, description, biography) VALUES (%s, %s, %s, %s, %s)"
+        data = (first_name, last_name, title, desc, bio)
+        res = execute_query(db, query, data)
+
+        query = "SELECT id, fname, lname, title FROM characters"
+        res = execute_query(db, query)
+
         species = form.sixth_field.data
-        print(type(species), species)
+        form.sixth_field.data = []
+        query_template = "INSERT INTO characters_species(cid, sid) VALUES (%s, %s)"
+        for spec_id in species:
+            link_tables(query_template, db, res[0], spec_id)
+
         series = form.seventh_field.data
-        print(type(series), series)
+        form.seventh_field.data = []
+        query_template = "INSERT INTO characters_series(cid, sid) VALUES (%s, %s)"
+        for ser_id in series:
+            link_tables(query_template, db, res[0], ser_id)
+
+    query = "SELECT id, fname, lname, title, description, biography FROM characters ORDER BY name"
+    res = execute_query(db, query)
+
+    for item in res:
+        row_id = item[0]
+        item = list(item[1:])
+        query_res.append(Row(row_id, item))
 
     return render_template("add_char_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
@@ -281,3 +302,12 @@ def sanitize_date(date_dict: dict):
 
     return True
 
+
+def link_tables(query_template, connection, id_one, id_two, id_three=None):
+    data = [id_one, id_two]
+    if id_three is not None:
+        data += [id_three]
+
+    data = tuple(data)
+
+    execute_query(connection, query_template, data)
