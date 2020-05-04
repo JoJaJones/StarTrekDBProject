@@ -181,20 +181,20 @@ def add_character():
 
     query = "SELECT id, name FROM species ORDER BY name"
     res = execute_query(db, query)
-    species_list = [(None, "None")]
+    species_list = []
     for species in res:
         species_list.append((species[0], species[1]))
     form.sixth_field.choices = species_list
-    display_species = len(species_list) > 1
+    display_species = len(species_list) > 0
     columns.append("Species")
 
     query = "SELECT id, name FROM series ORDER BY name"
     res = execute_query(db, query)
-    series_list = [(None, "None")]
+    series_list = []
     for series in res:
         series_list.append((series[0], series[1]))
     form.seventh_field.choices = series_list
-    display_series = len(series_list) > 1
+    display_series = len(series_list) > 0
     columns.append("Series")
 
     return render_template("add_char_form.html", form=form, query_res=query_res,
