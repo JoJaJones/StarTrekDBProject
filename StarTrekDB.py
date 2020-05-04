@@ -54,7 +54,7 @@ def add_species():
     if "delete_no" in request.args:
         delete_row(columns[0].lower(), db, request.args["delete_no"])
 
-    query = "SELECT id, name FROM species"
+    query = "SELECT id, name FROM species ORDER BY name"
     res = execute_query(db, query)
 
     for item in res:
@@ -84,7 +84,7 @@ def add_affiliation():
     if "delete_no" in request.args:
         delete_row(columns[0].lower(), db, request.args["delete_no"])
 
-    query = "SELECT id, name FROM affiliations"
+    query = "SELECT id, name FROM affiliations ORDER BY name"
     res = execute_query(db, query)
 
     for item in res:
@@ -92,7 +92,7 @@ def add_affiliation():
 
     return render_template("single_field_add_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
-                           header="Add a new affiliation to the database", target="add-affiliations")
+                           header="Add New Affiliation", target="add-affiliations")
 
 
 @app.route("/add-series", methods=["GET", "POST"])
@@ -127,7 +127,7 @@ def add_series():
     if "delete_no" in request.args:
         delete_row(columns[0].lower(), db, request.args["delete_no"])
 
-    query = "SELECT id, name, start_date, end_date FROM series"
+    query = "SELECT id, name, start_date, end_date FROM series ORDER BY name"
     res = execute_query(db, query)
 
     for item in res:
@@ -143,7 +143,7 @@ def add_series():
 
     return render_template("triple_field_add_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
-                           header="Add a new series to the database", target="add-series")
+                           header="Add New Series", target="add-series")
 
 
 @app.route("/add-location", methods=["GET", "POST"])
@@ -158,7 +158,49 @@ def add_location():
 
 @app.route("/add-character", methods=["GET", "POST"])
 def add_character():
-    return render_template("AddChar.html")
+    form = CharacterForm()
+    query_res = []
+    db = connect_to_database()
+    columns = ["First Name", "Last Name", "Title"]
+
+    if form.validate_on_submit():
+        first_name = form.first_field.data
+        form.first_field.data = ""
+        last_name = form.second_field.data
+        form.second_field.data = ""
+        title = form.third_field.data
+        form.third_field.data = ""
+        desc = form.fourth_field.data
+        form.fourth_field.data = ""
+        bio = form.fifth_field.data
+        form.fifth_field.data = ""
+        species = form.sixth_field.data
+        print(type(species), species)
+        series = form.seventh_field.data
+        print(type(series), series)
+
+    query = "SELECT id, name FROM species ORDER BY name"
+    res = execute_query(db, query)
+    species_list = [(None, "None")]
+    for species in res:
+        species_list.append((species[0], species[1]))
+    form.sixth_field = species_list
+    display_species = len(species_list) > 1
+    columns.append("Species")
+
+    query = "SELECT id, name FROM series ORDER BY name"
+    res = execute_query(db, query)
+    series_list = [(None, "None")]
+    for series in res:
+        series_list.append((series[0], series[1]))
+    form.seventh_field_field.choices = series_list
+    display_series = len(series_list) > 1
+    columns.append("Series")
+
+    return render_template("add_char_form.html", form=form, query_res=query_res,
+                           column_names=columns, query_has_value=(len(query_res) > 0),
+                           header="Add New Character", display_species=display_species,
+                           display_series=display_series)
 
 
 @app.route("/add-actor", methods=["GET", "POST"])

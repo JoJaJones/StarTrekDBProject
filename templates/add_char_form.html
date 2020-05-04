@@ -1,0 +1,24 @@
+{% extends "single_table_display.html" %}
+
+{% block content_form %}
+<div>
+    <fieldset>
+        <legend>{{ header}}</legend>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <p>{{ form.first_field.label }}{{ form.first_field() }}</p>
+            <p>{{ form.second_field.label }}{{ form.second_field() }}</p>
+            <p>{{ form.third_field.label }}{{ form.third_field() }}</p>
+            <p>{{ form.fourth_field.label }}{{ form.fourth_field() }}</p>
+            <p>{{ form.fifth_field.label }}{{ form.fifth_field() }}</p>
+            {% if display_species %}
+            <p>{{ form.sixth_field.label }}{{ form.sixth_field() }}</p>
+            {% endif %}
+            {% if display_series %}
+            <p>{{ form.seventh_field.label }}{{ form.seventh_field() }}</p>
+            {% endif %}
+            <p>{{ form.submit() }}</p>
+        </form>
+    </fieldset>
+</div>
+{% endblock %}

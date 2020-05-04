@@ -53,14 +53,14 @@ class SeriesForm(FlaskForm):
 
 
 class CharacterForm(FlaskForm):
-    first_field = StringField()
-    second_field = StringField()
-    third_field = StringField()
-    fourth_field = TextAreaField()
-    fifth_field = TextAreaField()
-    sixth_field = SelectMultipleField(choices=1)
-    seventh_field = SelectMultipleField(choices=1)
-    add_location = SubmitField("Add Location to Character")
+    first_field = StringField("First Name: ")
+    second_field = StringField("Last Name: ", validators=[validators.Optional()])
+    third_field = StringField("Title: ", validators=[validators.Optional()])
+    fourth_field = TextAreaField("Description: ", validators=[validators.Optional()])
+    fifth_field = TextAreaField("Biography: ", validators=[validators.Optional()])
+    sixth_field = SelectMultipleField("Species: ", choices=1, validators=[validators.Optional()])
+    seventh_field = SelectMultipleField("Affiliations: ", choices=1, validators=[validators.Optional()])
+    # add_location = SubmitField("Add Location to Character")
     submit = SubmitField("Submit")
 
 
