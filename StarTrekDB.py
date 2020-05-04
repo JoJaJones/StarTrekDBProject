@@ -193,7 +193,7 @@ def add_character():
     series_list = [(None, "None")]
     for series in res:
         series_list.append((series[0], series[1]))
-    form.seventh_field_field.choices = series_list
+    form.seventh_field.choices = series_list
     display_series = len(series_list) > 1
     columns.append("Series")
 
