@@ -1,7 +1,9 @@
 SECRET = "SJootneelso"
-TABLES_LIST = ["characters", "affiliations", "species", "locations",
+TABLES_LIST = ["characters", "affiliations", "species", "locations", "series",
                "actors", "characters_species", "characters_affiliations", "characters_series",
                "characters_series_locations"]
+
+
 TABLES = {
     "characters": "CREATE TABLE characters ("
                   "id int(11) NOT NULL AUTO_INCREMENT,"
@@ -30,6 +32,19 @@ TABLES = {
 
     "species": "CREATE TABLE species ("
                "id int(11) NOT NULL AUTO_INCREMENT,"
-               "name varchar(11) NOT NULL,"
-               "PRIMARY KEY (id))engine=innoDB;"
+               "name varchar(255) NOT NULL,"
+               "PRIMARY KEY (id))engine=innoDB;",
+
+    "locations": "CREATE TABLE locations ("
+                 "id int(11) NOT NULL AUTO_INCREMENT,"
+                 "name varchar(255) NOT NULL,"
+                 "type varchar(255),"
+                 "PRIMARY KEY (id))engine=innoDB;",
+
+    "series": "CREATE TABLE series ("
+              "id int(11) NOT NULL AUTO_INCREMENT,"
+              "name varchar(255) NOT NULL,"
+              "start_date DATE DEFAULT NULL,"
+              "end_date DATE DEFAULT NULL,"
+              "PRIMARY KEY (id))engine=innoDB;",
 }

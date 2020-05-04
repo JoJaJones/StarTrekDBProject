@@ -1,0 +1,8 @@
+{% extends "core_content.html" %}
+
+{% block content %}
+    {% block inner_content %}
+    {% endblock %}
+
+    <p><a href="{{ url_for('load_home')}}">Main Page</a></p>
+{% endblock %}
