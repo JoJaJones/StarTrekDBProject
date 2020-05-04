@@ -1,9 +1,12 @@
 {% extends "non_landing_page.html" %}
 
 {% block inner_content %}
-<form action="POST"></p>
-    <p><label for="char_name"></p>Character Name: </label><input type="text"name = "char_name"></p>
-    <p><label for="affiliation_name"></p>Affiliation Name: </label><input type="text"name = "affiliation_name"></p>
-    <p><input type="submit"></p>
-</form>
+<fieldset>
+    <legend>Enter a Character and Affiliation to link</legend>
+    <form action="POST">
+        <p><label for="char_name">Character Name: </label><input type="text"name = "char_name"></p>
+        <p><label for="affiliation_name">Affiliation Name: </label><input type="text"name = "affiliation_name"></p>
+        <p><input type="submit"></p>
+    </form>
+</fieldset>
 {% endblock %}

@@ -1,10 +1,13 @@
 {% extends "non_landing_page.html" %}
 
 {% block inner_content %}
-<form action="POST"></p>
-    <p><label for="char_name"></p>Character Name: </label><input type="text"name = "char_name"></p>
-    <p><label for="series_name"></p>Series Name: </label><input type="text"name = "series_name"></p>
-    <p><label for="location_name"></p>Location Name: </label><input type="text"name = "location_name"></p>
-    <p><input type="submit"></p>
-</form>
+<fieldset>
+    <legend>Enter a Character/Series combination to link to a Location</legend>
+    <form action="POST">
+        <p><label for="char_name">Character Name: </label><input type="text"name = "char_name"></p>
+        <p><label for="series_name">Series Name: </label><input type="text"name = "series_name"></p>
+        <p><label for="location_name">Location Name: </label><input type="text"name = "location_name"></p>
+        <p><input type="submit"></p>
+    </form>
+</fieldset>
 {% endblock %}

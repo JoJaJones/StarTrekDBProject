@@ -1,0 +1,14 @@
+table {
+    border-style:solid;
+}
+
+th {
+    border-style: solid;
+    width: 150px;
+    border-color: black;
+    text-align: center;
+}
+
+input {
+    border-radius: 3px;
+}
