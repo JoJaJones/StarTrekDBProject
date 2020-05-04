@@ -184,7 +184,7 @@ def add_character():
     species_list = [(None, "None")]
     for species in res:
         species_list.append((species[0], species[1]))
-    form.sixth_field = species_list
+    form.sixth_field.choices = species_list
     display_species = len(species_list) > 1
     columns.append("Species")
 
