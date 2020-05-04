@@ -151,6 +151,7 @@ def add_location():
     form = LocationForm()
     form.first_field.label = "Location Name: "
     form.second_field.label = "Location Type: "
+    print(form.second_field.choices)
     return render_template("double_field_add_form.html", form=form,
                            column_names=["Name", "Type"], query_has_value=False,
                            header="Add New Location", target="add-location")
