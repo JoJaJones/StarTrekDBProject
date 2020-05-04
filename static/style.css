@@ -13,6 +13,6 @@ input {
     border-radius: 3px;
 }
 
-.delete_button{
+input.delete_button{
     width: 100%;
 }
