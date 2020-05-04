@@ -1,0 +1,38 @@
+{% extends "non_landing_page.html" %}
+
+{% block inner_content %}
+  <!-- Link back to Main Page -->
+  <div style="margin-bottom: 1rem">
+    <a class="link" href="index.html">Back to Main Page</a>
+  </div>
+  <!-- Form to Submit a New Location -->
+  <div style="margin-bottom: 2rem; width: 700px;">    
+    <form class="form">
+      <fieldset>
+        <legend>Enter a New Location</legend>
+        <label for="type">Type:</label><br>
+        <select name="type" id="typeInput" style="margin:0.3rem 0 0.3rem 0;">
+          <option value="planet">planet</option>
+          <option value="ship">ship</option>
+          <option value="station">station</option>
+        </select><br>
+        <label for="name">Name:</label><br>
+        <input type="text" name="name" id="nameInput" required="required" class="input" style="margin-left:0px;width:200px"><br>        
+        <input id="addLocationSubmit" type="submit" style="margin:0.5rem 0 0.2rem;">
+      </fieldset>
+    </form>
+  </div>
+  <!-- Table of Existing Locations -->
+  <div>
+    <h3>Current Locations:</h3>
+    <table style="border-style:solid;">
+        <thead> 
+            <th style="border-style:solid; width: 150px; border-color: black; text-align: center;">Type</th> 
+            <th style="border-style:solid; width: 150px; border-color: black; text-align: center;">Name</th> 
+        </thead> 
+        <tbody>
+          <!-- Add row for each actor location in database  with edit/delete buttons -->
+        </tbody> 
+    </table> 
+  </div>
+{% endblock %}
