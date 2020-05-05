@@ -283,7 +283,7 @@ def index():
     return render_template("landing_page.html")
 
 
-@arr.route("/char-search")
+@app.route("/char-search")
 def search_char():
     return render_template("SearchChar.html")
 
