@@ -283,6 +283,10 @@ def index():
     return render_template("landing_page.html")
 
 
+@arr.route("/char-search")
+def search_char():
+    return render_template("SearchChar.html")
+
 def sanitze_input(user_input):
     pass
 
