@@ -8,12 +8,6 @@
     src: url("Federation.ttf");
 }
 
-nav#nav {
-    background-image: url("neven-krcmarek.jpg");
-	background-size: cover;
-	background-attachment: fixed;
-}
-
 body {
 	background-image: url("nasa-1.jpg");
 	background-size: cover;
@@ -46,7 +40,7 @@ input {
     border-radius: 3px;
 }
 
-input.delete_button{
+input.btn > btn-danger{
     width: 100%;
 }
 
