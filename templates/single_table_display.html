@@ -5,7 +5,7 @@
     {% block content_form %}
 
     {% endblock %}
-
+<div class="jumbotron bg-dark text-light">
     <form method="POST">
         {% if query_has_value %}
             <table>
@@ -28,5 +28,5 @@
             </table>
         {% endif %}
     </form>
-
+</div>
 {% endblock %}
