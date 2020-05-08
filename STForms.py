@@ -67,7 +67,7 @@ class CharacterForm(FlaskForm):
     fourth_field = TextAreaField("Description", validators=[validators.Optional()])
     fifth_field = TextAreaField("Biography", validators=[validators.Optional()])
     sixth_field = SelectMultipleField("Species", coerce=int, validators=[validators.Optional()])
-    seventh_field = SelectMultipleField("Affiliations", coerce=int, validators=[validators.Optional()])
+    seventh_field = SelectMultipleField("Series", coerce=int, validators=[validators.Optional()])
     # add_location = SubmitField("Add Location to Character")
     submit = SubmitField("Submit")
 
