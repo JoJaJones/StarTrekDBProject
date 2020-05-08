@@ -79,7 +79,7 @@ TABLES = {
 BASIC_SELECT_QUERIES = {
     SPEC: "SELECT id, name FROM species ORDER BY name",
     CHAR: "SELECT id, fname, lname, title FROM characters ORDER BY name",
-    AFF: "SELECT id, fname, lname, title FROM affiliations ORDER BY name",
+    AFF: "SELECT id, name FROM affiliations ORDER BY name",
     ACT: "SELECT id, fname, lname, birthday, imdb FROM actors ORDER BY name",
     SER: "SELECT id, name, start_date, end_date FROM series ORDER BY name",
     LOC: "SELECT id, name, type FROM locations ORDER BY name"
