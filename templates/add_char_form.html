@@ -7,8 +7,12 @@
         <form method="POST">
             {{ form.hidden_tag() }}
             <div class="row">
-            {{ form.first_field(class="form-control", placeholder="{{form.firs_field.label}}}") }}
-            {{ form.second_field(class="form-control", placeholer="{{ form.second_field.label }}") }}
+                <div class="col">
+                    {{ form.first_field(class="form-control", placeholder="{{form.first_field.label}}}") }}
+                </div>
+                <div class="col">
+                    {{ form.second_field(class="form-control", placeholer="{{ form.second_field.label }}") }}
+                </div>
             </div>
             {{ form.third_field.label }}{{ form.third_field() }}
             {{ form.fourth_field.label }}{{ form.fourth_field() }}
