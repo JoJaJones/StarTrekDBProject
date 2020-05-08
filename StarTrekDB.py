@@ -57,6 +57,12 @@ def route_function():
 
 @app.route("/create-all-tables")
 def init_DB():
+    """
+    function to delete all existing tables and create new ones. Requires a password passed to the
+    url in the pass argument to process the DB reset
+
+    :return:
+    """
     password = request.args.get("pass")
     result = "Invalid password"
     if password == "picard":
@@ -83,10 +89,16 @@ def init_DB():
 
 @app.route("/browse-species", methods=["GET", "POST"])
 def browse_species():
+    # create database connection
     db = connect_to_database()
+
+    # set table columns using the dictionary in constants
     columns = VIEW_COLUMNS[SPECIES]
 
+    # get results of query
     query_res = select_query(db, BASIC_SELECT_QUERIES[SPECIES], SPECIES)
+
+    # pass data necessary to generate table
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="", target="add-species")
@@ -118,10 +130,16 @@ def add_species():
 
 @app.route("/browse-affiliations", methods=["GET", "POST"])
 def browse_affiliations():
+    # create database connection
     db = connect_to_database()
+
+    # set table columns using the dictionary in constants
     columns = VIEW_COLUMNS[AFFILIATIONS]
 
+    # get results of query
     query_res = select_query(db, BASIC_SELECT_QUERIES[AFFILIATIONS], AFFILIATIONS)
+
+    # pass data necessary to generate table
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="", target="add-species")
@@ -154,10 +172,16 @@ def add_affiliation():
 
 @app.route("/browse-series", methods=["GET", "POST"])
 def browse_series():
+    # create database connection
     db = connect_to_database()
+
+    # set table columns using the dictionary in constants
     columns = VIEW_COLUMNS[SERIES]
 
+    # get results of query
     query_res = select_query(db, BASIC_SELECT_QUERIES[SERIES], SERIES)
+
+    # pass data necessary to generate table
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="", target="add-species")
@@ -205,10 +229,16 @@ def add_series():
 
 @app.route("/browse-locations", methods=["GET", "POST"])
 def browse_locations():
+    # create database connection
     db = connect_to_database()
+
+    # set table columns using the dictionary in constants
     columns = VIEW_COLUMNS[LOCATIONS]
 
+    # get results of query
     query_res = select_query(db, BASIC_SELECT_QUERIES[LOCATIONS], LOCATIONS)
+
+    # pass data necessary to generate table
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="", target="add-species")
@@ -232,9 +262,13 @@ def add_location():
 
 @app.route("/browse-characters", methods=["GET", "POST"])
 def browse_characters():
+    # create database connection
     db = connect_to_database()
+
+    # set table columns using the dictionary in constants
     columns = VIEW_COLUMNS[CHARACTERS][:]
 
+    # determine if species has data that might need to be displayed
     query = "SELECT id, name FROM species ORDER BY name"
     res = execute_query(db, query)
     species_list = []
@@ -244,6 +278,7 @@ def browse_characters():
     if display_species:
         columns.append("Species")
 
+    # determine if series has data that might need to be displayed
     query = "SELECT id, name FROM series ORDER BY name"
     res = execute_query(db, query)
     series_list = []
@@ -253,14 +288,16 @@ def browse_characters():
     if display_series:
         columns.append("Series")
 
+    # get results of query
     query_res = select_query(db, BASIC_SELECT_QUERIES[CHARACTERS], CHARACTERS)
-    for item in query_res:
+    for item in query_res:  # append blank spaces to characters if species and series exist
         # TODO add queries to set these values instead of adding a blank value to the data set
         if display_series:
             item.temp_char_buffer()
         if display_species:
             item.temp_char_buffer()
 
+    # pass data necessary to generate table
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="Add New Species", target="add-species")
