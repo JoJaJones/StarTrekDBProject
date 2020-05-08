@@ -15,6 +15,10 @@ body {
 	display: grid;
 }
 
+body.no-bg {
+    background-image: unset;
+}
+
 .body {
     height: 100vh;
     overflow: auto;
