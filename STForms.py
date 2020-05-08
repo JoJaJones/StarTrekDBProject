@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 from flask_wtf import FlaskForm
+from constants import CHAR, SPEC, SER, LOC, AFF, ACT
 from wtforms import (widgets, validators, StringField, SubmitField, RadioField, SelectMultipleField, FormField,
                      IntegerField, SelectField, DateField, TextAreaField, Form)
 
@@ -31,7 +32,14 @@ class Row:
         self.id = id
         self.data_type = data_type
         self.table_values = values
+        self.name = self.set_name()
         # self.form = DeleteForm()
+
+    def set_name(self):
+        if self.data_type == CHAR and len(self.table_values[1]) > 0:
+            self.name = self.table_values[1]
+        else:
+            self.name = self.table_values[0]
 
     def reformat_date(self, idx: int):
         temp_date = str(self.table_values[idx]).split("-")
