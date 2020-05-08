@@ -21,7 +21,7 @@
                         </tr>
                     </thead>
                     {% for item in query_res %}
-                        <tr>
+                        <tr onclick="{{ load_data_page(item)}}">
                             {% for cell in item.table_values %}
                                 <td class="align-middle">{{cell}}</td>
                             {% endfor %}

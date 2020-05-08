@@ -27,8 +27,9 @@ class SingleFieldForm(FlaskForm):
 
 
 class Row:
-    def __init__(self, id, values):
+    def __init__(self, id, values, data_type):
         self.id = id
+        self.data_type = data_type
         self.table_values = values
         # self.form = DeleteForm()
 

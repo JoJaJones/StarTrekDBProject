@@ -39,7 +39,7 @@ def browse_species():
     db = connect_to_database()
     columns = VIEW_COLUMNS[SPEC]
 
-    query_res = select_query(db, BASIC_SELECT_QUERIES[SPEC])
+    query_res = select_query(db, BASIC_SELECT_QUERIES[SPEC], SPEC)
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="", target="add-species")
@@ -63,7 +63,7 @@ def add_species():
     if "delete_no" in request.args:
         delete_row(SPEC, db, request.args["delete_no"])
 
-    query_res = select_query(db, BASIC_SELECT_QUERIES[SPEC])
+    query_res = select_query(db, BASIC_SELECT_QUERIES[SPEC], SPEC)
 
     return render_template("single_field_add_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
@@ -74,7 +74,7 @@ def browse_affiliations():
     db = connect_to_database()
     columns = VIEW_COLUMNS[AFF]
 
-    query_res = select_query(db, BASIC_SELECT_QUERIES[AFF])
+    query_res = select_query(db, BASIC_SELECT_QUERIES[AFF], AFF)
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="", target="add-species")
@@ -98,7 +98,7 @@ def add_affiliation():
     if "delete_no" in request.args:
         delete_row(AFF, db, request.args["delete_no"])
 
-    query_res = select_query(db, BASIC_SELECT_QUERIES[AFF])
+    query_res = select_query(db, BASIC_SELECT_QUERIES[AFF], AFF)
 
     return render_template("single_field_add_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
@@ -110,7 +110,7 @@ def browse_series():
     db = connect_to_database()
     columns = VIEW_COLUMNS[SER]
 
-    query_res = select_query(db, BASIC_SELECT_QUERIES[SER])
+    query_res = select_query(db, BASIC_SELECT_QUERIES[SER], SER)
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="", target="add-species")
@@ -146,7 +146,7 @@ def add_series():
     if "delete_no" in request.args:
         delete_row(SER, db, request.args["delete_no"])
 
-    query_res = select_query(db, BASIC_SELECT_QUERIES[SER])
+    query_res = select_query(db, BASIC_SELECT_QUERIES[SER], SER)
     for item in query_res:
         for i in range(1, 3):
             item.reformat_date(i)
@@ -161,7 +161,7 @@ def browse_locations():
     db = connect_to_database()
     columns = VIEW_COLUMNS[LOC]
 
-    query_res = select_query(db, BASIC_SELECT_QUERIES[LOC])
+    query_res = select_query(db, BASIC_SELECT_QUERIES[LOC], LOC)
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="", target="add-species")
@@ -177,7 +177,7 @@ def add_location():
     db = connect_to_database()
     print(form.second_field.choices)
 
-    query_res = select_query(db, BASIC_SELECT_QUERIES[LOC])
+    query_res = select_query(db, BASIC_SELECT_QUERIES[LOC], LOC)
     return render_template("add_location_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="Add New Location", target="add-location")
@@ -206,8 +206,9 @@ def browse_characters():
     if display_series:
         columns.append("Series")
 
-    query_res = select_query(db, BASIC_SELECT_QUERIES[CHAR])
+    query_res = select_query(db, BASIC_SELECT_QUERIES[CHAR], CHAR)
     for item in query_res:
+        # TODO add queries to set these values instead of adding a blank value to the data set
         if display_series:
             item.temp_char_buffer()
         if display_species:
@@ -287,8 +288,9 @@ def add_character():
     if "delete_no" in request.args:
         delete_row(CHAR, db, request.args["delete_no"])
 
-    query_res = select_query(db, BASIC_SELECT_QUERIES[CHAR])
+    query_res = select_query(db, BASIC_SELECT_QUERIES[CHAR], CHAR)
     for item in query_res:
+        # TODO add queries to set these values instead of adding a blank value to the data set
         if display_series:
             item.temp_char_buffer()
         if display_species:
@@ -306,7 +308,7 @@ def browse_actors():
     db = connect_to_database()
     columns = VIEW_COLUMNS[ACT]
 
-    query_res = select_query(db, BASIC_SELECT_QUERIES[ACT])
+    query_res = select_query(db, BASIC_SELECT_QUERIES[ACT], ACT)
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="Add New Species", target="add-species")
@@ -401,10 +403,14 @@ def delete_row(table_name, connection, row_num):
     res = execute_query(connection, query)
 
 
-def select_query(connection, query):
+def select_query(connection, query, data_type):
     query_res = []
     res = execute_query(connection, query)
     for item in res:
         query_res.append(Row(item[0], list(item[1:])))
 
     return query_res
+
+
+def load_data_page(row_item):
+    print(row_item, row_item.id)
