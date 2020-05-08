@@ -37,9 +37,9 @@ def init_DB():
 @app.route("/browse-species", methods=["GET", "POST"])
 def browse_species():
     db = connect_to_database()
-    columns = VIEW_COLUMNS[SPEC]
+    columns = VIEW_COLUMNS[SPECIES]
 
-    query_res = select_query(db, BASIC_SELECT_QUERIES[SPEC], SPEC)
+    query_res = select_query(db, BASIC_SELECT_QUERIES[SPECIES], SPECIES)
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="", target="add-species")
@@ -50,7 +50,7 @@ def add_species():
     form.first_field.label = "Species Name: "
     query_res = []
     db = connect_to_database()
-    columns = VIEW_COLUMNS[SPEC]
+    columns = VIEW_COLUMNS[SPECIES]
 
     if form.validate_on_submit():
         name = str(form.first_field.data)
@@ -61,9 +61,9 @@ def add_species():
         res = execute_query(db, query, data)
 
     if "delete_no" in request.args:
-        delete_row(SPEC, db, request.args["delete_no"])
+        delete_row(SPECIES, db, request.args["delete_no"])
 
-    query_res = select_query(db, BASIC_SELECT_QUERIES[SPEC], SPEC)
+    query_res = select_query(db, BASIC_SELECT_QUERIES[SPECIES], SPECIES)
 
     return render_template("single_field_add_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
@@ -72,9 +72,9 @@ def add_species():
 @app.route("/browse-affiliations", methods=["GET", "POST"])
 def browse_affiliations():
     db = connect_to_database()
-    columns = VIEW_COLUMNS[AFF]
+    columns = VIEW_COLUMNS[AFFILIATIONS]
 
-    query_res = select_query(db, BASIC_SELECT_QUERIES[AFF], AFF)
+    query_res = select_query(db, BASIC_SELECT_QUERIES[AFFILIATIONS], AFFILIATIONS)
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="", target="add-species")
@@ -85,7 +85,7 @@ def add_affiliation():
     form.first_field.label = "Affiliation Name: "
     query_res = []
     db = connect_to_database()
-    columns = VIEW_COLUMNS[AFF]
+    columns = VIEW_COLUMNS[AFFILIATIONS]
 
     if form.validate_on_submit():
         name = str(form.first_field.data)
@@ -96,9 +96,9 @@ def add_affiliation():
         res = execute_query(db, query, data)
 
     if "delete_no" in request.args:
-        delete_row(AFF, db, request.args["delete_no"])
+        delete_row(AFFILIATIONS, db, request.args["delete_no"])
 
-    query_res = select_query(db, BASIC_SELECT_QUERIES[AFF], AFF)
+    query_res = select_query(db, BASIC_SELECT_QUERIES[AFFILIATIONS], AFFILIATIONS)
 
     return render_template("single_field_add_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
@@ -108,9 +108,9 @@ def add_affiliation():
 @app.route("/browse-series", methods=["GET", "POST"])
 def browse_series():
     db = connect_to_database()
-    columns = VIEW_COLUMNS[SER]
+    columns = VIEW_COLUMNS[SERIES]
 
-    query_res = select_query(db, BASIC_SELECT_QUERIES[SER], SER)
+    query_res = select_query(db, BASIC_SELECT_QUERIES[SERIES], SERIES)
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="", target="add-species")
@@ -123,7 +123,7 @@ def add_series():
     form.third_field.label = "Series End Date"
 
     db = connect_to_database()
-    columns = VIEW_COLUMNS[SER]
+    columns = VIEW_COLUMNS[SERIES]
 
     if form.validate_on_submit():
         name = str(form.first_field.data)
@@ -144,9 +144,9 @@ def add_series():
         res = execute_query(db, query, data)
 
     if "delete_no" in request.args:
-        delete_row(SER, db, request.args["delete_no"])
+        delete_row(SERIES, db, request.args["delete_no"])
 
-    query_res = select_query(db, BASIC_SELECT_QUERIES[SER], SER)
+    query_res = select_query(db, BASIC_SELECT_QUERIES[SERIES], SERIES)
     for item in query_res:
         for i in range(1, 3):
             item.reformat_date(i)
@@ -159,9 +159,9 @@ def add_series():
 @app.route("/browse-locations", methods=["GET", "POST"])
 def browse_locations():
     db = connect_to_database()
-    columns = VIEW_COLUMNS[LOC]
+    columns = VIEW_COLUMNS[LOCATIONS]
 
-    query_res = select_query(db, BASIC_SELECT_QUERIES[LOC], LOC)
+    query_res = select_query(db, BASIC_SELECT_QUERIES[LOCATIONS], LOCATIONS)
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="", target="add-species")
@@ -172,12 +172,12 @@ def add_location():
     form = LocationForm()
     form.first_field.label = "Location Name"
     form.second_field.label = "Location Type"
-    columns = VIEW_COLUMNS[LOC]
+    columns = VIEW_COLUMNS[LOCATIONS]
 
     db = connect_to_database()
     print(form.second_field.choices)
 
-    query_res = select_query(db, BASIC_SELECT_QUERIES[LOC], LOC)
+    query_res = select_query(db, BASIC_SELECT_QUERIES[LOCATIONS], LOCATIONS)
     return render_template("add_location_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="Add New Location", target="add-location")
@@ -186,7 +186,7 @@ def add_location():
 @app.route("/browse-characters", methods=["GET", "POST"])
 def browse_characters():
     db = connect_to_database()
-    columns = VIEW_COLUMNS[CHAR][:]
+    columns = VIEW_COLUMNS[CHARACTERS][:]
 
     query = "SELECT id, name FROM species ORDER BY name"
     res = execute_query(db, query)
@@ -206,7 +206,7 @@ def browse_characters():
     if display_series:
         columns.append("Series")
 
-    query_res = select_query(db, BASIC_SELECT_QUERIES[CHAR], CHAR)
+    query_res = select_query(db, BASIC_SELECT_QUERIES[CHARACTERS], CHARACTERS)
     for item in query_res:
         # TODO add queries to set these values instead of adding a blank value to the data set
         if display_series:
@@ -224,7 +224,7 @@ def add_character():
     form = CharacterForm()
     query_res = []
     db = connect_to_database()
-    columns = VIEW_COLUMNS[CHAR][:]
+    columns = VIEW_COLUMNS[CHARACTERS][:]
     print(form.first_field.label.text)
 
     query = "SELECT id, name FROM species ORDER BY name"
@@ -286,9 +286,9 @@ def add_character():
             link_tables(query_template, db, res[0], ser_id)
 
     if "delete_no" in request.args:
-        delete_row(CHAR, db, request.args["delete_no"])
+        delete_row(CHARACTERS, db, request.args["delete_no"])
 
-    query_res = select_query(db, BASIC_SELECT_QUERIES[CHAR], CHAR)
+    query_res = select_query(db, BASIC_SELECT_QUERIES[CHARACTERS], CHARACTERS)
     for item in query_res:
         # TODO add queries to set these values instead of adding a blank value to the data set
         if display_series:
@@ -306,9 +306,9 @@ def add_character():
 @app.route("/browse-actors", methods=["GET", "POST"])
 def browse_actors():
     db = connect_to_database()
-    columns = VIEW_COLUMNS[ACT]
+    columns = VIEW_COLUMNS[ACTORS]
 
-    query_res = select_query(db, BASIC_SELECT_QUERIES[ACT], ACT)
+    query_res = select_query(db, BASIC_SELECT_QUERIES[ACTORS], ACTORS)
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="Add New Species", target="add-species")
@@ -346,6 +346,12 @@ def link_to_location():
 
 @app.route("/create-table")
 def create_table():
+    """
+    Function to create the table specified in the url table argument
+
+    :return:
+    """
+
     table = request.args.get("table")
     db = connect_to_database()
     query = f"DROP TABLE IF ExISTS {table};"
@@ -364,10 +370,20 @@ def index():
 def search_char():
     return render_template("SearchChar.html")
 
+
+# TODO implement function to prevent SQL injections as needed
 def sanitze_input(user_input):
     pass
 
+
 def sanitize_date(date_dict: dict):
+    """
+    Function to take the date values entered by the user and check their validity. If valid it returns True,
+    otherwise it sets the values to None and returns False
+
+    :param date_dict:
+    :return:
+    """
     month = date_dict["month"]
     day = date_dict["day"]
     year = date_dict["year"]
@@ -389,6 +405,20 @@ def sanitize_date(date_dict: dict):
 
 
 def link_tables(query_template, connection, id_one, id_two, id_three=None):
+    """
+    Function to create the connections in M:M relationships in the database
+    takes a string in the format:
+    INSERT INTO table_name(id_one_attribute_name, id_two_attribute_name) VALUES (%s, %s)
+    for the query and interpolates the data and calls the appropriate query
+
+
+    :param query_template:
+    :param connection:
+    :param id_one:
+    :param id_two:
+    :param id_three:
+    :return:
+    """
     data = [id_one, id_two]
     if id_three is not None:
         data += [id_three]
@@ -399,18 +429,39 @@ def link_tables(query_template, connection, id_one, id_two, id_three=None):
 
 
 def delete_row(table_name, connection, row_num):
+    """
+    Function to delete the selected row from the table
+
+    :param table_name:
+    :param connection:
+    :param row_num:
+    :return:
+    """
     query = f"DELETE FROM {table_name} WHERE id = {row_num}"
     res = execute_query(connection, query)
 
 
 def select_query(connection, query, data_type):
+    """
+    Function to perform the select query passed to it and return a list of row objects
+    representing the results of the query
+
+    :param connection:
+    :param query:
+    :param data_type:
+    :return:
+    """
+
+    # perform passed query
     query_res = []
     res = execute_query(connection, query)
+
+    # prepare and format the results
     for item in res:
         query_res.append(Row(item[0], list(item[1:]), data_type))
 
     return query_res
 
-
+# TODO implement
 def load_data_page(row_item):
     print(row_item, row_item.id)

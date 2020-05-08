@@ -1,20 +1,20 @@
 SECRET = "SJootneelso"
 
-CHAR = "characters"
-ACT = "actors"
-AFF = "affiliations"
-SPEC = "species"
-LOC = "locations"
-SER = "series"
+CHARACTERS = "characters"
+ACTORS = "actors"
+AFFILIATIONS = "affiliations"
+SPECIES = "species"
+LOCATIONS = "locations"
+SERIES = "series"
 
 
-TABLES_LIST = [CHAR, AFF, SPEC, LOC, SER,
-               ACT, "characters_species", "characters_affiliations", "characters_series",
+TABLES_LIST = [CHARACTERS, AFFILIATIONS, SPECIES, LOCATIONS, SERIES,
+               ACTORS, "characters_species", "characters_affiliations", "characters_series",
                "characters_series_locations"]
 
 
 TABLES = {
-    CHAR: "CREATE TABLE characters ("
+    CHARACTERS: "CREATE TABLE characters ("
                   "id int(11) NOT NULL AUTO_INCREMENT,"
                   "fname varchar(255) NOT NULL,"
                   "lname varchar(255) DEFAULT NULL,"
@@ -23,7 +23,7 @@ TABLES = {
                   "biography text DEFAULT NULL,"
                   "PRIMARY KEY(id))engine=innoDB;",
 
-    ACT: "CREATE TABLE actors ("
+    ACTORS: "CREATE TABLE actors ("
               "id int(11) NOT NULL AUTO_INCREMENT,"
               "fname varchar(255) NOT NULL,"
               "lname varchar(255) DEFAULT NULL,"
@@ -34,23 +34,23 @@ TABLES = {
               "ON DELETE CASCADE ON UPDATE CASCADE,"
               "PRIMARY KEY(id))engine=innoDB;",
 
-    AFF: "CREATE TABLE affiliations ("
+    AFFILIATIONS: "CREATE TABLE affiliations ("
                     "id int(11) NOT NULL AUTO_INCREMENT,"
                     "name varchar(255) NOT NULL,"
                     "PRIMARY KEY(id))engine=innoDB;",
 
-    SPEC: "CREATE TABLE species ("
+    SPECIES: "CREATE TABLE species ("
                "id int(11) NOT NULL AUTO_INCREMENT,"
                "name varchar(255) NOT NULL,"
                "PRIMARY KEY (id))engine=innoDB;",
 
-    LOC: "CREATE TABLE locations ("
+    LOCATIONS: "CREATE TABLE locations ("
                  "id int(11) NOT NULL AUTO_INCREMENT,"
                  "name varchar(255) NOT NULL,"
                  "type varchar(255),"
                  "PRIMARY KEY (id))engine=innoDB;",
 
-    SER: "CREATE TABLE series ("
+    SERIES: "CREATE TABLE series ("
               "id int(11) NOT NULL AUTO_INCREMENT,"
               "name varchar(255) NOT NULL,"
               "start_date DATE DEFAULT NULL,"
@@ -77,19 +77,19 @@ TABLES = {
 }
 
 BASIC_SELECT_QUERIES = {
-    SPEC: "SELECT id, name FROM species ORDER BY name",
-    CHAR: "SELECT id, fname, lname, title FROM characters ORDER BY fname",
-    AFF: "SELECT id, name FROM affiliations ORDER BY name",
-    ACT: "SELECT id, fname, lname, birthday, imdb FROM actors ORDER BY fname",
-    SER: "SELECT id, name, start_date, end_date FROM series ORDER BY name",
-    LOC: "SELECT id, name, type FROM locations ORDER BY name"
+    SPECIES: "SELECT id, name FROM species ORDER BY name",
+    CHARACTERS: "SELECT id, fname, lname, title FROM characters ORDER BY fname",
+    AFFILIATIONS: "SELECT id, name FROM affiliations ORDER BY name",
+    ACTORS: "SELECT id, fname, lname, birthday, imdb FROM actors ORDER BY fname",
+    SERIES: "SELECT id, name, start_date, end_date FROM series ORDER BY name",
+    LOCATIONS: "SELECT id, name, type FROM locations ORDER BY name"
 }
 
 VIEW_COLUMNS = {
-    SPEC: ["Species"],
-    CHAR: ["First Name", "Last Name", "Title"],
-    AFF: ["Affiliation"],
-    SER: ["Series", "Start Date", "End Date"],
-    LOC: ["Name", "Type"],
-    ACT: ["First Name", "Last Name", "Birthday", "IMDB"]
+    SPECIES: ["Species"],
+    CHARACTERS: ["First Name", "Last Name", "Title"],
+    AFFILIATIONS: ["Affiliation"],
+    SERIES: ["Series", "Start Date", "End Date"],
+    LOCATIONS: ["Name", "Type"],
+    ACTORS: ["First Name", "Last Name", "Birthday", "IMDB"]
 }
