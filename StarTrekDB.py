@@ -38,6 +38,7 @@ def init_DB():
 def browse_species():
     db = connect_to_database()
     columns = VIEW_COLUMNS[SPEC]
+
     query_res = select_query(db, BASIC_SELECT_QUERIES["species"])
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
@@ -62,11 +63,7 @@ def add_species():
     if "delete_no" in request.args:
         delete_row(columns[0].lower(), db, request.args["delete_no"])
 
-    query = "SELECT id, name FROM species ORDER BY name"
-    res = execute_query(db, query)
-
-    for item in res:
-        query_res.append(Row(item[0], item[1:]))
+    query_res = select_query(db, BASIC_SELECT_QUERIES[SPEC])
 
     return render_template("single_field_add_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
@@ -92,11 +89,7 @@ def add_affiliation():
     if "delete_no" in request.args:
         delete_row(columns[0].lower(), db, request.args["delete_no"])
 
-    query = "SELECT id, name FROM affiliations ORDER BY name"
-    query_res = select_query(db, "affiliations", ["id", "name"], None, "name")
-
-
-
+    query_res = select_query(db, BASIC_SELECT_QUERIES[AFF])
 
     return render_template("single_field_add_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
@@ -110,7 +103,7 @@ def add_series():
     form.second_field.label = "Series Start Date: "
 
     form.third_field.label = "Series End Date: "
-    query_res = []
+
     db = connect_to_database()
     columns = VIEW_COLUMNS[SER]
 
@@ -135,19 +128,10 @@ def add_series():
     if "delete_no" in request.args:
         delete_row(columns[0].lower(), db, request.args["delete_no"])
 
-    query = "SELECT id, name, start_date, end_date FROM series ORDER BY name"
-    res = execute_query(db, query)
-
-    for item in res:
-        row_id = item[0]
-        item = list(item[1:])
-
+    query_res = select_query(db, BASIC_SELECT_QUERIES[SER])
+    for item in query_res:
         for i in range(1, 3):
-            temp_date = str(item[i]).split("-")
-            temp_date = temp_date[1:] + [temp_date[0]]
-            item[i] = "-".join(temp_date)
-
-        query_res.append(Row(row_id, item))
+            item.reformat_date(i)
 
     return render_template("triple_field_add_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
@@ -160,9 +144,13 @@ def add_location():
     form.first_field.label = "Location Name: "
     form.second_field.label = "Location Type: "
     columns = VIEW_COLUMNS[LOC]
+
+    db = connect_to_database()
     print(form.second_field.choices)
-    return render_template("double_field_add_form.html", form=form,
-                           column_names=columns, query_has_value=False,
+
+    query_res = select_query(db, BASIC_SELECT_QUERIES[LOC])
+    return render_template("double_field_add_form.html", form=form, query_res=query_res,
+                           column_names=columns, query_has_value=(len(query_res) > 0),
                            header="Add New Location", target="add-location")
 
 
@@ -232,13 +220,9 @@ def add_character():
     if "delete_no" in request.args:
         delete_row("characters", db, request.args["delete_no"])
 
-    query = "SELECT id, fname, lname, title FROM characters ORDER BY fname"
-    res = execute_query(db, query)
-
-    for item in res:
-        row_id = item[0]
-        item = list(item[1:]) + ["",""]
-        query_res.append(Row(row_id, item))
+    query_res = select_query(db, BASIC_SELECT_QUERIES[CHAR])
+    for item in query_res:
+        item.temp_char_buffer()
 
     return render_template("add_char_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),

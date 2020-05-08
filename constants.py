@@ -82,7 +82,7 @@ BASIC_SELECT_QUERIES = {
     AFF: "SELECT id, fname, lname, title FROM affiliations ORDER BY name",
     ACT: "SELECT id, fname, lname, birthday, imdb FROM actors ORDER BY name",
     SER: "SELECT id, name, start_date, end_date FROM series ORDER BY name",
-    LOC: "SELECT id, type, name FROM locations ORDER BY name"
+    LOC: "SELECT id, name, type FROM locations ORDER BY name"
 }
 
 VIEW_COLUMNS = {

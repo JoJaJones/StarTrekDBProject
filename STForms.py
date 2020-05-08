@@ -32,6 +32,14 @@ class Row:
         self.table_values = values
         # self.form = DeleteForm()
 
+    def reformat_date(self, idx: int):
+        temp_date = str(self.table_values[idx]).split("-")
+        temp_date = temp_date[1:] + [temp_date[0]]
+        self.table_values[idx] = "-".join(temp_date)
+
+    def temp_char_buffer(self):
+        self.table_values += ["", ""]
+
 
 class DeleteForm(FlaskForm):
     submit = SubmitField("Delete")
