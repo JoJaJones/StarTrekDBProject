@@ -213,7 +213,7 @@ def browse_characters():
             item.temp_char_buffer()
         if display_species:
             item.temp_char_buffer()
-            
+
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="Add a new species to the database", target="add-species")
