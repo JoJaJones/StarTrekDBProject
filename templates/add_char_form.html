@@ -1,24 +1,33 @@
-{% extends "single_table_display.html" %}
+{% extends "form_template.html" %}
 
-{% block content_form %}
-<div>
-    <fieldset>
-        <legend>{{ header}}</legend>
-        <form method="POST">
-            {{ form.hidden_tag() }}
-            <p>{{ form.first_field.label }}{{ form.first_field() }}</p>
-            <p>{{ form.second_field.label }}{{ form.second_field() }}</p>
-            <p>{{ form.third_field.label }}{{ form.third_field() }}</p>
-            <p>{{ form.fourth_field.label }}{{ form.fourth_field() }}</p>
-            <p>{{ form.fifth_field.label }}{{ form.fifth_field() }}</p>
-            {% if display_species %}
-            <p>{{ form.sixth_field.label }}{{ form.sixth_field() }}</p>
-            {% endif %}
-            {% if display_series %}
-            <p>{{ form.seventh_field.label }}{{ form.seventh_field() }}</p>
-            {% endif %}
-            <p>{{ form.submit() }}</p>
-        </form>
-    </fieldset>
-</div>
+{% block form_specifics %}
+    <div class="form-row">
+        <div class="col-md-4">
+            {{ form.first_field(class="form-control", placeholder=form.first_field.label.text) }}
+        </div>
+        <div class="col-md-4">
+            {{ form.second_field(class="form-control", placeholder=form.second_field.label.text) }}
+        </div>
+        <div class="col-md-4">
+            {{ form.third_field(class="form-control", placeholder=form.third_field.label.text) }}
+        </div>
+    </div>
+    <div class="form-group">
+        {{ form.fourth_field.label }}{{ form.fourth_field(class="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ form.fifth_field.label }}{{ form.fifth_field(class="form-control") }}
+    </div>
+    <div class="form-row">
+        {% if display_species %}
+            <div class="form-group col-md-6">
+                {{ form.sixth_field.label }}{{ form.sixth_field(class="form-control") }}
+            </div>
+        {% endif %}
+        {% if display_series %}
+            <div class="form-group col-md-6">
+                {{ form.seventh_field.label }}{{ form.seventh_field(class="form-control") }}
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}

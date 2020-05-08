@@ -1,8 +1,9 @@
 {% extends "non_landing_page.html" %}
 
 {% block inner_content %}
+<div class="jumbotron bg-dark text-light">
   <!-- Form to Submit a New Actor -->
-  <div style="margin-bottom: 2rem; width: 700px;">    
+  <div class="jumbotron bg-dark text-light" style="margin-bottom: 2rem; width: 700px;">
     <form class="form">
       <fieldset>
         <legend>Enter a New Actor</legend>
@@ -14,12 +15,12 @@
         <input type="date" name="birthday" id="birthdayInput" class="input" style="margin-left:0px"><br>
         <label for="imdb">IMDB Page:</label><br>
         <input type="text" name="imdb" id="imdbInput" class="input" style="margin-left:0px;width:600px"><br>
-        <input id="addActorSubmit" type="submit" style="margin:0.5rem 0 0.2rem;">
+        <input id="addActorSubmit" class="btn btn-primary" type="submit" style="margin:0.5rem 0 0.2rem;">
       </fieldset>
     </form>
   </div>
   <!-- Table of Existing Actors -->
-  <div>
+  <div class="jumbotron bg-dark text-light">
     <h3>Current Actors:</h3>
     <table style="border-style:solid;">
         <thead> 
@@ -30,8 +31,22 @@
         </thead> 
         <tbody>
           <!-- Add row for each actor currently in database  with edit/delete buttons -->
+            <tr>
+                <td>William</td>
+                <td>Shatner</td>
+                <td>something</td>
+                <td>something</td>
+                <td><input type="button" class="btn btn-danger" value="Delete William Shatner"></td>
+            </tr>
+            <tr>
+                <td>Leonard</td>
+                <td>Nimoy</td>
+                <td>something</td>
+                <td>something</td>
+                <td><input type="submit" class="btn btn-danger" value="Delete Leornad Nimoy"></td>
+            </tr>
         </tbody> 
     </table> 
   </div>
-
+</div>
 {% endblock %}

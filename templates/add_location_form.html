@@ -1,0 +1,14 @@
+{% extends "form_template.html" %}
+
+{% block form_specifics %}
+
+    <div class="form-row">
+        <div class="form-group col-md-8">
+            {{ form.first_field.label }}{{ form.first_field(class="form-control", placeholder=form.first_field.label.text) }}
+        </div>
+        <div class="form-group col-md-4">
+            {{ form.second_field.label }}{{ form.second_field(class="form-control", placeholder=form.second_field.label.text) }}
+        </div>
+    </div>
+
+{% endblock %}

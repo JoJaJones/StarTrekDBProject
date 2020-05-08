@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from config import SECRET, TABLES, TABLES_LIST
+from constants import *
 from db_connector.db_connector import connect_to_database, execute_query
 from STForms import *
 
@@ -34,6 +34,15 @@ def init_DB():
 
     return result
 
+@app.route("/browse-species", methods=["GET", "POST"])
+def browse_species():
+    db = connect_to_database()
+    columns = VIEW_COLUMNS[SPEC]
+
+    query_res = select_query(db, BASIC_SELECT_QUERIES[SPEC], SPEC)
+    return render_template("single_table_display.html", form=False, query_res=query_res,
+                           column_names=columns, query_has_value=(len(query_res) > 0),
+                           header="", target="add-species")
 
 @app.route("/add-species", methods=["GET", "POST"])
 def add_species():
@@ -41,7 +50,7 @@ def add_species():
     form.first_field.label = "Species Name: "
     query_res = []
     db = connect_to_database()
-    columns = ["Species"]
+    columns = VIEW_COLUMNS[SPEC]
 
     if form.validate_on_submit():
         name = str(form.first_field.data)
@@ -52,18 +61,23 @@ def add_species():
         res = execute_query(db, query, data)
 
     if "delete_no" in request.args:
-        delete_row(columns[0].lower(), db, request.args["delete_no"])
+        delete_row(SPEC, db, request.args["delete_no"])
 
-    query = "SELECT id, name FROM species ORDER BY name"
-    res = execute_query(db, query)
-
-    for item in res:
-        query_res.append(Row(item[0], item[1:]))
+    query_res = select_query(db, BASIC_SELECT_QUERIES[SPEC], SPEC)
 
     return render_template("single_field_add_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
-                           header="Add a new species to the database", target="add-species")
+                           header="Add New Species", target="add-species")
 
+@app.route("/browse-affiliations", methods=["GET", "POST"])
+def browse_affiliations():
+    db = connect_to_database()
+    columns = VIEW_COLUMNS[AFF]
+
+    query_res = select_query(db, BASIC_SELECT_QUERIES[AFF], AFF)
+    return render_template("single_table_display.html", form=False, query_res=query_res,
+                           column_names=columns, query_has_value=(len(query_res) > 0),
+                           header="", target="add-species")
 
 @app.route("/add-affiliations", methods=["GET", "POST"])
 def add_affiliation():
@@ -71,7 +85,7 @@ def add_affiliation():
     form.first_field.label = "Affiliation Name: "
     query_res = []
     db = connect_to_database()
-    columns = ["Affiliation"]
+    columns = VIEW_COLUMNS[AFF]
 
     if form.validate_on_submit():
         name = str(form.first_field.data)
@@ -82,29 +96,34 @@ def add_affiliation():
         res = execute_query(db, query, data)
 
     if "delete_no" in request.args:
-        delete_row(columns[0].lower(), db, request.args["delete_no"])
+        delete_row(AFF, db, request.args["delete_no"])
 
-    query = "SELECT id, name FROM affiliations ORDER BY name"
-    res = execute_query(db, query)
-
-    for item in res:
-        query_res.append(Row(item[0], item[1:]))
+    query_res = select_query(db, BASIC_SELECT_QUERIES[AFF], AFF)
 
     return render_template("single_field_add_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="Add New Affiliation", target="add-affiliations")
 
 
+@app.route("/browse-series", methods=["GET", "POST"])
+def browse_series():
+    db = connect_to_database()
+    columns = VIEW_COLUMNS[SER]
+
+    query_res = select_query(db, BASIC_SELECT_QUERIES[SER], SER)
+    return render_template("single_table_display.html", form=False, query_res=query_res,
+                           column_names=columns, query_has_value=(len(query_res) > 0),
+                           header="", target="add-species")
+
 @app.route("/add-series", methods=["GET", "POST"])
 def add_series():
     form = SeriesForm()
-    form.first_field.label = "Series Name: "
-    form.second_field.label = "Series Start Date: "
+    form.second_field.label = "Series Start Date"
 
-    form.third_field.label = "Series End Date: "
-    query_res = []
+    form.third_field.label = "Series End Date"
+
     db = connect_to_database()
-    columns = ["Series", "Start Date", "End Date"]
+    columns = VIEW_COLUMNS[SER]
 
     if form.validate_on_submit():
         name = str(form.first_field.data)
@@ -125,36 +144,79 @@ def add_series():
         res = execute_query(db, query, data)
 
     if "delete_no" in request.args:
-        delete_row(columns[0].lower(), db, request.args["delete_no"])
+        delete_row(SER, db, request.args["delete_no"])
 
-    query = "SELECT id, name, start_date, end_date FROM series ORDER BY name"
-    res = execute_query(db, query)
-
-    for item in res:
-        row_id = item[0]
-        item = list(item[1:])
-
+    query_res = select_query(db, BASIC_SELECT_QUERIES[SER], SER)
+    for item in query_res:
         for i in range(1, 3):
-            temp_date = str(item[i]).split("-")
-            temp_date = temp_date[1:] + [temp_date[0]]
-            item[i] = "-".join(temp_date)
+            item.reformat_date(i)
 
-        query_res.append(Row(row_id, item))
-
-    return render_template("triple_field_add_form.html", form=form, query_res=query_res,
+    return render_template("add_series_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="Add New Series", target="add-series")
+
+
+@app.route("/browse-locations", methods=["GET", "POST"])
+def browse_locations():
+    db = connect_to_database()
+    columns = VIEW_COLUMNS[LOC]
+
+    query_res = select_query(db, BASIC_SELECT_QUERIES[LOC], LOC)
+    return render_template("single_table_display.html", form=False, query_res=query_res,
+                           column_names=columns, query_has_value=(len(query_res) > 0),
+                           header="", target="add-species")
 
 
 @app.route("/add-location", methods=["GET", "POST"])
 def add_location():
     form = LocationForm()
-    form.first_field.label = "Location Name: "
-    form.second_field.label = "Location Type: "
+    form.first_field.label = "Location Name"
+    form.second_field.label = "Location Type"
+    columns = VIEW_COLUMNS[LOC]
+
+    db = connect_to_database()
     print(form.second_field.choices)
-    return render_template("double_field_add_form.html", form=form,
-                           column_names=["Name", "Type"], query_has_value=False,
+
+    query_res = select_query(db, BASIC_SELECT_QUERIES[LOC], LOC)
+    return render_template("add_location_form.html", form=form, query_res=query_res,
+                           column_names=columns, query_has_value=(len(query_res) > 0),
                            header="Add New Location", target="add-location")
+
+
+@app.route("/browse-characters", methods=["GET", "POST"])
+def browse_characters():
+    db = connect_to_database()
+    columns = VIEW_COLUMNS[CHAR][:]
+
+    query = "SELECT id, name FROM species ORDER BY name"
+    res = execute_query(db, query)
+    species_list = []
+    for species in res:
+        species_list.append((species[0], species[1]))
+    display_species = len(species_list) > 0
+    if display_species:
+        columns.append("Species")
+
+    query = "SELECT id, name FROM series ORDER BY name"
+    res = execute_query(db, query)
+    series_list = []
+    for series in res:
+        series_list.append((series[0], series[1]))
+    display_series = len(series_list) > 0
+    if display_series:
+        columns.append("Series")
+
+    query_res = select_query(db, BASIC_SELECT_QUERIES[CHAR], CHAR)
+    for item in query_res:
+        # TODO add queries to set these values instead of adding a blank value to the data set
+        if display_series:
+            item.temp_char_buffer()
+        if display_species:
+            item.temp_char_buffer()
+
+    return render_template("single_table_display.html", form=False, query_res=query_res,
+                           column_names=columns, query_has_value=(len(query_res) > 0),
+                           header="Add New Species", target="add-species")
 
 
 @app.route("/add-character", methods=["GET", "POST"])
@@ -162,7 +224,8 @@ def add_character():
     form = CharacterForm()
     query_res = []
     db = connect_to_database()
-    columns = ["First Name", "Last Name", "Title"]
+    columns = VIEW_COLUMNS[CHAR][:]
+    print(form.first_field.label.text)
 
     query = "SELECT id, name FROM species ORDER BY name"
     res = execute_query(db, query)
@@ -171,7 +234,8 @@ def add_character():
         species_list.append((species[0], species[1]))
     form.sixth_field.choices = species_list
     display_species = len(species_list) > 0
-    columns.append("Species")
+    if display_species:
+        columns.append("Species")
 
     query = "SELECT id, name FROM series ORDER BY name"
     res = execute_query(db, query)
@@ -180,7 +244,8 @@ def add_character():
         series_list.append((series[0], series[1]))
     form.seventh_field.choices = series_list
     display_series = len(series_list) > 0
-    columns.append("Series")
+    if display_series:
+        columns.append("Series")
 
     if form.validate_on_submit():
         first_name = form.first_field.data
@@ -221,20 +286,32 @@ def add_character():
             link_tables(query_template, db, res[0], ser_id)
 
     if "delete_no" in request.args:
-        delete_row("characters", db, request.args["delete_no"])
+        delete_row(CHAR, db, request.args["delete_no"])
 
-    query = "SELECT id, fname, lname, title FROM characters ORDER BY fname"
-    res = execute_query(db, query)
-
-    for item in res:
-        row_id = item[0]
-        item = list(item[1:]) + ["",""]
-        query_res.append(Row(row_id, item))
+    query_res = select_query(db, BASIC_SELECT_QUERIES[CHAR], CHAR)
+    for item in query_res:
+        # TODO add queries to set these values instead of adding a blank value to the data set
+        if display_series:
+            item.temp_char_buffer()
+        if display_species:
+            item.temp_char_buffer()
 
     return render_template("add_char_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="Add New Character", display_species=display_species,
                            display_series=display_series, target="add-character")
+
+
+
+@app.route("/browse-actors", methods=["GET", "POST"])
+def browse_actors():
+    db = connect_to_database()
+    columns = VIEW_COLUMNS[ACT]
+
+    query_res = select_query(db, BASIC_SELECT_QUERIES[ACT], ACT)
+    return render_template("single_table_display.html", form=False, query_res=query_res,
+                           column_names=columns, query_has_value=(len(query_res) > 0),
+                           header="Add New Species", target="add-species")
 
 
 @app.route("/add-actor", methods=["GET", "POST"])
@@ -290,12 +367,6 @@ def search_char():
 def sanitze_input(user_input):
     pass
 
-
-def delete_row(table_name, connection, row_num):
-    query = f"DELETE FROM {table_name} WHERE id = {row_num}"
-    res = execute_query(connection, query)
-
-
 def sanitize_date(date_dict: dict):
     month = date_dict["month"]
     day = date_dict["day"]
@@ -325,3 +396,21 @@ def link_tables(query_template, connection, id_one, id_two, id_three=None):
     data = tuple(data)
 
     execute_query(connection, query_template, data)
+
+
+def delete_row(table_name, connection, row_num):
+    query = f"DELETE FROM {table_name} WHERE id = {row_num}"
+    res = execute_query(connection, query)
+
+
+def select_query(connection, query, data_type):
+    query_res = []
+    res = execute_query(connection, query)
+    for item in res:
+        query_res.append(Row(item[0], list(item[1:]), data_type))
+
+    return query_res
+
+
+def load_data_page(row_item):
+    print(row_item, row_item.id)

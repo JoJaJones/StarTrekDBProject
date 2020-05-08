@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 from flask_wtf import FlaskForm
+from constants import CHAR, SPEC, SER, LOC, AFF, ACT
 from wtforms import (widgets, validators, StringField, SubmitField, RadioField, SelectMultipleField, FormField,
                      IntegerField, SelectField, DateField, TextAreaField, Form)
 
@@ -9,9 +10,9 @@ app.config["SECRET_KEY"] = "tempsecret"
 
 
 class DateSubForm(Form):
-    month = IntegerField("Month: ", validators=[validators.Optional(), validators.NumberRange(1, 12)])
-    day = IntegerField("Day: ", validators=[validators.Optional(), validators.number_range(1, 31)])
-    year = IntegerField("Year: ", validators=[validators.Optional(),
+    month = IntegerField("MM", validators=[validators.Optional(), validators.NumberRange(1, 12)])
+    day = IntegerField("DD", validators=[validators.Optional(), validators.number_range(1, 31)])
+    year = IntegerField("YYYY", validators=[validators.Optional(),
                                               validators.number_range(1966,
                                                                       message="Year must be 1966 or later")])
 
@@ -27,10 +28,27 @@ class SingleFieldForm(FlaskForm):
 
 
 class Row:
-    def __init__(self, id, values):
+    def __init__(self, id, values, data_type):
         self.id = id
+        self.data_type = data_type
         self.table_values = values
+        self.name = None
+        self.set_name()
         # self.form = DeleteForm()
+
+    def set_name(self):
+        if self.data_type == CHAR and len(self.table_values[1]) > 0:
+            self.name = self.table_values[1]
+        else:
+            self.name = self.table_values[0]
+
+    def reformat_date(self, idx: int):
+        temp_date = str(self.table_values[idx]).split("-")
+        temp_date = temp_date[1:] + [temp_date[0]]
+        self.table_values[idx] = "-".join(temp_date)
+
+    def temp_char_buffer(self):
+        self.table_values += [""]
 
 
 class DeleteForm(FlaskForm):
@@ -46,20 +64,20 @@ class LocationForm(FlaskForm):
 
 
 class SeriesForm(FlaskForm):
-    first_field = StringField()
+    first_field = StringField("Series Name")
     second_field = FormField(DateSubForm)
     third_field = FormField(DateSubForm)
     submit = SubmitField("Submit")
 
 
 class CharacterForm(FlaskForm):
-    first_field = StringField("First Name: ")
-    second_field = StringField("Last Name: ", validators=[validators.Optional()])
-    third_field = StringField("Title: ", validators=[validators.Optional()])
-    fourth_field = TextAreaField("Description: ", validators=[validators.Optional()])
-    fifth_field = TextAreaField("Biography: ", validators=[validators.Optional()])
-    sixth_field = SelectMultipleField("Species: ", coerce=int, validators=[validators.Optional()])
-    seventh_field = SelectMultipleField("Affiliations: ", coerce=int, validators=[validators.Optional()])
+    first_field = StringField("First Name")
+    second_field = StringField("Last Name", validators=[validators.Optional()])
+    third_field = StringField("Title", validators=[validators.Optional()])
+    fourth_field = TextAreaField("Description", validators=[validators.Optional()])
+    fifth_field = TextAreaField("Biography", validators=[validators.Optional()])
+    sixth_field = SelectMultipleField("Species", coerce=int, validators=[validators.Optional()])
+    seventh_field = SelectMultipleField("Series", coerce=int, validators=[validators.Optional()])
     # add_location = SubmitField("Add Location to Character")
     submit = SubmitField("Submit")
 

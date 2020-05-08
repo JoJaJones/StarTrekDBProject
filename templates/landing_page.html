@@ -1,16 +1,18 @@
 {% extends "core_content.html" %}
 
 {% block content %}
-    <p><a href="{{ url_for('add_species') }}">Add a species</a></p>
-    <p><a href="{{ url_for('add_affiliation') }}">Add an affiliation</a></p>
-    <p><a href="{{ url_for('add_series') }}">Add a series</a></p>
-    <p><a href="{{ url_for('add_location') }}">Add a location</a></p>
-    <p><a href="{{ url_for('add_character') }}">Add a character</a></p>
-    <p><a href="{{ url_for('add_actor') }}">Add an actor</a></p>
-    <p><a href="{{ url_for('link_actor_char') }}">Connect an actor to a character</a></p>
-    <p><a href="{{ url_for('link_char_species') }}">Connect a character to a species</a></p>
-    <p><a href="{{ url_for('link_char_aff') }}">Connect a character to an affiliation</a></p>
-    <p><a href="{{ url_for('link_char_series') }}">Connect a character to a series</a></p>
-    <p><a href="{{ url_for('link_to_location') }}">Connect a character/series to a location</a></p>
-    <p><a href="{{ url_for('search_char') }}">Search for a character</a></p>
+    <div class="jumbotron bg-dark text-light">
+        <p><a href="{{ url_for('add_species') }}">Add a species</a></p>
+        <p><a href="{{ url_for('add_affiliation') }}">Add an affiliation</a></p>
+        <p><a href="{{ url_for('add_series') }}">Add a series</a></p>
+        <p><a href="{{ url_for('add_location') }}">Add a location</a></p>
+        <p><a href="{{ url_for('add_character') }}">Add a character</a></p>
+        <p><a href="{{ url_for('add_actor') }}">Add an actor</a></p>
+        <p><a href="{{ url_for('link_actor_char') }}">Connect an actor to a character</a></p>
+        <p><a href="{{ url_for('link_char_species') }}">Connect a character to a species</a></p>
+        <p><a href="{{ url_for('link_char_aff') }}">Connect a character to an affiliation</a></p>
+        <p><a href="{{ url_for('link_char_series') }}">Connect a character to a series</a></p>
+        <p><a href="{{ url_for('link_to_location') }}">Connect a character/series to a location</a></p>
+        <p><a href="{{ url_for('search_char') }}">Search for a character</a></p>
+    </div>
 {% endblock %}

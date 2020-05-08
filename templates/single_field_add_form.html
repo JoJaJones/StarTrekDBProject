@@ -1,15 +1,7 @@
-{% extends "single_table_display.html" %}
+{% extends "form_template.html" %}
 
-{% block content_form %}
-<div>
-    <fieldset>
-        <legend>{{ header}}</legend>
-
-        <form method="POST">
-            {{ form.hidden_tag() }}
-            <p>{{ form.first_field.label }}{{ form.first_field() }}</p>
-            <p>{{ form.submit() }}</p>
-        </form>
-    </fieldset>
-</div>
+{% block form_specifics %}
+    <div class="form-group">
+        {{ form.first_field.label }}{{ form.first_field(class="form-control") }}
+    </div>
 {% endblock %}

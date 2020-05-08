@@ -1,3 +1,30 @@
+@font-face {
+	font-family: stfont1;
+	src: url("Final_Frontier.ttf");
+}
+
+@font-face {
+    font-family: stfont2;
+    src: url("Federation.ttf");
+}
+
+body {
+	background-image: url("nasa-1.jpg");
+	background-size: cover;
+	background-attachment: fixed;
+	display: grid;
+}
+
+#custom-color {
+    background-color: black;
+}
+
+.logo {
+	font-family: stfont;
+	font-size: 10vh;
+    color: white;
+}
+
 table {
     border-style:solid;
 }
@@ -13,6 +40,36 @@ input {
     border-radius: 3px;
 }
 
-input.delete_button{
+td > input.btn.btn-danger{
     width: 100%;
+}
+
+.navbar-brand {
+    font-family: stfont1;
+}
+
+.navbar {
+    font-family: stfont2;
+}
+
+.navbar-nav > li > .dropdown-menu {
+    background-color: #343a40;
+    color: #f8f9fa;
+}
+
+.navbar-nav > li > div > a:hover {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+.navbar-nav > li > div > a {
+    background-color: #343a40;
+    color: #f8f9fa;
+}
+
+.jumbotron {
+    background-color: #343a40;
+    margin-top: 5%;
+    color: #f8f9fa;
+    opacity: 0.95;
 }
