@@ -39,9 +39,12 @@
                     Add to database
                 </a>
                 <div class="dropdown-menu" aria-labelledby="add">
-                    <a class="dropdown-item" href="#" style="font-family: stfont2">Action</a>
-                    <a class="dropdown-item" href="#" style="font-family: stfont2">Another action</a>
-                    <a class="dropdown-item" href="#" style="font-family: stfont2">Something else here</a>
+                    <a class="dropdown-item" href="{{url_for('add_character')}}">Add a Character</a>
+                    <a class="dropdown-item" href="{{url_for('add_actor')}}">Add a Actors</a>
+                    <a class="dropdown-item" href="{{url_for('add_series')}}">Add a Series</a>
+                    <a class="dropdown-item" href="{{url_for('add_species')}}">Add a Species</a>
+                    <a class="dropdown-item" href="{{url_for('add_location')}}">Add a Locations</a>
+                    <a class="dropdown-item" href="{{url_for('add_affiliation')}}">Add a Affiliations</a>
                 </div>
             </li>
             <li class="nav-item">
