@@ -61,7 +61,7 @@ def add_species():
         res = execute_query(db, query, data)
 
     if "delete_no" in request.args:
-        delete_row(columns[0].lower(), db, request.args["delete_no"])
+        delete_row(SPEC, db, request.args["delete_no"])
 
     query_res = select_query(db, BASIC_SELECT_QUERIES[SPEC])
 
@@ -87,7 +87,7 @@ def add_affiliation():
         res = execute_query(db, query, data)
 
     if "delete_no" in request.args:
-        delete_row(columns[0].lower(), db, request.args["delete_no"])
+        delete_row(AFF, db, request.args["delete_no"])
 
     query_res = select_query(db, BASIC_SELECT_QUERIES[AFF])
 
@@ -126,7 +126,7 @@ def add_series():
         res = execute_query(db, query, data)
 
     if "delete_no" in request.args:
-        delete_row(columns[0].lower(), db, request.args["delete_no"])
+        delete_row(SER, db, request.args["delete_no"])
 
     query_res = select_query(db, BASIC_SELECT_QUERIES[SER])
     for item in query_res:
@@ -218,7 +218,7 @@ def add_character():
             link_tables(query_template, db, res[0], ser_id)
 
     if "delete_no" in request.args:
-        delete_row("characters", db, request.args["delete_no"])
+        delete_row(CHAR, db, request.args["delete_no"])
 
     query_res = select_query(db, BASIC_SELECT_QUERIES[CHAR])
     for item in query_res:
