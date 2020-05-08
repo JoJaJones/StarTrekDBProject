@@ -323,6 +323,6 @@ def select_query(connection, query):
     query_res = []
     res = execute_query(connection, query)
     for item in res:
-        query_res.append(Row(item[0], item[1:]))
+        query_res.append(Row(item[0], list(item[1:])))
 
     return query_res
