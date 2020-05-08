@@ -38,7 +38,7 @@ class Row:
         self.table_values[idx] = "-".join(temp_date)
 
     def temp_char_buffer(self):
-        self.table_values += ["", ""]
+        self.table_values =  tuple(list(self.table_values) + ["", ""])
 
 
 class DeleteForm(FlaskForm):
