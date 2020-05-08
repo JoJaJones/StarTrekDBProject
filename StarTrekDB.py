@@ -407,7 +407,7 @@ def select_query(connection, query, data_type):
     query_res = []
     res = execute_query(connection, query)
     for item in res:
-        query_res.append(Row(item[0], list(item[1:])))
+        query_res.append(Row(item[0], list(item[1:], data_type)))
 
     return query_res
 
