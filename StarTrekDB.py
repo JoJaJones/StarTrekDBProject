@@ -160,6 +160,7 @@ def add_character():
     query_res = []
     db = connect_to_database()
     columns = VIEW_COLUMNS[CHAR]
+    print(form.first_field.label.text)
 
     query = "SELECT id, name FROM species ORDER BY name"
     res = execute_query(db, query)
