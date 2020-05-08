@@ -152,7 +152,7 @@ def add_series():
         for i in range(1, 3):
             item.reformat_date(i)
 
-    return render_template("triple_field_add_form.html", form=form, query_res=query_res,
+    return render_template("add_series_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="Add New Series", target="add-series")
 
@@ -171,15 +171,15 @@ def browse_locations():
 @app.route("/add-location", methods=["GET", "POST"])
 def add_location():
     form = LocationForm()
-    form.first_field.label = "Location Name: "
-    form.second_field.label = "Location Type: "
+    form.first_field.label = "Location Name"
+    form.second_field.label = "Location Type"
     columns = VIEW_COLUMNS[LOC]
 
     db = connect_to_database()
     print(form.second_field.choices)
 
     query_res = select_query(db, BASIC_SELECT_QUERIES[LOC])
-    return render_template("double_field_add_form.html", form=form, query_res=query_res,
+    return render_template("add_location_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="Add New Location", target="add-location")
 
