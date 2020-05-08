@@ -208,6 +208,12 @@ def browse_characters():
         columns.append("Series")
 
     query_res = select_query(db, BASIC_SELECT_QUERIES[CHAR])
+    for item in query_res:
+        if display_series:
+            item.temp_char_buffer()
+        if display_species:
+            item.temp_char_buffer()
+            
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="Add a new species to the database", target="add-species")
@@ -284,7 +290,10 @@ def add_character():
 
     query_res = select_query(db, BASIC_SELECT_QUERIES[CHAR])
     for item in query_res:
-        item.temp_char_buffer()
+        if display_series:
+            item.temp_char_buffer()
+        if display_species:
+            item.temp_char_buffer()
 
     return render_template("add_char_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
