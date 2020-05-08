@@ -6,18 +6,20 @@
         <legend>{{ header}}</legend>
         <form method="POST">
             {{ form.hidden_tag() }}
-            <p>{{ form.first_field.label }}{{ form.first_field() }}</p>
-            <p>{{ form.second_field.label }}{{ form.second_field() }}</p>
-            <p>{{ form.third_field.label }}{{ form.third_field() }}</p>
-            <p>{{ form.fourth_field.label }}{{ form.fourth_field() }}</p>
-            <p>{{ form.fifth_field.label }}{{ form.fifth_field() }}</p>
+            <div class="row">
+            {{ form.first_field(class="form-control", placeholder="{{form.firs_field.label}}}") }}
+            {{ form.second_field(class="form-control", placeholer="{{ form.second_field.label }}") }}
+            </div>
+            {{ form.third_field.label }}{{ form.third_field() }}
+            {{ form.fourth_field.label }}{{ form.fourth_field() }}
+            {{ form.fifth_field.label }}{{ form.fifth_field() }}
             {% if display_species %}
-            <p>{{ form.sixth_field.label }}{{ form.sixth_field() }}</p>
+            {{ form.sixth_field.label }}{{ form.sixth_field() }}
             {% endif %}
             {% if display_series %}
-            <p>{{ form.seventh_field.label }}{{ form.seventh_field() }}</p>
+            {{ form.seventh_field.label }}{{ form.seventh_field() }}
             {% endif %}
-            <p>{{ form.submit(class="btn btn-primary") }}</p>
+            {{ form.submit(class="btn btn-primary") }}
         </form>
     </fieldset>
 </div>
