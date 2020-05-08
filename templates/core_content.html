@@ -11,16 +11,13 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Star Trek Character Database</a>
+        <a class="navbar-brand" href="{{url_for('index')}}">Star Trek Character Database</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="{{url_for('index')}}">Home <span class="sr-only">(current)</span></a>
-                </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="browse" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-family: stfont2">
                         Browse database
@@ -40,16 +37,16 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="add">
                     <a class="dropdown-item" href="{{url_for('add_character')}}">Add a Character</a>
-                    <a class="dropdown-item" href="{{url_for('add_actor')}}">Add a Actors</a>
+                    <a class="dropdown-item" href="{{url_for('add_actor')}}">Add an Actors</a>
                     <a class="dropdown-item" href="{{url_for('add_series')}}">Add a Series</a>
                     <a class="dropdown-item" href="{{url_for('add_species')}}">Add a Species</a>
                     <a class="dropdown-item" href="{{url_for('add_location')}}">Add a Locations</a>
-                    <a class="dropdown-item" href="{{url_for('add_affiliation')}}">Add a Affiliations</a>
+                    <a class="dropdown-item" href="{{url_for('add_affiliation')}}">Add an Affiliations</a>
                 </div>
             </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" href="#">Disabled</a>
-            </li>
+            <!--<li class="nav-item">-->
+                <!--<a class="nav-link disabled" href="#">Disabled</a>-->
+            <!--</li>-->
         </ul>
         <form class="form-inline my-2 my-lg-0">
             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
