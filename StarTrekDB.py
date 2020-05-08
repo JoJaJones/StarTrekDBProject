@@ -35,24 +35,29 @@ def init_DB():
     return result
 
 
+def browse_species():
+    db = connect_to_database()
+
+    res = select_query()
+    return render_template("single_table_display.html", form=False, query_res=query_res,
+                           column_names=columns, query_has_value=(len(query_res) > 0),
+                           header="Add a new species to the database", target="add-species")
+
 @app.route("/add-species", methods=["GET", "POST"])
-def add_species(render_form: bool = True):
+def add_species():
+    form = SingleFieldForm()
+    form.first_field.label = "Species Name: "
     query_res = []
     db = connect_to_database()
     columns = ["Species"]
-    form = False
 
-    if render_form:
-        form = SingleFieldForm()
-        form.first_field.label = "Species Name: "
+    if form.validate_on_submit():
+        name = str(form.first_field.data)
+        form.first_field.data = ""
 
-        if form.validate_on_submit():
-            name = str(form.first_field.data)
-            form.first_field.data = ""
-
-            query = "INSERT INTO species(name) VALUES (%s)"
-            data = tuple([name])
-            res = execute_query(db, query, data)
+        query = "INSERT INTO species(name) VALUES (%s)"
+        data = tuple([name])
+        res = execute_query(db, query, data)
 
     if "delete_no" in request.args:
         delete_row(columns[0].lower(), db, request.args["delete_no"])
@@ -88,10 +93,10 @@ def add_affiliation():
         delete_row(columns[0].lower(), db, request.args["delete_no"])
 
     query = "SELECT id, name FROM affiliations ORDER BY name"
-    res = execute_query(db, query)
+    query_res = select_query(db, "affiliations", ["id", "name"], None, "name")
 
-    for item in res:
-        query_res.append(Row(item[0], item[1:]))
+
+
 
     return render_template("single_field_add_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
@@ -293,12 +298,6 @@ def search_char():
 def sanitze_input(user_input):
     pass
 
-
-def delete_row(table_name, connection, row_num):
-    query = f"DELETE FROM {table_name} WHERE id = {row_num}"
-    res = execute_query(connection, query)
-
-
 def sanitize_date(date_dict: dict):
     month = date_dict["month"]
     day = date_dict["day"]
@@ -328,3 +327,23 @@ def link_tables(query_template, connection, id_one, id_two, id_three=None):
     data = tuple(data)
 
     execute_query(connection, query_template, data)
+
+
+def delete_row(table_name, connection, row_num):
+    query = f"DELETE FROM {table_name} WHERE id = {row_num}"
+    res = execute_query(connection, query)
+
+
+def select_query(connection, table_name: str, selected_values: list, conditions: str = None, order: str = None):
+    query = f"SELECT {', '.join(selected_values)} FROM {table_name}"
+    if conditions:
+        query += f" WHERE {conditions}"
+
+    if order:
+        query += f" ORDER BY {order}"
+    query_res = []
+    res = execute_query(connection, query)
+    for item in res:
+        query_res.append(Row(item[0], item[1:]))
+
+    return query_res
