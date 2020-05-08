@@ -90,5 +90,6 @@ VIEW_COLUMNS = {
     CHAR: ["First Name", "Last Name", "Title"],
     AFF: ["Affiliation"],
     SER: ["Series", "Start Date", "End Date"],
-    LOC: ["Name", "Type"]
+    LOC: ["Name", "Type"],
+    ACT: ["First Name", "Last Name", "Birthday", "IMDB"]
 }

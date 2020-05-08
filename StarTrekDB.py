@@ -39,7 +39,7 @@ def browse_species():
     db = connect_to_database()
     columns = VIEW_COLUMNS[SPEC]
 
-    query_res = select_query(db, BASIC_SELECT_QUERIES["species"])
+    query_res = select_query(db, BASIC_SELECT_QUERIES[SPEC])
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="Add a new species to the database", target="add-species")
@@ -74,7 +74,7 @@ def browse_affiliations():
     db = connect_to_database()
     columns = VIEW_COLUMNS[AFF]
 
-    query_res = select_query(db, BASIC_SELECT_QUERIES["species"])
+    query_res = select_query(db, BASIC_SELECT_QUERIES[AFF])
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="Add a new species to the database", target="add-species")
@@ -110,7 +110,7 @@ def browse_series():
     db = connect_to_database()
     columns = VIEW_COLUMNS[SER]
 
-    query_res = select_query(db, BASIC_SELECT_QUERIES["species"])
+    query_res = select_query(db, BASIC_SELECT_QUERIES[SER])
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="Add a new species to the database", target="add-species")
@@ -162,7 +162,7 @@ def browse_locations():
     db = connect_to_database()
     columns = VIEW_COLUMNS[LOC]
 
-    query_res = select_query(db, BASIC_SELECT_QUERIES["species"])
+    query_res = select_query(db, BASIC_SELECT_QUERIES[LOC])
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="Add a new species to the database", target="add-species")
@@ -207,7 +207,7 @@ def browse_characters():
     if display_series:
         columns.append("Series")
 
-    query_res = select_query(db, BASIC_SELECT_QUERIES["species"])
+    query_res = select_query(db, BASIC_SELECT_QUERIES[CHAR])
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="Add a new species to the database", target="add-species")
@@ -298,7 +298,7 @@ def browse_actors():
     db = connect_to_database()
     columns = VIEW_COLUMNS[ACT]
 
-    query_res = select_query(db, BASIC_SELECT_QUERIES["species"])
+    query_res = select_query(db, BASIC_SELECT_QUERIES[ACT])
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="Add a new species to the database", target="add-species")
