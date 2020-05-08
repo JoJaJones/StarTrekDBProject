@@ -2,7 +2,7 @@
 
 {% block form_specifics %}
     <div class="form-group">
-        {{ form.first_field.label }}{{ form.first_field() }}
+        {{ form.first_field.label }}{{ form.first_field(class="form-control", placeholder=form.first_field.label.text) }}
     </div>
     <div class="form-group">
         {{ form.second_field.label }}
