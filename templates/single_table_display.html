@@ -16,8 +16,8 @@
                             {% for value in column_names %}
                                 <th scope="col">{{value}}</th>
                             {% endfor %}
-                            <th scope="col" style="max-width: 25%">Update</th>
-                            <th scope="col" style="max-width: 25%">Delete</th>
+                            <th scope="col" style="max-width: 25%;">Update</th>
+                            <th scope="col" style="max-width: 25%;">Delete</th>
                         </tr>
                     </thead>
                     {% for item in query_res %}
@@ -27,7 +27,7 @@
                             {% endfor %}
                             <td><input type="submit" name="delete_button" class="btn btn-outline-info btn-sm" value="Update {{item.table_values[0]}}"
                                        formaction="/{{target}}?update_no={{item.id}}" style="width: 100%;"></td>
-                            <td><input type="submit" name="delete_button" class="btn btn-danger btn-sm" value="Delete {{item.table_values[0]}}"
+                            <td><input type="submit" name="delete_button" class="btn btn-outline-danger btn-sm" value="Delete {{item.table_values[0]}}"
                                        formaction="/{{target}}?delete_no={{item.id}}" style="width: 100%;"></td>
                         </tr>
                     {% endfor %}
