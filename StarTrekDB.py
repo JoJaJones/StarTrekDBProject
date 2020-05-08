@@ -8,6 +8,53 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = SECRET
 
 
+"""
+add route function template:
+
+@app.route_name("/route-url", method=["POST","GET"])
+def route_function():
+    # create a form object
+    # set any form labels as needed
+    
+    # create db connection
+    db = connect_to_database()
+    
+    # set column names using the dictionary/constant in constants
+    columns = VIEW_COLUMNS[SPECIES]
+
+    # query any choices that need to be set before generating the form
+    
+    # check if form has been submit
+    if form.validate_on_submit():
+        # get data from form and set fields to empty
+        name = str(form.first_field.data)
+        form.first_field.data = ""
+
+        # process insert query
+        query = "INSERT INTO species(name) VALUES (%s)"
+        data = tuple([name])
+        res = execute_query(db, query, data)
+
+    # check url args for delete_no argument and process related delete query if present 
+    if "delete_no" in request.args:
+        delete_row(SPECIES, db, request.args["delete_no"])
+
+    # query updated data in the DB
+    query_res = select_query(db, BASIC_SELECT_QUERIES[SPECIES], SPECIES)
+
+    # return render and pass necessary arguments
+        # all add pages need form, query_res, column_names, query_has_value, header, and target
+        # form is used to create the form
+        # query_res and column_names are used to generate the table
+        # query_has_value is used to determine if there are any results to display before generating a table
+        # header is the text displayed at the top of the page
+        # target is for the delete/update buttons and should be set to the current route url without the /
+    return render_template("single_field_add_form.html", form=form, query_res=query_res,
+                           column_names=columns, query_has_value=(len(query_res) > 0),
+                           header="Add New Species", target="add-species")
+"""
+
+
 @app.route("/create-all-tables")
 def init_DB():
     password = request.args.get("pass")
@@ -305,10 +352,16 @@ def add_character():
 
 @app.route("/browse-actors", methods=["GET", "POST"])
 def browse_actors():
+    # create database connection
     db = connect_to_database()
+
+    # set table columns using the dictionary in constants
     columns = VIEW_COLUMNS[ACTORS]
 
+    # get results of query
     query_res = select_query(db, BASIC_SELECT_QUERIES[ACTORS], ACTORS)
+
+    # pass data necessary to generate table
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="Add New Species", target="add-species")
