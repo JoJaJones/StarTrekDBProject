@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from config import SECRET, TABLES, TABLES_LIST
+from constants import *
 from db_connector.db_connector import connect_to_database, execute_query
 from STForms import *
 
@@ -37,11 +37,11 @@ def init_DB():
 @app.route("/browse-species", methods=["GET", "POST"])
 def browse_species():
     db = connect_to_database()
-
-    res = select_query()
-    # return render_template("single_table_display.html", form=False, query_res=query_res,
-    #                        column_names=columns, query_has_value=(len(query_res) > 0),
-    #                        header="Add a new species to the database", target="add-species")
+    columns = VIEW_COLUMNS[SPEC]
+    query_res = select_query(db, BASIC_SELECT_QUERIES["species"])
+    return render_template("single_table_display.html", form=False, query_res=query_res,
+                           column_names=columns, query_has_value=(len(query_res) > 0),
+                           header="Add a new species to the database", target="add-species")
 
 @app.route("/add-species", methods=["GET", "POST"])
 def add_species():
@@ -49,7 +49,7 @@ def add_species():
     form.first_field.label = "Species Name: "
     query_res = []
     db = connect_to_database()
-    columns = ["Species"]
+    columns = VIEW_COLUMNS[SPEC]
 
     if form.validate_on_submit():
         name = str(form.first_field.data)
@@ -79,7 +79,7 @@ def add_affiliation():
     form.first_field.label = "Affiliation Name: "
     query_res = []
     db = connect_to_database()
-    columns = ["Affiliation"]
+    columns = VIEW_COLUMNS[AFF]
 
     if form.validate_on_submit():
         name = str(form.first_field.data)
@@ -112,7 +112,7 @@ def add_series():
     form.third_field.label = "Series End Date: "
     query_res = []
     db = connect_to_database()
-    columns = ["Series", "Start Date", "End Date"]
+    columns = VIEW_COLUMNS[SER]
 
     if form.validate_on_submit():
         name = str(form.first_field.data)
@@ -159,9 +159,10 @@ def add_location():
     form = LocationForm()
     form.first_field.label = "Location Name: "
     form.second_field.label = "Location Type: "
+    columns = VIEW_COLUMNS[LOC]
     print(form.second_field.choices)
     return render_template("double_field_add_form.html", form=form,
-                           column_names=["Name", "Type"], query_has_value=False,
+                           column_names=columns, query_has_value=False,
                            header="Add New Location", target="add-location")
 
 
@@ -334,13 +335,7 @@ def delete_row(table_name, connection, row_num):
     res = execute_query(connection, query)
 
 
-def select_query(connection, table_name: str, selected_values: list, conditions: str = None, order: str = None):
-    query = f"SELECT {', '.join(selected_values)} FROM {table_name}"
-    if conditions:
-        query += f" WHERE {conditions}"
-
-    if order:
-        query += f" ORDER BY {order}"
+def select_query(connection, query):
     query_res = []
     res = execute_query(connection, query)
     for item in res:

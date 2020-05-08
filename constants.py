@@ -1,11 +1,20 @@
 SECRET = "SJootneelso"
-TABLES_LIST = ["characters", "affiliations", "species", "locations", "series",
-               "actors", "characters_species", "characters_affiliations", "characters_series",
+
+CHAR = "characters"
+ACT = "actors"
+AFF = "affiliations"
+SPEC = "species"
+LOC = "locations"
+SER = "series"
+
+
+TABLES_LIST = [CHAR, AFF, SPEC, LOC, SER,
+               ACT, "characters_species", "characters_affiliations", "characters_series",
                "characters_series_locations"]
 
 
 TABLES = {
-    "characters": "CREATE TABLE characters ("
+    CHAR: "CREATE TABLE characters ("
                   "id int(11) NOT NULL AUTO_INCREMENT,"
                   "fname varchar(255) NOT NULL,"
                   "lname varchar(255) DEFAULT NULL,"
@@ -14,7 +23,7 @@ TABLES = {
                   "biography text DEFAULT NULL,"
                   "PRIMARY KEY(id))engine=innoDB;",
 
-    "actors": "CREATE TABLE actors ("
+    ACT: "CREATE TABLE actors ("
               "id int(11) NOT NULL AUTO_INCREMENT,"
               "fname varchar(255) NOT NULL,"
               "lname varchar(255) DEFAULT NULL,"
@@ -25,23 +34,23 @@ TABLES = {
               "ON DELETE CASCADE ON UPDATE CASCADE,"
               "PRIMARY KEY(id))engine=innoDB;",
 
-    "affiliations": "CREATE TABLE affiliations ("
+    AFF: "CREATE TABLE affiliations ("
                     "id int(11) NOT NULL AUTO_INCREMENT,"
                     "name varchar(255) NOT NULL,"
                     "PRIMARY KEY(id))engine=innoDB;",
 
-    "species": "CREATE TABLE species ("
+    SPEC: "CREATE TABLE species ("
                "id int(11) NOT NULL AUTO_INCREMENT,"
                "name varchar(255) NOT NULL,"
                "PRIMARY KEY (id))engine=innoDB;",
 
-    "locations": "CREATE TABLE locations ("
+    LOC: "CREATE TABLE locations ("
                  "id int(11) NOT NULL AUTO_INCREMENT,"
                  "name varchar(255) NOT NULL,"
                  "type varchar(255),"
                  "PRIMARY KEY (id))engine=innoDB;",
 
-    "series": "CREATE TABLE series ("
+    SER: "CREATE TABLE series ("
               "id int(11) NOT NULL AUTO_INCREMENT,"
               "name varchar(255) NOT NULL,"
               "start_date DATE DEFAULT NULL,"
@@ -65,4 +74,21 @@ TABLES = {
                          "FOREIGN KEY (sid) REFERENCES series(id)"
                          "ON DELETE CASCADE ON UPDATE CASCADE,"
                          "PRIMARY KEY (cid, sid))engine=innoDB;"
+}
+
+BASIC_SELECT_QUERIES = {
+    SPEC: "SELECT id, name FROM species ORDER BY name",
+    CHAR: "SELECT id, fname, lname, title FROM characters ORDER BY name",
+    AFF: "SELECT id, fname, lname, title FROM affiliations ORDER BY name",
+    ACT: "SELECT id, fname, lname, birthday, imdb FROM actors ORDER BY name",
+    SER: "SELECT id, name, start_date, end_date FROM series ORDER BY name",
+    LOC: "SELECT id, type, name FROM locations ORDER BY name"
+}
+
+VIEW_COLUMNS = {
+    SPEC: ["Species"],
+    CHAR: ["First Name", "Last Name", "Title"],
+    AFF: ["Affiliation"],
+    SER: ["Series", "Start Date", "End Date"],
+    LOC: ["Name", "Type"]
 }
