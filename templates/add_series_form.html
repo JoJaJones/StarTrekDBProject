@@ -1,10 +1,29 @@
 {% extends "form_template.html" %}
 
 {% block form_specifics %}
-            <p>{{ form.first_field.label }}{{ form.first_field() }}</p>
-            <p>{{ form.second_field.label }}</p>
-            <p>{{ form.second_field.form.month.label }}{{ form.second_field.form.month() }}
-            {{ form.second_field.form.day.label }}{{ form.second_field.form.day() }}
-            {{ form.second_field.form.year.label }}{{ form.second_field.form.year() }}</p>
-            <p>{{ form.third_field.label }}{{ form.third_field() }}</p>
+    <div class="form-group">
+        {{ form.first_field.label }}{{ form.first_field() }}
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            {{ form.second_field.label }} {{ form.second_field.form.month(form.second_field.form.month.label.text) }}
+        </div>
+        <div class="form-group col-md-4">
+            {{ form.second_field.form.day(form.second_field.form.day.label.text) }}
+        </div>
+        <div class="form-group col-md-4">
+            {{ form.second_field.form.year(form.second_field.form.year.label.text) }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            {{ form.third_field.label }} {{ form.third_field.form.month(form.third_field.form.month.label.text) }}
+        </div>
+        <div class="form-group col-md-4">
+            {{ form.third_field.form.day(form.third_field.form.day.label.text) }}
+        </div>
+        <div class="form-group col-md-4">
+            {{ form.third_field.form.year(form.third_field.form.year.label.text) }}
+        </div>
+    </div>
 {% endblock %}

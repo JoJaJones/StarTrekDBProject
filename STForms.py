@@ -9,9 +9,9 @@ app.config["SECRET_KEY"] = "tempsecret"
 
 
 class DateSubForm(Form):
-    month = IntegerField("Month: ", validators=[validators.Optional(), validators.NumberRange(1, 12)])
-    day = IntegerField("Day: ", validators=[validators.Optional(), validators.number_range(1, 31)])
-    year = IntegerField("Year: ", validators=[validators.Optional(),
+    month = IntegerField("MM", validators=[validators.Optional(), validators.NumberRange(1, 12)])
+    day = IntegerField("DD", validators=[validators.Optional(), validators.number_range(1, 31)])
+    year = IntegerField("YYYY", validators=[validators.Optional(),
                                               validators.number_range(1966,
                                                                       message="Year must be 1966 or later")])
 
