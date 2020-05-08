@@ -10,7 +10,7 @@
     <div class="container">
         <form method="POST">
             {% if query_has_value %}
-                <table class="table table-hover table-dark table-bordered">
+                <table class="table table-hover table-dark table-bordered" style="background-color: #1a1c1f;">
                     <thead>
                         <tr>
                             {% for value in column_names %}
@@ -25,9 +25,9 @@
                             {% for cell in item.table_values %}
                                 <td>{{cell}}</td>
                             {% endfor %}
-                            <td><input type="submit" name="delete_button" class="btn btn-outline-info btn-sm" value="Update {{item.table_values[0]}}"
+                            <td style="max-width: 25%;"><input type="submit" name="delete_button" class="btn btn-outline-info btn-sm" value="Update {{item.table_values[0]}}"
                                        formaction="/{{target}}?update_no={{item.id}}" style="width: 100%;"></td>
-                            <td><input type="submit" name="delete_button" class="btn btn-outline-danger btn-sm" value="Delete {{item.table_values[0]}}"
+                            <td style="max-width: 25%;"><input type="submit" name="delete_button" class="btn btn-outline-danger btn-sm" value="Delete {{item.table_values[0]}}"
                                        formaction="/{{target}}?delete_no={{item.id}}" style="width: 100%;"></td>
                         </tr>
                     {% endfor %}
