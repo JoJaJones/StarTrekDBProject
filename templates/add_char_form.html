@@ -6,7 +6,7 @@
         <legend>{{ header}}</legend>
         <form method="POST">
             {{ form.hidden_tag() }}
-            <div class="row">
+            <div class="form-row">
                 <div class="col">
                     {{ form.first_field(class="form-control", placeholder=form.first_field.label.text) }}
                 </div>
@@ -14,18 +14,22 @@
                     {{ form.second_field(class="form-control", placeholder=form.second_field.label.text) }}
                 </div>
             </div>
-            <div class="row">
+            <div class="form-row">
                 <div class="col">
                     {{ form.third_field(class="form-control", placeholder=form.third_field.label.text) }}
                 </div>
             </div>
-            <div class="row">
-                {{ form.fourth_field.label }}{{ form.fourth_field(class="form-control") }}
+            <div class="form-row">
+                <div class="col">
+                    {{ form.fourth_field.label }}{{ form.fourth_field(class="form-control") }}
+                </div>
             </div>
-            <div class="row">
-                {{ form.fifth_field.label }}{{ form.fifth_field(class="form-control") }}
+            <div class="form-row">
+                <div class="col">
+                    {{ form.fifth_field.label }}{{ form.fifth_field(class="form-control") }}
+                </div>
             </div>
-            <div class="row">
+            <div class="form-row">
                 {% if display_species %}
                     <div class="col">
                         {{ form.sixth_field.label }}{{ form.sixth_field(class="form-control") }}
