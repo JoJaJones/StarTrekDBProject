@@ -118,7 +118,6 @@ def browse_series():
 @app.route("/add-series", methods=["GET", "POST"])
 def add_series():
     form = SeriesForm()
-    form.first_field.label = "Series Name"
     form.second_field.label = "Series Start Date"
 
     form.third_field.label = "Series End Date"

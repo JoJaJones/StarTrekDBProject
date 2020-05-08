@@ -54,7 +54,7 @@ class LocationForm(FlaskForm):
 
 
 class SeriesForm(FlaskForm):
-    first_field = StringField()
+    first_field = StringField("Series Name")
     second_field = FormField(DateSubForm)
     third_field = FormField(DateSubForm)
     submit = SubmitField("Submit")
