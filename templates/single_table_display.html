@@ -23,11 +23,11 @@
                     {% for item in query_res %}
                         <tr>
                             {% for cell in item.table_values %}
-                                <td class="align-center">{{cell}}</td>
+                                <td class="align-middle">{{cell}}</td>
                             {% endfor %}
-                            <td class="align-center" style="max-width: 25%;"><input type="submit" name="delete_button" class="btn btn-outline-info btn-sm" value="Update {{item.table_values[0]}}"
+                            <td class="align-middle" style="max-width: 25%;"><input type="submit" name="delete_button" class="btn btn-outline-info btn-sm" value="Update {{item.table_values[0]}}"
                                        formaction="/{{target}}?update_no={{item.id}}" style="width: 100%;"></td>
-                            <td class="align-center" style="max-width: 25%;"><input type="submit" name="delete_button" class="btn btn-outline-danger btn-sm" value="Delete {{item.table_values[0]}}"
+                            <td class="align-middle" style="max-width: 25%;"><input type="submit" name="delete_button" class="btn btn-outline-danger btn-sm" value="Delete {{item.table_values[0]}}"
                                        formaction="/{{target}}?delete_no={{item.id}}" style="width: 100%;"></td>
                         </tr>
                     {% endfor %}
