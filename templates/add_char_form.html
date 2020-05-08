@@ -14,15 +14,29 @@
                     {{ form.second_field(class="form-control", placeholder=form.second_field.label.text) }}
                 </div>
             </div>
-            {{ form.third_field.label }}{{ form.third_field() }}
-            {{ form.fourth_field.label }}{{ form.fourth_field() }}
-            {{ form.fifth_field.label }}{{ form.fifth_field() }}
-            {% if display_species %}
-            {{ form.sixth_field.label }}{{ form.sixth_field() }}
-            {% endif %}
-            {% if display_series %}
-            {{ form.seventh_field.label }}{{ form.seventh_field() }}
-            {% endif %}
+            <div class="row">
+                <div class="col">
+                    {{ form.third_field.label }}{{ form.third_field() }}
+                </div>
+            </div>
+            <div class="row">
+                {{ form.fourth_field.label }}{{ form.fourth_field() }}
+            </div>
+            <div class="row">
+                {{ form.fifth_field.label }}{{ form.fifth_field() }}
+            </div>
+            <div class="row">
+                {% if display_species %}
+                    <div class="col">
+                        {{ form.sixth_field.label }}{{ form.sixth_field() }}
+                    </div>
+                {% endif %}
+                {% if display_series %}
+                    <div class="col">
+                        {{ form.seventh_field.label }}{{ form.seventh_field() }}
+                    </div>
+                {% endif %}
+            </div>
             {{ form.submit(class="btn btn-primary") }}
         </form>
     </fieldset>
