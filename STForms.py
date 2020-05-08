@@ -32,7 +32,8 @@ class Row:
         self.id = id
         self.data_type = data_type
         self.table_values = values
-        self.name = self.set_name()
+        self.name = None
+        self.set_name()
         # self.form = DeleteForm()
 
     def set_name(self):
