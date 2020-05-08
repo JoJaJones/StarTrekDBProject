@@ -34,14 +34,14 @@ def init_DB():
 
     return result
 
-
+@app.route("/browse-species", methods=["GET", "POST"])
 def browse_species():
     db = connect_to_database()
 
     res = select_query()
-    return render_template("single_table_display.html", form=False, query_res=query_res,
-                           column_names=columns, query_has_value=(len(query_res) > 0),
-                           header="Add a new species to the database", target="add-species")
+    # return render_template("single_table_display.html", form=False, query_res=query_res,
+    #                        column_names=columns, query_has_value=(len(query_res) > 0),
+    #                        header="Add a new species to the database", target="add-species")
 
 @app.route("/add-species", methods=["GET", "POST"])
 def add_species():
