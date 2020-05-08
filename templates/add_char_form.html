@@ -16,24 +16,24 @@
             </div>
             <div class="row">
                 <div class="col">
-                    {{ form.third_field.label }}{{ form.third_field() }}
+                    {{ form.third_field(class="form-control", placeholder=form.third_field.label.text) }}
                 </div>
             </div>
             <div class="row">
-                {{ form.fourth_field.label }}{{ form.fourth_field() }}
+                {{ form.fourth_field.label }}{{ form.fourth_field(class="form-control") }}
             </div>
             <div class="row">
-                {{ form.fifth_field.label }}{{ form.fifth_field() }}
+                {{ form.fifth_field.label }}{{ form.fifth_field(class="form-control") }}
             </div>
             <div class="row">
                 {% if display_species %}
                     <div class="col">
-                        {{ form.sixth_field.label }}{{ form.sixth_field() }}
+                        {{ form.sixth_field.label }}{{ form.sixth_field(class="form-control") }}
                     </div>
                 {% endif %}
                 {% if display_series %}
                     <div class="col">
-                        {{ form.seventh_field.label }}{{ form.seventh_field() }}
+                        {{ form.seventh_field.label }}{{ form.seventh_field(class="form-control") }}
                     </div>
                 {% endif %}
             </div>
