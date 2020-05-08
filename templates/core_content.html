@@ -19,16 +19,19 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="{{url_for('index')}}">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="browse" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-family: stfont2">
                         Browse database
                     </a>
                 <div class="dropdown-menu" aria-labelledby="browse">
+                    <a class="dropdown-item" href="{{url_for('browse_characters')}}">Browse Character</a>
+                    <a class="dropdown-item" href="{{url_for('browse_actors')}}">Browse Actors</a>
+                    <a class="dropdown-item" href="{{url_for('browse_series')}}">Browse Series</a>
                     <a class="dropdown-item" href="{{url_for('browse_species')}}">Browse Species</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <a class="dropdown-item" href="#">Something else here</a>
+                    <a class="dropdown-item" href="{{url_for('browse_locations')}}">Browse Locations</a>
+                    <a class="dropdown-item" href="{{url_for('browse_affiliations')}}">Browse Affiliations</a>
                 </div>
             </li>
             <li class="nav-item dropdown">

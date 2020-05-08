@@ -69,6 +69,15 @@ def add_species():
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="Add a new species to the database", target="add-species")
 
+@app.route("/browse-affiliations", methods=["GET", "POST"])
+def browse_affiliations():
+    db = connect_to_database()
+    columns = VIEW_COLUMNS[AFF]
+
+    query_res = select_query(db, BASIC_SELECT_QUERIES["species"])
+    return render_template("single_table_display.html", form=False, query_res=query_res,
+                           column_names=columns, query_has_value=(len(query_res) > 0),
+                           header="Add a new species to the database", target="add-species")
 
 @app.route("/add-affiliations", methods=["GET", "POST"])
 def add_affiliation():
@@ -95,6 +104,16 @@ def add_affiliation():
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="Add New Affiliation", target="add-affiliations")
 
+
+@app.route("/browse-series", methods=["GET", "POST"])
+def browse_series():
+    db = connect_to_database()
+    columns = VIEW_COLUMNS[SER]
+
+    query_res = select_query(db, BASIC_SELECT_QUERIES["species"])
+    return render_template("single_table_display.html", form=False, query_res=query_res,
+                           column_names=columns, query_has_value=(len(query_res) > 0),
+                           header="Add a new species to the database", target="add-species")
 
 @app.route("/add-series", methods=["GET", "POST"])
 def add_series():
@@ -138,6 +157,17 @@ def add_series():
                            header="Add New Series", target="add-series")
 
 
+@app.route("/browse-locations", methods=["GET", "POST"])
+def browse_locations():
+    db = connect_to_database()
+    columns = VIEW_COLUMNS[LOC]
+
+    query_res = select_query(db, BASIC_SELECT_QUERIES["species"])
+    return render_template("single_table_display.html", form=False, query_res=query_res,
+                           column_names=columns, query_has_value=(len(query_res) > 0),
+                           header="Add a new species to the database", target="add-species")
+
+
 @app.route("/add-location", methods=["GET", "POST"])
 def add_location():
     form = LocationForm()
@@ -152,6 +182,35 @@ def add_location():
     return render_template("double_field_add_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="Add New Location", target="add-location")
+
+
+@app.route("/browse-characters", methods=["GET", "POST"])
+def browse_characters():
+    db = connect_to_database()
+    columns = VIEW_COLUMNS[CHAR]
+
+    query = "SELECT id, name FROM species ORDER BY name"
+    res = execute_query(db, query)
+    species_list = []
+    for species in res:
+        species_list.append((species[0], species[1]))
+    display_species = len(species_list) > 0
+    if display_species:
+        columns.append("Species")
+
+    query = "SELECT id, name FROM series ORDER BY name"
+    res = execute_query(db, query)
+    series_list = []
+    for series in res:
+        series_list.append((series[0], series[1]))
+    display_series = len(series_list) > 0
+    if display_series:
+        columns.append("Series")
+
+    query_res = select_query(db, BASIC_SELECT_QUERIES["species"])
+    return render_template("single_table_display.html", form=False, query_res=query_res,
+                           column_names=columns, query_has_value=(len(query_res) > 0),
+                           header="Add a new species to the database", target="add-species")
 
 
 @app.route("/add-character", methods=["GET", "POST"])
@@ -169,7 +228,8 @@ def add_character():
         species_list.append((species[0], species[1]))
     form.sixth_field.choices = species_list
     display_species = len(species_list) > 0
-    columns.append("Species")
+    if display_species:
+        columns.append("Species")
 
     query = "SELECT id, name FROM series ORDER BY name"
     res = execute_query(db, query)
@@ -178,7 +238,8 @@ def add_character():
         series_list.append((series[0], series[1]))
     form.seventh_field.choices = series_list
     display_series = len(series_list) > 0
-    columns.append("Series")
+    if display_series:
+        columns.append("Series")
 
     if form.validate_on_submit():
         first_name = form.first_field.data
@@ -229,6 +290,18 @@ def add_character():
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="Add New Character", display_species=display_species,
                            display_series=display_series, target="add-character")
+
+
+
+@app.route("/browse-actors", methods=["GET", "POST"])
+def browse_actors():
+    db = connect_to_database()
+    columns = VIEW_COLUMNS[ACT]
+
+    query_res = select_query(db, BASIC_SELECT_QUERIES["species"])
+    return render_template("single_table_display.html", form=False, query_res=query_res,
+                           column_names=columns, query_has_value=(len(query_res) > 0),
+                           header="Add a new species to the database", target="add-species")
 
 
 @app.route("/add-actor", methods=["GET", "POST"])
