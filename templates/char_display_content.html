@@ -1,0 +1,38 @@
+{% extends "item_display_template.html" %}
+
+{% block display_content %}
+<div class="jumbotron bg-dark-extra text-light scroll-container container-fluid">
+    <div class="scoll-content">
+        <p>biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography.</p>
+
+        <p>biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography.</p>
+
+        <p>biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography.</p>
+
+        <p>biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography.</p>
+
+        <p>biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography biography.</p>
+    </div>
+</div>
+
+<table class="table table-hover table-dark table-bordered" id="dark-table">
+    <thead>
+        <th scope="col">
+            Series
+        </th>
+        <th scope="col">
+            Locations
+        </th>
+    </thead>
+    <tr>
+        <td class="align-middle">
+            {{form.hidden_tag()}}
+            {{form.select_field(class="form-control")}}
+        </td>
+        <td class="align-middle">
+            {{location_results}}
+        </td>
+    </tr>
+</table>
+
+{% endblock %}

@@ -6,11 +6,11 @@
 
     {% endblock %}
 {% endif %}
-<div class="jumbotron bg-dark text-light" style="font-family: stfont2">
+<div class="jumbotron bg-dark text-light federation">
     <div class="container">
         <form method="POST">
             {% if query_has_value %}
-                <table class="table table-hover table-dark table-bordered" style="background-color: #1a1c1f;">
+                <table class="table table-hover table-dark table-bordered" id="dark-table">
                     <thead>
                         <tr>
                             {% for value in column_names %}
@@ -25,10 +25,10 @@
                                 {% for cell in item.table_values %}
                                     <td class="align-middle">{{cell}}</td>
                                 {% endfor %}
-                                <td class="align-middle" style="max-width: 25%;"><input type="submit" name="delete_button" class="btn btn-outline-info btn-sm" value="Update {{item.name}}"
-                                           formaction="/{{target}}?update_no={{item.id}}" style="width: 100%;"></td>
-                                <td class="align-middle" style="max-width: 25%;"><input type="submit" name="delete_button" class="btn btn-outline-danger btn-sm" value="Delete {{item.name}}"
-                                           formaction="/{{target}}?delete_no={{item.id}}" style="width: 100%;"></td>
+                                <td class="align-middle full-wide" style="max-width: 25%;"><input type="submit" name="delete_button" class="btn btn-outline-info btn-sm" value="Update {{item.name}}"
+                                           formaction="/{{target}}?update_no={{item.id}}"></td>
+                                <td class="align-middle full-wide" style="max-width: 25%;"><input type="submit" name="delete_button" class="btn btn-outline-danger btn-sm" value="Delete {{item.name}}"
+                                           formaction="/{{target}}?delete_no={{item.id}}"></td>
                             </tr>
                     {% endfor %}
                 </table>

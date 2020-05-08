@@ -15,12 +15,17 @@ body {
 	display: grid;
 }
 
+.body {
+    height: 100vh;
+    overflow: auto;
+}
+
 #custom-color {
     background-color: black;
 }
 
 .logo {
-	font-family: stfont;
+	font-family: stfont, serif;
 	font-size: 10vh;
     color: white;
 }
@@ -45,11 +50,11 @@ td > input.btn.btn-danger{
 }
 
 .navbar-brand {
-    font-family: stfont1;
+    font-family: stfont1, serif;
 }
 
 .navbar {
-    font-family: stfont2;
+    font-family: stfont2, serif;
 }
 
 .navbar-nav > li > .dropdown-menu {
@@ -72,4 +77,44 @@ td > input.btn.btn-danger{
     margin-top: 5%;
     color: #f8f9fa;
     opacity: 0.95;
+}
+
+.federation {
+    font-family: stfont2, serif;
+}
+
+.final-frontier {
+    font-family: stfont1, serif;
+}
+
+#dark-table{
+    background-color: #1a1c1f;
+}
+
+#item-info {
+    padding-top: 5%;
+    padding-bottom: 5%;
+}
+
+.jumbotron.bg-dark-extra {
+    background-color: #1a1c1f;
+}
+
+.jumbotron.scroll-container {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
+.col.right {
+    text-align: right;
+}
+
+.scoll-content {
+    font-family: sans-serif;
+    max-height: 30vh;
+    overflow: auto;
+}
+
+.align-middle.full-wide {
+    width: 100%;
 }

@@ -1,0 +1,19 @@
+{% extends "non_landing_page.html" %}
+
+{% block inner_content %}
+    <div class="jumbotron bg-dark text-light federation" id="item-info">
+        <h1 class="display-4 final-frontier">{{display.name}}</h1>
+        <p class="lead">{{display.description}}</p>
+        <hr class="my-4 bg-light">
+        {% block display_content %}
+
+        {% endblock %}
+        <form method="POST">
+            <div class="form-row">
+                <div class="col right">
+                    <input class="btn btn-outline-info" type="submit" value="Update {{display.name}}">
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

@@ -22,6 +22,10 @@ class DateSubForm(Form):
         self.year.data = ""
 
 
+class Display:
+    pass
+
+
 class SingleFieldForm(FlaskForm):
     first_field = StringField("")
     submit = SubmitField("Submit")
@@ -34,7 +38,6 @@ class Row:
         self.table_values = values
         self.name = None
         self.set_name()
-        # self.form = DeleteForm()
 
     def set_name(self):
         if self.data_type == CHAR and len(self.table_values[1]) > 0:
@@ -53,6 +56,10 @@ class Row:
 
 class DeleteForm(FlaskForm):
     submit = SubmitField("Delete")
+
+
+class TestForm(FlaskForm):
+    select_field = SelectField("", coerce=int)
 
 
 class LocationForm(FlaskForm):
