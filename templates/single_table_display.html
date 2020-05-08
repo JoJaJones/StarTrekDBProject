@@ -16,12 +16,11 @@
                             {% for value in column_names %}
                                 <th scope="col">{{value}}</th>
                             {% endfor %}
-                            <!--<th scope="col" class="w-25">Update</th>-->
                             <th scope="col" colspan="2" class="w-25"></th>
                         </tr>
                     </thead>
                     {% for item in query_res %}
-                        <!--<a href="{{ load_data_page(item)}}">-->
+
                             <tr>
                                 {% for cell in item.table_values %}
                                     <td class="align-middle">{{cell}}</td>
@@ -31,7 +30,6 @@
                                 <td class="align-middle" style="max-width: 25%;"><input type="submit" name="delete_button" class="btn btn-outline-danger btn-sm" value="Delete {{item.table_values[0]}}"
                                            formaction="/{{target}}?delete_no={{item.id}}" style="width: 100%;"></td>
                             </tr>
-                        <!--</a>-->
                     {% endfor %}
                 </table>
             {% endif %}
