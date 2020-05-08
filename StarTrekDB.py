@@ -36,20 +36,23 @@ def init_DB():
 
 
 @app.route("/add-species", methods=["GET", "POST"])
-def add_species():
-    form = SingleFieldForm()
-    form.first_field.label = "Species Name: "
+def add_species(render_form: bool = True):
     query_res = []
     db = connect_to_database()
     columns = ["Species"]
+    form = False
 
-    if form.validate_on_submit():
-        name = str(form.first_field.data)
-        form.first_field.data = ""
+    if render_form:
+        form = SingleFieldForm()
+        form.first_field.label = "Species Name: "
 
-        query = "INSERT INTO species(name) VALUES (%s)"
-        data = tuple([name])
-        res = execute_query(db, query, data)
+        if form.validate_on_submit():
+            name = str(form.first_field.data)
+            form.first_field.data = ""
+
+            query = "INSERT INTO species(name) VALUES (%s)"
+            data = tuple([name])
+            res = execute_query(db, query, data)
 
     if "delete_no" in request.args:
         delete_row(columns[0].lower(), db, request.args["delete_no"])

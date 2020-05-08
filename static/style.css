@@ -40,7 +40,7 @@ input {
     border-radius: 3px;
 }
 
-input.btn > btn-danger{
+td > input.btn.btn-danger{
     width: 100%;
 }
 
