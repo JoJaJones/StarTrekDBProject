@@ -40,7 +40,7 @@ class Row:
         self.set_name()
 
     def set_name(self):
-        if self.data_type == CHARACTERS and len(self.table_values[1]) > 0:
+        if self.data_type == CHARACTERS and self.table_values[1] and len(self.table_values[1]) > 0:
             self.name = self.table_values[1]
         else:
             self.name = self.table_values[0]
