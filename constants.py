@@ -167,7 +167,7 @@ PREPOPULATE = {
     '11': f"INSERT INTO {SERIES}"
            "(name,start_date)"
            "VALUES"
-           "('Discovery','2017-09-24');"
+           "('Discovery','2017-09-24');",
 
     '12': f"INSERT INTO {CHAR_SPECIES}"
            "(cid,sid)"
