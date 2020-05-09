@@ -107,7 +107,7 @@ def browse_species():
 def add_species():
     form = SingleFieldForm()
     form.first_field.label = "Species Name: "
-    query_res = []
+
     db = connect_to_database()
     columns = VIEW_COLUMNS[SPECIES]
 
@@ -148,7 +148,7 @@ def browse_affiliations():
 def add_affiliation():
     form = SingleFieldForm()
     form.first_field.label = "Affiliation Name: "
-    query_res = []
+
     db = connect_to_database()
     columns = VIEW_COLUMNS[AFFILIATIONS]
 
@@ -204,9 +204,11 @@ def add_series():
         end = form.third_field.data
         form.third_field.data.clear()
 
+        # validate the date data entered by the user and then format it for entry to DB
         sanitize_date(start)
         start = f"{start['year']}-{start['month']}-{start['day']}"
 
+        # validate the date data entered by the user and then format it for entry to DB
         sanitize_date(end)
         end = f"{end['year']}-{end['month']}-{end['day']}"
 
@@ -306,7 +308,7 @@ def browse_characters():
 @app.route("/add-character", methods=["GET", "POST"])
 def add_character():
     form = CharacterForm()
-    query_res = []
+
     db = connect_to_database()
     columns = VIEW_COLUMNS[CHARACTERS][:]
     print(form.first_field.label.text)
