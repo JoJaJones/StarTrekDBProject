@@ -89,11 +89,12 @@ def add_species():
     if "update_no" in request.args:
         query = f"SELECT * FROM {SPECIES} WHERE id = {request.args['update_no']}"
         res = execute_query(db, query).fetchone()
-        session["update_id"] = res[0]
-        session[SUBMIT_TYPE] = "update"
-        session["update_page"] = SPECIES
-        form.first_field.data = f"{res[1]}"
-        header = f"Update {res[1]}"
+        if res is not None:
+            session["update_id"] = res[0]
+            session[SUBMIT_TYPE] = "update"
+            session["update_page"] = SPECIES
+            form.first_field.data = f"{res[1]}"
+            header = f"Update {res[1]}"
 
     query_res = select_query(db, BASIC_SELECT_QUERIES[SPECIES], SPECIES)
 
@@ -150,11 +151,12 @@ def add_affiliation():
     if "update_no" in request.args:
         query = f"SELECT * FROM {AFFILIATIONS} WHERE id = {request.args['update_no']}"
         res = execute_query(db, query).fetchone()
-        session["update_id"] = res[0]
-        session[SUBMIT_TYPE] = "update"
-        session["update_page"] = AFFILIATIONS
-        form.first_field.data = f"{res[1]}"
-        header = f"Update {res[1]}"
+        if res is not None:
+            session["update_id"] = res[0]
+            session[SUBMIT_TYPE] = "update"
+            session["update_page"] = AFFILIATIONS
+            form.first_field.data = f"{res[1]}"
+            header = f"Update {res[1]}"
 
     query_res = select_query(db, BASIC_SELECT_QUERIES[AFFILIATIONS], AFFILIATIONS)
 
@@ -225,14 +227,15 @@ def add_series():
         delete_row(SERIES, db, request.args["delete_no"])
 
     if "update_no" in request.args:  # TODO
-        query = f"SELECT * FROM {SPECIES} WHERE id = {request.args['update_no']}"
+        query = f"SELECT * FROM {SERIES} WHERE id = {request.args['update_no']}"
         res = execute_query(db, query).fetchone()
         print(res)
-        session["update_id"] = res[0]
-        session[SUBMIT_TYPE] = "update"
-        session["update_page"] = SPECIES
-        form.first_field.data = f"{res[1]}"
-        header = f"Update {res[1]}"
+        if res is not None:
+            session["update_id"] = res[0]
+            session[SUBMIT_TYPE] = "update"
+            session["update_page"] = SERIES
+            form.first_field.data = f"{res[1]}"
+            header = f"Update {res[1]}"
 
     query_res = select_query(db, BASIC_SELECT_QUERIES[SERIES], SERIES)
     for item in query_res:
@@ -295,13 +298,14 @@ def add_location():
         delete_row(SERIES, db, request.args["delete_no"])
 
     if "update_no" in request.args:  # TODO
-        query = f"SELECT * FROM {SPECIES} WHERE id = {request.args['update_no']}"
+        query = f"SELECT * FROM {LOCATIONS} WHERE id = {request.args['update_no']}"
         res = execute_query(db, query).fetchone()
-        session["update_id"] = res[0]
-        session[SUBMIT_TYPE] = "update"
-        session["update_page"] = SPECIES
-        form.first_field.data = f"{res[1]}"
-        header = f"Update {res[1]}"
+        if res is not None:
+            session["update_id"] = res[0]
+            session[SUBMIT_TYPE] = "update"
+            session["update_page"] = LOCATIONS
+            form.first_field.data = f"{res[1]}"
+            header = f"Update {res[1]}"
     # TODO *********************************************************************
 
     query_res = select_query(db, BASIC_SELECT_QUERIES[LOCATIONS], LOCATIONS)
@@ -423,13 +427,14 @@ def add_character():
         delete_row(CHARACTERS, db, request.args["delete_no"])
 
     if "update_no" in request.args:  # TODO
-        query = f"SELECT * FROM {SPECIES} WHERE id = {request.args['update_no']}"
+        query = f"SELECT * FROM {CHARACTERS} WHERE id = {request.args['update_no']}"
         res = execute_query(db, query).fetchone()
-        session["update_id"] = res[0]
-        session[SUBMIT_TYPE] = "update"
-        session["update_page"] = SPECIES
-        form.first_field.data = f"{res[1]}"
-        header = f"Update {res[1]}"
+        if res is not None:
+            session["update_id"] = res[0]
+            session[SUBMIT_TYPE] = "update"
+            session["update_page"] = CHARACTERS
+            form.first_field.data = f"{res[1]}"
+            header = f"Update {res[1]}"
 
     query_res = select_query(db, BASIC_SELECT_QUERIES[CHARACTERS], CHARACTERS)
     for item in query_res:
