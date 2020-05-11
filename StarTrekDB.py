@@ -285,24 +285,21 @@ def add_location():
     if UPDATE_PAGE in session and session[UPDATE_PAGE] != LOCATIONS:
         session[SUBMIT_TYPE] = "insert"
 
+    print(form.second_field)
+
     # TODO *********************************************************************
     if form.validate_on_submit():
         name = str(form.first_field.data)
         form.first_field.data = ""
-        start = form.second_field.data
-        form.second_field.data.clear()
-        end = form.third_field.data
-        form.third_field.data.clear()
+        type = form.second_field.data
+        form.second_field.data = ""
+        print(type)
 
-        sanitize_date(start)
-        start = f"{start['year']}-{start['month']}-{start['day']}"
 
-        sanitize_date(end)
-        end = f"{end['year']}-{end['month']}-{end['day']}"
 
-        query = "INSERT INTO series(name, start_date, end_date) VALUES (%s, %s, %s)"
-        data = (name, start, end)
-        res = execute_query(db, query, data)
+        # query = "INSERT INTO series(name, start_date, end_date) VALUES (%s, %s, %s)"
+        # data = (name, start, end)
+        # res = execute_query(db, query, data)
 
     if "delete_no" in request.args:
         delete_row(SERIES, db, request.args["delete_no"])
