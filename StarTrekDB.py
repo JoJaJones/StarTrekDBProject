@@ -52,6 +52,9 @@ def browse_species():
 
 @app.route("/add-species", methods=["GET", "POST"])
 def add_species():
+    if SUBMIT_TYPE not in session:
+        session[SUBMIT_TYPE] = "insert"
+
     form = SingleFieldForm()
     form.first_field.label.text = "Species Name"
 
@@ -60,17 +63,12 @@ def add_species():
     header = "Add New Species"
 
     if UPDATE_PAGE in session and session[UPDATE_PAGE] != SPECIES:
-        del session[SUBMIT_TYPE]
-
-    if SUBMIT_TYPE in session:
-        sub_type = session[SUBMIT_TYPE]
-    else:
-        sub_type = INSERT
+        session[SUBMIT_TYPE] = "insert"
 
     if form.validate_on_submit():
         name = str(form.first_field.data)
         form.first_field.data = ""
-        if sub_type == INSERT:
+        if session[SUBMIT_TYPE] == "insert":
             query = "INSERT INTO species(name) VALUES (%s)"
         else:
             query = f"UPDATE species SET name = %s WHERE id = {session['update_id']}"
@@ -108,6 +106,9 @@ def browse_affiliations():
 
 @app.route("/add-affiliations", methods=["GET", "POST"])
 def add_affiliation():
+    if SUBMIT_TYPE not in session:
+        session[SUBMIT_TYPE] = "insert"
+
     form = SingleFieldForm()
     form.first_field.label.text = "Affiliation Name"
     query_res = []
@@ -116,12 +117,7 @@ def add_affiliation():
     header = "Add New Affiliation"
 
     if UPDATE_PAGE in session and session[UPDATE_PAGE] != AFFILIATIONS:
-        session[SUBMIT_TYPE] = False
-
-    if SUBMIT_TYPE in session:
-        sub_type = session[SUBMIT_TYPE]
-    else:
-        sub_type = INSERT
+        session[SUBMIT_TYPE] = "insert"
 
     if form.validate_on_submit():
         name = str(form.first_field.data)
@@ -162,6 +158,9 @@ def browse_series():
 
 @app.route("/add-series", methods=["GET", "POST"])
 def add_series():
+    if SUBMIT_TYPE not in session:
+        session[SUBMIT_TYPE] = "insert"
+
     form = SeriesForm()
     form.second_field.label.text = "Series Start Date"
 
@@ -172,13 +171,7 @@ def add_series():
     header = "Add New Series"
 
     if UPDATE_PAGE in session and session[UPDATE_PAGE] != SERIES:
-        session[SUBMIT_TYPE] = False
-
-    if SUBMIT_TYPE in session:
-        sub_type = session[SUBMIT_TYPE]
-    else:
-        sub_type = INSERT
-
+        session[SUBMIT_TYPE] = "insert"
 
     if form.validate_on_submit():
         name = str(form.first_field.data)
@@ -233,6 +226,9 @@ def browse_locations():
 
 @app.route("/add-location", methods=["GET", "POST"])
 def add_location():
+    if SUBMIT_TYPE not in session:
+        session[SUBMIT_TYPE] = "insert"
+
     form = LocationForm()
     form.first_field.label = "Location Name"
     form.second_field.label = "Location Type"
@@ -243,12 +239,7 @@ def add_location():
     print(form.second_field.choices)
 
     if UPDATE_PAGE in session and session[UPDATE_PAGE] != LOCATIONS:
-        session[SUBMIT_TYPE] = False
-
-    if SUBMIT_TYPE in session:
-        sub_type = session[SUBMIT_TYPE]
-    else:
-        sub_type = INSERT
+        session[SUBMIT_TYPE] = "insert"
 
     # TODO *********************************************************************
     if form.validate_on_submit():
@@ -327,11 +318,13 @@ def browse_characters():
 
 @app.route("/add-character", methods=["GET", "POST"])
 def add_character():
+    if SUBMIT_TYPE not in session:
+        session[SUBMIT_TYPE] = "insert"
+
     form = CharacterForm()
     query_res = []
     db = connect_to_database()
     columns = VIEW_COLUMNS[CHARACTERS][:]
-    header = "Add New Character"
     print(form.first_field.label.text)
 
     query = "SELECT id, name FROM species ORDER BY name"
@@ -355,13 +348,7 @@ def add_character():
         columns.append("Series")
 
     if UPDATE_PAGE in session and session[UPDATE_PAGE] != CHARACTERS:
-        session[SUBMIT_TYPE] = False
-
-    if SUBMIT_TYPE in session:
-        sub_type = session[SUBMIT_TYPE]
-    else:
-        sub_type = INSERT
-
+        session[SUBMIT_TYPE] = "insert"
 
     if form.validate_on_submit():
         first_name = form.first_field.data
@@ -440,19 +427,16 @@ def browse_actors():
 
 @app.route("/add-actors", methods=["GET", "POST"])
 def add_actor():
+    if SUBMIT_TYPE not in session:
+        session[SUBMIT_TYPE] = "insert"
+
     form = AddActorForm()
-    query_res = []
     db = connect_to_database()
     columns = VIEW_COLUMNS[ACTORS]
     header = "Add New Actor"
 
     if UPDATE_PAGE in session and session[UPDATE_PAGE] != ACTORS:
-        session[SUBMIT_TYPE] = False
-
-    if SUBMIT_TYPE in session:
-        sub_type = session[SUBMIT_TYPE]
-    else:
-        sub_type = INSERT
+        session[SUBMIT_TYPE] = "insert"
 
     if "update_no" in request.args:
         id = request.args['update_no']
