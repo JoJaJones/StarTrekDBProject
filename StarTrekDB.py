@@ -59,6 +59,9 @@ def add_species():
     columns = VIEW_COLUMNS[SPECIES]
     header = "Add New Species"
 
+    if UPDATE_PAGE in session and session[UPDATE_PAGE] != SPECIES:
+        del session[SUBMIT_TYPE]
+
     if SUBMIT_TYPE in session:
         sub_type = session[SUBMIT_TYPE]
     else:
@@ -73,6 +76,7 @@ def add_species():
             query = f"UPDATE species SET name = %s WHERE id = {session['update_id']}"
         data = tuple([name])
         res = execute_query(db, query, data)
+        del session[SUBMIT_TYPE]
 
     if "delete_no" in request.args:
         delete_row(SPECIES, db, request.args["delete_no"])
@@ -82,6 +86,7 @@ def add_species():
         res = execute_query(db, query).fetchone()
         session["update_id"] = res[0]
         session[SUBMIT_TYPE] = "update"
+        session["update_page"] = SPECIES
         form.first_field.data = f"{res[1]}"
         header = f"Update {res[1]}"
 
@@ -104,11 +109,19 @@ def browse_affiliations():
 @app.route("/add-affiliations", methods=["GET", "POST"])
 def add_affiliation():
     form = SingleFieldForm()
-    form.first_field.label = "Affiliation Name: "
+    form.first_field.label.text = "Affiliation Name"
     query_res = []
     db = connect_to_database()
     columns = VIEW_COLUMNS[AFFILIATIONS]
     header = "Add New Affiliation"
+
+    if UPDATE_PAGE in session and session[UPDATE_PAGE] != AFFILIATIONS:
+        session[SUBMIT_TYPE] = False
+
+    if SUBMIT_TYPE in session:
+        sub_type = session[SUBMIT_TYPE]
+    else:
+        sub_type = INSERT
 
     if form.validate_on_submit():
         name = str(form.first_field.data)
@@ -120,6 +133,15 @@ def add_affiliation():
 
     if "delete_no" in request.args:
         delete_row(AFFILIATIONS, db, request.args["delete_no"])
+
+    if "update_no" in request.args:
+        query = f"SELECT * FROM {AFFILIATIONS} WHERE id = {request.args['update_no']}"
+        res = execute_query(db, query).fetchone()
+        session["update_id"] = res[0]
+        session[SUBMIT_TYPE] = "update"
+        session["update_page"] = AFFILIATIONS
+        form.first_field.data = f"{res[1]}"
+        header = f"Update {res[1]}"
 
     query_res = select_query(db, BASIC_SELECT_QUERIES[AFFILIATIONS], AFFILIATIONS)
 
@@ -141,13 +163,22 @@ def browse_series():
 @app.route("/add-series", methods=["GET", "POST"])
 def add_series():
     form = SeriesForm()
-    form.second_field.label = "Series Start Date"
+    form.second_field.label.text = "Series Start Date"
 
-    form.third_field.label = "Series End Date"
+    form.third_field.label.text = "Series End Date"
 
     db = connect_to_database()
     columns = VIEW_COLUMNS[SERIES]
     header = "Add New Series"
+
+    if UPDATE_PAGE in session and session[UPDATE_PAGE] != SERIES:
+        session[SUBMIT_TYPE] = False
+
+    if SUBMIT_TYPE in session:
+        sub_type = session[SUBMIT_TYPE]
+    else:
+        sub_type = INSERT
+
 
     if form.validate_on_submit():
         name = str(form.first_field.data)
@@ -169,6 +200,15 @@ def add_series():
 
     if "delete_no" in request.args:
         delete_row(SERIES, db, request.args["delete_no"])
+
+    if "update_no" in request.args:  # TODO
+        query = f"SELECT * FROM {SPECIES} WHERE id = {request.args['update_no']}"
+        res = execute_query(db, query).fetchone()
+        session["update_id"] = res[0]
+        session[SUBMIT_TYPE] = "update"
+        session["update_page"] = SPECIES
+        form.first_field.data = f"{res[1]}"
+        header = f"Update {res[1]}"
 
     query_res = select_query(db, BASIC_SELECT_QUERIES[SERIES], SERIES)
     for item in query_res:
@@ -201,6 +241,46 @@ def add_location():
 
     db = connect_to_database()
     print(form.second_field.choices)
+
+    if UPDATE_PAGE in session and session[UPDATE_PAGE] != LOCATIONS:
+        session[SUBMIT_TYPE] = False
+
+    if SUBMIT_TYPE in session:
+        sub_type = session[SUBMIT_TYPE]
+    else:
+        sub_type = INSERT
+
+    # TODO *********************************************************************
+    if form.validate_on_submit():
+        name = str(form.first_field.data)
+        form.first_field.data = ""
+        start = form.second_field.data
+        form.second_field.data.clear()
+        end = form.third_field.data
+        form.third_field.data.clear()
+
+        sanitize_date(start)
+        start = f"{start['year']}-{start['month']}-{start['day']}"
+
+        sanitize_date(end)
+        end = f"{end['year']}-{end['month']}-{end['day']}"
+
+        query = "INSERT INTO series(name, start_date, end_date) VALUES (%s, %s, %s)"
+        data = (name, start, end)
+        res = execute_query(db, query, data)
+
+    if "delete_no" in request.args:
+        delete_row(SERIES, db, request.args["delete_no"])
+
+    if "update_no" in request.args:  # TODO
+        query = f"SELECT * FROM {SPECIES} WHERE id = {request.args['update_no']}"
+        res = execute_query(db, query).fetchone()
+        session["update_id"] = res[0]
+        session[SUBMIT_TYPE] = "update"
+        session["update_page"] = SPECIES
+        form.first_field.data = f"{res[1]}"
+        header = f"Update {res[1]}"
+    # TODO *********************************************************************
 
     query_res = select_query(db, BASIC_SELECT_QUERIES[LOCATIONS], LOCATIONS)
     return render_template("add_location_form.html", form=form, query_res=query_res,
@@ -274,6 +354,15 @@ def add_character():
     if display_series:
         columns.append("Series")
 
+    if UPDATE_PAGE in session and session[UPDATE_PAGE] != CHARACTERS:
+        session[SUBMIT_TYPE] = False
+
+    if SUBMIT_TYPE in session:
+        sub_type = session[SUBMIT_TYPE]
+    else:
+        sub_type = INSERT
+
+
     if form.validate_on_submit():
         first_name = form.first_field.data
         form.first_field.data = ""
@@ -315,6 +404,15 @@ def add_character():
     if "delete_no" in request.args:
         delete_row(CHARACTERS, db, request.args["delete_no"])
 
+    if "update_no" in request.args:  # TODO
+        query = f"SELECT * FROM {SPECIES} WHERE id = {request.args['update_no']}"
+        res = execute_query(db, query).fetchone()
+        session["update_id"] = res[0]
+        session[SUBMIT_TYPE] = "update"
+        session["update_page"] = SPECIES
+        form.first_field.data = f"{res[1]}"
+        header = f"Update {res[1]}"
+
     query_res = select_query(db, BASIC_SELECT_QUERIES[CHARACTERS], CHARACTERS)
     for item in query_res:
         # TODO add queries to set these values instead of adding a blank value to the data set
@@ -348,8 +446,13 @@ def add_actor():
     columns = VIEW_COLUMNS[ACTORS]
     header = "Add New Actor"
 
-    if "delete_no" in request.args:
-        delete_row(ACTORS, db, request.args["delete_no"])
+    if UPDATE_PAGE in session and session[UPDATE_PAGE] != ACTORS:
+        session[SUBMIT_TYPE] = False
+
+    if SUBMIT_TYPE in session:
+        sub_type = session[SUBMIT_TYPE]
+    else:
+        sub_type = INSERT
 
     if "update_no" in request.args:
         id = request.args['update_no']
@@ -378,6 +481,18 @@ def add_actor():
         query = f"INSERT INTO {ACTORS} (fname,lname,birthday,imdb) VALUES (%s, %s, %s, %s)"
         data = tuple([fname,lname,birthday,imdb])
         execute_query(db, query, data)
+
+    if "delete_no" in request.args:
+        delete_row(ACTORS, db, request.args["delete_no"])
+
+    if "update_no" in request.args:  # TODO
+        query = f"SELECT * FROM {SPECIES} WHERE id = {request.args['update_no']}"
+        res = execute_query(db, query).fetchone()
+        session["update_id"] = res[0]
+        session[SUBMIT_TYPE] = "update"
+        session["update_page"] = SPECIES
+        form.first_field.data = f"{res[1]}"
+        header = f"Update {res[1]}"
 
     query_res = select_query(db, BASIC_SELECT_QUERIES[ACTORS], ACTORS)
 

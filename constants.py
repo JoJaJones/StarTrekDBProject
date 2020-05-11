@@ -4,6 +4,7 @@ INSERT = "insert"
 UPDATE = "update"
 
 SUBMIT_TYPE = "sub_type"
+UPDATE_PAGE = "update_page"
 
 CHARACTERS       = "characters"
 ACTORS           = "actors"
