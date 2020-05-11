@@ -4,7 +4,7 @@
     <div class="jumbotron bg-dark text-light" style="font-family: stfont2">
         <fieldset>
             <legend>{{ header}}</legend>
-            <form method="POST">
+            <form {{special_action}} method="POST">
                 {{ form.hidden_tag() }}
                 {% block form_specifics %}
 

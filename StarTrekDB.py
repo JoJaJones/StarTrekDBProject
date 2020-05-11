@@ -495,7 +495,7 @@ def add_actor():
 
         return render_template("add_actor_form.html", form=form, query_res=None,
                            column_names=columns, query_has_value=False,
-                           header="Edit New Actor", updating=True, id=id)
+                           header=f"Update {res[0]} {res[1]}", special_action='action="/edit-actors?id={{id}}"', id=id)
 
     if form.validate_on_submit():
         fname = str(form.fname_field.data)
@@ -516,7 +516,7 @@ def add_actor():
 
         return render_template("add_actor_form.html", form=form, query_res=query_res,
                                column_names=columns, query_has_value=(len(query_res) > 0),
-                               header=header, target="add-actors", updating=False)
+                               header=header, target="add-actors", special_action='')
 
     if "delete_no" in request.args:
         delete_row(ACTORS, db, request.args["delete_no"])
@@ -534,7 +534,7 @@ def add_actor():
 
     return render_template("add_actor_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
-                           header=header, target="add-actors", updating=False)
+                           header=header, target="add-actors", special_action='')
 
 @app.route("/edit-actors", methods=["GET", "POST"])
 def edit_actor():
