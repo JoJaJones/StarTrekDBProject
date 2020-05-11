@@ -17,9 +17,9 @@ class DateSubForm(Form):
                                                                       message="Year must be 1966 or later")])
 
     def clear(self):
-        self.month.data = ""
-        self.day.data = ""
-        self.year.data = ""
+        self.month.data = None
+        self.day.data = None
+        self.year.data = None
 
 
 class Display:
@@ -71,7 +71,7 @@ class LocationForm(FlaskForm):
 
 
 class SeriesForm(FlaskForm):
-    first_field = StringField("Series Name")
+    first_field = StringField("Series Name", validators=[validators.Required])
     second_field = FormField(DateSubForm)
     third_field = FormField(DateSubForm)
     submit = SubmitField("Submit")
