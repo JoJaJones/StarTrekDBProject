@@ -27,7 +27,7 @@ class Display:
 
 
 class SingleFieldForm(FlaskForm):
-    first_field = StringField("", validators=[validators.Required])
+    first_field = StringField("", validators=[validators.DataRequired()])
     submit = SubmitField("Submit")
 
 
@@ -71,7 +71,7 @@ class LocationForm(FlaskForm):
 
 
 class SeriesForm(FlaskForm):
-    first_field = StringField("Series Name", validators=[validators.Required])
+    first_field = StringField("Series Name", validators=[validators.DataRequired()])
     second_field = FormField(DateSubForm)
     third_field = FormField(DateSubForm)
     submit = SubmitField("Submit")
