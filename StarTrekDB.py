@@ -229,7 +229,7 @@ def add_series():
     if "update_no" in request.args:  # TODO
         query = f"SELECT * FROM {SERIES} WHERE id = {request.args['update_no']}"
         res = execute_query(db, query).fetchone()
-        print(res)
+        print(res, res[2]['year'])
         if res is not None:
             session["update_id"] = res[0]
             session[SUBMIT_TYPE] = "update"
