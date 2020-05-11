@@ -190,8 +190,10 @@ def add_series():
     if UPDATE_PAGE in session and session[UPDATE_PAGE] != SERIES:
         session[SUBMIT_TYPE] = "insert"
 
-    print(form.second_field.data)
     print(form.second_field.form)
+    print(form.second_field.form.year)
+    print(form.second_field.form.year.label)
+    print(form.second_field.form.year.label.text)
 
     if form.validate_on_submit():
         name = str(form.first_field.data)
