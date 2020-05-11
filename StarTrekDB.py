@@ -17,16 +17,14 @@ def init_DB():
         db = connect_to_database()
         for i in range(len(TABLES_LIST)-1, -1, -1):
             if TABLES_LIST[i] in TABLES:
-                # print(TABLES_LIST[i])
                 query = f"DROP TABLE IF EXISTS {TABLES_LIST[i]};"
                 execute_query(db, query)
 
         for table in TABLES_LIST:
             if table in TABLES:
-                # print(table)
                 query = TABLES[table]
                 res = execute_query(db, query)
-                print(res)
+
                 if result[-2] != ":":
                     result += ", "
 
@@ -196,6 +194,7 @@ def add_series():
         name = str(form.first_field.data)
         form.first_field.data = ""
         start = form.second_field.data
+        print(form.second_field.year.data)
         form.second_field.year.data = ""
         form.second_field.month.data = ""
         form.second_field.day.data = ""
@@ -233,7 +232,7 @@ def add_series():
     if "update_no" in request.args:
         query = f"SELECT * FROM {SERIES} WHERE id = {request.args['update_no']}"
         res = execute_query(db, query).fetchone()
-        print(res, res[2].year)
+
         if res is not None:
             session["update_id"] = res[0]
             session[SUBMIT_TYPE] = "update"
@@ -280,12 +279,9 @@ def add_location():
     header = "Add New Location"
 
     db = connect_to_database()
-    print(form.second_field.choices)
 
     if UPDATE_PAGE in session and session[UPDATE_PAGE] != LOCATIONS:
         session[SUBMIT_TYPE] = "insert"
-
-    print(form.second_field.data)
 
     if form.validate_on_submit():
         name = str(form.first_field.data)
@@ -371,7 +367,6 @@ def add_character():
     query_res = []
     db = connect_to_database()
     columns = VIEW_COLUMNS[CHARACTERS][:]
-    print(form.first_field.label.text)
 
     query = "SELECT id, name FROM species ORDER BY name"
     res = execute_query(db, query)
@@ -693,7 +688,6 @@ def select_query(connection, query, data_type):
 
     # prepare and format the results
     for item in res:
-        print((item[0], list(item[1:]), data_type))
         query_res.append(Row(item[0], list(item[1:]), data_type))
 
     return query_res
