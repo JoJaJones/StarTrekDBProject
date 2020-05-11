@@ -285,7 +285,7 @@ def add_location():
     if UPDATE_PAGE in session and session[UPDATE_PAGE] != LOCATIONS:
         session[SUBMIT_TYPE] = "insert"
 
-    print(form.second_field)
+    print(form.second_field.data)
 
     # TODO *********************************************************************
     if form.validate_on_submit():
