@@ -27,7 +27,7 @@ class Display:
 
 
 class SingleFieldForm(FlaskForm):
-    first_field = StringField("")
+    first_field = StringField("", validators=[validators.Required])
     submit = SubmitField("Submit")
 
 
