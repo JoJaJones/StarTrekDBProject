@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 from constants import *
 from db_connector.db_connector import connect_to_database, execute_query
 from STForms import *
@@ -57,23 +57,38 @@ def add_species():
     query_res = []
     db = connect_to_database()
     columns = VIEW_COLUMNS[SPECIES]
+    header = "Add New Species"
+
+
+    if SUBMIT_TYPE in session:
+        sub_type = session[SUBMIT_TYPE]
+    else:
+        sub_type = INSERT
 
     if form.validate_on_submit():
         name = str(form.first_field.data)
         form.first_field.data = ""
-
-        query = "INSERT INTO species(name) VALUES (%s)"
+        if sub_type == INSERT:
+            query = "INSERT INTO species(name) VALUES (%s)"
+        else:
+            query = ""
         data = tuple([name])
         res = execute_query(db, query, data)
 
     if "delete_no" in request.args:
         delete_row(SPECIES, db, request.args["delete_no"])
 
+    if "update_no" in request.args:
+        query = f"SELECT * FROM {SPECIES} WHERE id = {request.args['update_no']}"
+        res = execute_query(db, query).fetchone()
+        print(res)
+
+
     query_res = select_query(db, BASIC_SELECT_QUERIES[SPECIES], SPECIES)
 
     return render_template("single_field_add_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
-                           header="Add New Species", target="add-species")
+                           header=header, target="add-species")
 
 @app.route("/browse-affiliations", methods=["GET", "POST"])
 def browse_affiliations():
@@ -92,6 +107,7 @@ def add_affiliation():
     query_res = []
     db = connect_to_database()
     columns = VIEW_COLUMNS[AFFILIATIONS]
+    header = "Add New Affiliation"
 
     if form.validate_on_submit():
         name = str(form.first_field.data)
@@ -108,7 +124,7 @@ def add_affiliation():
 
     return render_template("single_field_add_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
-                           header="Add New Affiliation", target="add-affiliations")
+                           header=header, target="add-affiliations")
 
 
 @app.route("/browse-series", methods=["GET", "POST"])
@@ -130,6 +146,7 @@ def add_series():
 
     db = connect_to_database()
     columns = VIEW_COLUMNS[SERIES]
+    header = "Add New Series"
 
     if form.validate_on_submit():
         name = str(form.first_field.data)
@@ -159,7 +176,7 @@ def add_series():
 
     return render_template("add_series_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
-                           header="Add New Series", target="add-series")
+                           header=header, target="add-series")
 
 
 @app.route("/browse-locations", methods=["GET", "POST"])
@@ -179,6 +196,7 @@ def add_location():
     form.first_field.label = "Location Name"
     form.second_field.label = "Location Type"
     columns = VIEW_COLUMNS[LOCATIONS]
+    header = "Add New Location"
 
     db = connect_to_database()
     print(form.second_field.choices)
@@ -186,13 +204,14 @@ def add_location():
     query_res = select_query(db, BASIC_SELECT_QUERIES[LOCATIONS], LOCATIONS)
     return render_template("add_location_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
-                           header="Add New Location", target="add-location")
+                           header=header, target="add-location")
 
 
 @app.route("/browse-characters", methods=["GET", "POST"])
 def browse_characters():
     db = connect_to_database()
     columns = VIEW_COLUMNS[CHARACTERS][:]
+    header = "Add New Species"
 
     query = "SELECT id, name FROM species ORDER BY name"
     res = execute_query(db, query)
@@ -222,7 +241,7 @@ def browse_characters():
 
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
-                           header="Add New Species", target="add-species")
+                           header=header, target="add-species")
 
 
 @app.route("/add-character", methods=["GET", "POST"])
@@ -231,6 +250,7 @@ def add_character():
     query_res = []
     db = connect_to_database()
     columns = VIEW_COLUMNS[CHARACTERS][:]
+    header = "Add New Character"
     print(form.first_field.label.text)
 
     query = "SELECT id, name FROM species ORDER BY name"
@@ -325,6 +345,7 @@ def add_actor():
     query_res = []
     db = connect_to_database()
     columns = VIEW_COLUMNS[ACTORS]
+    header = "Add New Actor"
 
     if "delete_no" in request.args:
         delete_row(ACTORS, db, request.args["delete_no"])
@@ -361,7 +382,7 @@ def add_actor():
 
     return render_template("AddActor.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
-                           header="Add New Actor", target="add-actors", updating=False)
+                           header=header, target="add-actors", updating=False)
 
 @app.route("/edit-actors", methods=["GET", "POST"])
 def edit_actor():

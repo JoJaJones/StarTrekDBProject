@@ -1,5 +1,10 @@
 SECRET = "SJootneelso"
 
+INSERT = "insert"
+UPDATE = "update"
+
+SUBMIT_TYPE = "sub_type"
+
 CHARACTERS       = "characters"
 ACTORS           = "actors"
 AFFILIATIONS     = "affiliations"
