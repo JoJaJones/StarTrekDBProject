@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from constants import *
 from db_connector.db_connector import connect_to_database, execute_query
 from STForms import *
@@ -326,6 +326,23 @@ def add_actor():
     db = connect_to_database()
     columns = VIEW_COLUMNS[ACTORS]
 
+    if "delete_no" in request.args:
+        delete_row(ACTORS, db, request.args["delete_no"])
+
+    if "update_no" in request.args:
+        id = request.args['update_no']
+        query = f"SELECT fname,lname,birthday,imdb FROM {ACTORS} WHERE id={id}"
+        res = execute_query(db, query).fetchall()
+        res = res[0]
+        form.fname_field.data = res[0]
+        form.lname_field.data = res[1]
+        form.birthday_field.data = str(res[2]).replace('-','/')
+        form.imdb_field.data = res[3]
+
+        return render_template("AddActor.html", form=form, query_res=None,
+                           column_names=columns, query_has_value=False,
+                           header="Edit New Actor", updating=True, id=id)
+
     if form.validate_on_submit():
         fname = str(form.fname_field.data)
         form.fname_field.data = ""
@@ -336,18 +353,30 @@ def add_actor():
         imdb = str(form.imdb_field.data)
         form.imdb_field.data = ""
         
-        query = f"INSERT INTO {ACTORS}(fname,lname,birthday,imdb) VALUES (%s, %s, %s, %s)"
+        query = f"INSERT INTO {ACTORS} (fname,lname,birthday,imdb) VALUES (%s, %s, %s, %s)"
         data = tuple([fname,lname,birthday,imdb])
         execute_query(db, query, data)
-
-    if "delete_no" in request.args:
-        delete_row(ACTORS, db, request.args["delete_no"])
 
     query_res = select_query(db, BASIC_SELECT_QUERIES[ACTORS], ACTORS)
 
     return render_template("AddActor.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
-                           header="Add New Actor", target="add-actors")
+                           header="Add New Actor", target="add-actors", updating=False)
+
+@app.route("/edit-actors", methods=["GET", "POST"])
+def edit_actor():
+    db = connect_to_database()
+    form = AddActorForm()
+    id = request.args['id']
+    fname = str(form.fname_field.data)
+    lname = str(form.lname_field.data)
+    birthday = str(form.birthday_field.data).replace('/','-')
+    imdb = str(form.imdb_field.data)
+    query = f"UPDATE {ACTORS} SET fname=(%s),lname=(%s),birthday=(%s),imdb=(%s) WHERE id={id}"
+    data = tuple([fname,lname,birthday,imdb])
+    execute_query(db, query, data)   
+
+    return redirect(url_for('add_actor'))
 
 
 @app.route("/connect-actor-char", methods=["GET", "POST"])
@@ -385,7 +414,7 @@ def create_table():
 
     table = request.args.get("table")
     db = connect_to_database()
-    query = f"DROP TABLE IF ExISTS {table};"
+    query = f"DROP TABLE IF EXISTS {table};"
     results = execute_query(db, query)
     query = TABLES[table]
     results = execute_query(db, query)
