@@ -235,8 +235,12 @@ def add_series():
             session[SUBMIT_TYPE] = "update"
             session["update_page"] = SERIES
             form.first_field.data = f"{res[1]}"
-            form.second_field.data = {"year": res[2].year, "month": res[2].month, "day": res[2].day}
-            form.third_field.data = {"year": res[3].year, "month": res[3].month, "day": res[3].day}
+            form.second_field.year.data = res[2].year
+            form.second_field.month.data = res[2].month
+            form.second_field.day.data= res[2].day
+            form.third_field.year.data = res[3].year
+            form.third_field.month.data = res[3].month
+            form.third_field.day.data = res[3].day
             header = f"Update {res[1]}"
 
     query_res = select_query(db, BASIC_SELECT_QUERIES[SERIES], SERIES)
