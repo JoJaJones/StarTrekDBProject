@@ -73,9 +73,14 @@ def add_species():
         else:
             query = f"UPDATE species SET name = %s WHERE id = {session['update_id']}"
             session[SUBMIT_TYPE] = "insert"
-            del request.args["update_no"]
         data = tuple([name])
         res = execute_query(db, query, data)
+
+        query_res = select_query(db, BASIC_SELECT_QUERIES[SPECIES], SPECIES)
+
+        return render_template("single_field_add_form.html", form=form, query_res=query_res,
+                               column_names=columns, query_has_value=(len(query_res) > 0),
+                               header=header, target="add-species")
 
     if "delete_no" in request.args:
         delete_row(SPECIES, db, request.args["delete_no"])
