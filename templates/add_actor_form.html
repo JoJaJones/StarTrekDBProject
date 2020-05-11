@@ -1,28 +1,24 @@
 {% extends "single_table_display.html" %}
 
 {% block content_form %}
-            {% if updating %}
-            <form action="/edit-actors?id={{id}}" method="POST">
-            {% else %}
-            <form action=method="POST">
-            {% endif %}
-                {{ form.hidden_tag() }}
-                <div class="form-row">
-                    <div class="form-group col-md-4">
-                    {{ form.fname_field.label }}{{ form.fname_field(class="form-control", placeholder=form.fname_field.label.text) }}
-                    </div>
-                    <div class="form-group col-md-4">
-                    {{ form.lname_field.label }}{{ form.lname_field(class="form-control", placeholder=form.lname_field.label.text) }}
-                    </div>
-                    <div class="form-row col-md-3">
-                        {{ form.birthday_field.label }}{{ form.birthday_field(class="form-control") }}
-                    </div>
-                    <div class="form-row col-md-8">
-                        {{ form.imdb_field.label }}{{ form.imdb_field(class="form-control") }}
-                    </div>
-                    <div class="form-row col-md-2 btn">
-                        {{ form.submit(class="btn btn-info", style="width: 100%;") }}
-                    </div>
-                </div>                  
-            </form>
+            <!--{% if updating %}-->
+            <!--<form action="/edit-actors?id={{id}}" method="POST">-->
+            <!--{% else %}-->
+            <!--<form action=method="POST">-->
+            <!--{% endif %}-->
+                <!--{{ form.hidden_tag() }}-->
+    <div class="form-row">
+        <div class="form-group col-md-4">
+        {{ form.fname_field.label }}{{ form.fname_field(class="form-control", placeholder=form.fname_field.label.text) }}
+        </div>
+        <div class="form-group col-md-4">
+        {{ form.lname_field.label }}{{ form.lname_field(class="form-control", placeholder=form.lname_field.label.text) }}
+        </div>
+    </div>
+    <div class="form-group">
+        {{ form.birthday_field.label }}{{ form.birthday_field(class="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ form.imdb_field.label }}{{ form.imdb_field(class="form-control") }}
+    </div>
 {% endblock %}
