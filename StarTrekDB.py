@@ -198,11 +198,9 @@ def add_series():
         form.first_field.data = ""
         start = form.second_field.data
         print(form.second_field.data)
-        form.second_field = FormField(DateSubForm())
         print(form.second_field.data)
         end = form.third_field.data
         # form.third_field.data = {"month": "", "year": "", "day":""}
-        form.third_field = FormField(DateSubForm())
 
         sanitize_date(start)
         start = f"{start['year']}-{start['month']}-{start['day']}"
@@ -223,9 +221,7 @@ def add_series():
             for i in range(1, 3):
                 item.reformat_date(i)
 
-        return render_template("add_series_form.html", form=form, query_res=query_res,
-                               column_names=columns, query_has_value=(len(query_res) > 0),
-                               header=header, target="add-series")
+        return redirect(url_for("add_series"))
 
     if "delete_no" in request.args:
         delete_row(SERIES, db, request.args["delete_no"])
