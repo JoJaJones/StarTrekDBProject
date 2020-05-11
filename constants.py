@@ -20,6 +20,8 @@ CHAR_SERIES_LOCS = "characters_series_locations"
 TABLES_LIST = [CHARACTERS, AFFILIATIONS, SPECIES, LOCATIONS, SERIES, ACTORS,
                CHAR_SPECIES, CHAR_AFFILS, CHAR_SERIES, CHAR_SERIES_LOCS]
 
+LOCATION_TYPE_DICT = {"ship": "Space Ship", "planet": "Planet", "station": "Space Station"}
+
 TABLES = {
     CHARACTERS: f"CREATE TABLE {CHARACTERS} ("
                  "id int(11) NOT NULL AUTO_INCREMENT,"
