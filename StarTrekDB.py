@@ -193,6 +193,7 @@ def add_series():
     print(form.second_field.form)
     print(form.second_field.form.year)
     print(form.second_field.form.year.label)
+    print(form.second_field.form.year.data)
     print(form.second_field.form.year.label.text)
 
     if form.validate_on_submit():
