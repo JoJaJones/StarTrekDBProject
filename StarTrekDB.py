@@ -318,8 +318,8 @@ def add_location():
 
     query_res = select_query(db, BASIC_SELECT_QUERIES[LOCATIONS], LOCATIONS)
     for item in query_res:
-        item.table_values[2] = LOCATION_TYPE_DICT(item.table_values[2])
-        
+        item.table_values[1] = LOCATION_TYPE_DICT(item.table_values[2])
+
     return render_template("add_location_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header=header, target="add-location")
