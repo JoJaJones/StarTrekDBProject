@@ -40,7 +40,7 @@ class Row:
         self.set_name()
 
     def set_name(self):
-        if self.data_type == CHARACTERS and len(self.table_values[1]) > 0:
+        if self.data_type == CHARACTERS and self.table_values[1] and len(self.table_values[1]) > 0:
             self.name = self.table_values[1]
         else:
             self.name = self.table_values[0]
@@ -93,3 +93,12 @@ class AddLocationToCharacter(FlaskForm):
     first_field = SelectField(coerce=int)
     second_field = SelectField(coerce=int)
     submit = SubmitField("Submit")
+
+
+class AddActorForm(FlaskForm):
+    fname_field    = StringField("First name", validators=[validators.Required()])
+    lname_field    = StringField("Last name", validators=[validators.Optional()])
+    birthday_field = StringField(label="Date", id='datepick', validators=[validators.Optional()])
+    imdb_field     = StringField("IMDB link", validators=[validators.Optional()])
+    submit         = SubmitField("Submit")
+

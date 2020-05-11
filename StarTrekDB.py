@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from constants import *
 from db_connector.db_connector import connect_to_database, execute_query
 from STForms import *
@@ -12,14 +12,14 @@ app.config["SECRET_KEY"] = SECRET
 def init_DB():
     password = request.args.get("pass")
     result = "Invalid password"
-    if password == "picard":
+    if password in ("picard","kirk"):
         result = "Tables created: "
         db = connect_to_database()
         for i in range(len(TABLES_LIST)-1, -1, -1):
             if TABLES_LIST[i] in TABLES:
                 # print(TABLES_LIST[i])
                 query = f"DROP TABLE IF EXISTS {TABLES_LIST[i]};"
-                res = execute_query(db, query)
+                execute_query(db, query)
 
         for table in TABLES_LIST:
             if table in TABLES:
@@ -31,6 +31,12 @@ def init_DB():
                     result += ", "
 
                 result += table
+
+    if password == "kirk":
+        for stmt in PREPOPULATE:
+            db.cursor().execute(PREPOPULATE[stmt])
+        db.commit()
+        result += '<br>Data pre-populated in tables'
 
     return result
 
@@ -311,12 +317,66 @@ def browse_actors():
     query_res = select_query(db, BASIC_SELECT_QUERIES[ACTORS], ACTORS)
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
-                           header="Add New Species", target="add-species")
+                           header="", target="add-actors")
 
-
-@app.route("/add-actor", methods=["GET", "POST"])
+@app.route("/add-actors", methods=["GET", "POST"])
 def add_actor():
-    return render_template("AddActor.html")
+    form = AddActorForm()
+    query_res = []
+    db = connect_to_database()
+    columns = VIEW_COLUMNS[ACTORS]
+
+    if "delete_no" in request.args:
+        delete_row(ACTORS, db, request.args["delete_no"])
+
+    if "update_no" in request.args:
+        id = request.args['update_no']
+        query = f"SELECT fname,lname,birthday,imdb FROM {ACTORS} WHERE id={id}"
+        res = execute_query(db, query).fetchall()
+        res = res[0]
+        form.fname_field.data = res[0]
+        form.lname_field.data = res[1]
+        form.birthday_field.data = str(res[2]).replace('-','/')
+        form.imdb_field.data = res[3]
+
+        return render_template("AddActor.html", form=form, query_res=None,
+                           column_names=columns, query_has_value=False,
+                           header="Edit New Actor", updating=True, id=id)
+
+    if form.validate_on_submit():
+        fname = str(form.fname_field.data)
+        form.fname_field.data = ""
+        lname = str(form.lname_field.data)
+        form.lname_field.data = ""
+        birthday = str(form.birthday_field.data).replace('/','-')
+        form.birthday_field.data = ""
+        imdb = str(form.imdb_field.data)
+        form.imdb_field.data = ""
+        
+        query = f"INSERT INTO {ACTORS} (fname,lname,birthday,imdb) VALUES (%s, %s, %s, %s)"
+        data = tuple([fname,lname,birthday,imdb])
+        execute_query(db, query, data)
+
+    query_res = select_query(db, BASIC_SELECT_QUERIES[ACTORS], ACTORS)
+
+    return render_template("AddActor.html", form=form, query_res=query_res,
+                           column_names=columns, query_has_value=(len(query_res) > 0),
+                           header="Add New Actor", target="add-actors", updating=False)
+
+@app.route("/edit-actors", methods=["GET", "POST"])
+def edit_actor():
+    db = connect_to_database()
+    form = AddActorForm()
+    id = request.args['id']
+    fname = str(form.fname_field.data)
+    lname = str(form.lname_field.data)
+    birthday = str(form.birthday_field.data).replace('/','-')
+    imdb = str(form.imdb_field.data)
+    query = f"UPDATE {ACTORS} SET fname=(%s),lname=(%s),birthday=(%s),imdb=(%s) WHERE id={id}"
+    data = tuple([fname,lname,birthday,imdb])
+    execute_query(db, query, data)   
+
+    return redirect(url_for('add_actor'))
 
 
 @app.route("/connect-actor-char", methods=["GET", "POST"])
@@ -354,7 +414,7 @@ def create_table():
 
     table = request.args.get("table")
     db = connect_to_database()
-    query = f"DROP TABLE IF ExISTS {table};"
+    query = f"DROP TABLE IF EXISTS {table};"
     results = execute_query(db, query)
     query = TABLES[table]
     results = execute_query(db, query)
@@ -458,6 +518,7 @@ def select_query(connection, query, data_type):
 
     # prepare and format the results
     for item in res:
+        print((item[0], list(item[1:]), data_type))
         query_res.append(Row(item[0], list(item[1:]), data_type))
 
     return query_res
@@ -465,3 +526,7 @@ def select_query(connection, query, data_type):
 # TODO implement
 def load_data_page(row_item):
     print(row_item, row_item.id)
+
+
+if __name__=="__main__":
+    app.run(debug=True)
