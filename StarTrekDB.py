@@ -211,7 +211,7 @@ def add_series():
         else:
             query = f"UPDATE {SERIES} SET name = %s, start_date = %s, end_date = %s WHERE id = {session['update_id']}"
             session[SUBMIT_TYPE] = "insert"
-        data = tuple([name])
+        data = (name, start, end)
         res = execute_query(db, query, data)
 
         query_res = select_query(db, BASIC_SELECT_QUERIES[SERIES], SERIES)
@@ -226,7 +226,7 @@ def add_series():
     if "delete_no" in request.args:
         delete_row(SERIES, db, request.args["delete_no"])
 
-    if "update_no" in request.args:  # TODO
+    if "update_no" in request.args:
         query = f"SELECT * FROM {SERIES} WHERE id = {request.args['update_no']}"
         res = execute_query(db, query).fetchone()
         print(res, res[2].year)
