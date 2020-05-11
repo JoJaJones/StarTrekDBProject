@@ -73,6 +73,7 @@ def add_species():
         else:
             query = f"UPDATE species SET name = %s WHERE id = {session['update_id']}"
             session[SUBMIT_TYPE] = "insert"
+            del request.args["update_no"]
         data = tuple([name])
         res = execute_query(db, query, data)
 
