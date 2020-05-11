@@ -190,17 +190,11 @@ def add_series():
     if UPDATE_PAGE in session and session[UPDATE_PAGE] != SERIES:
         session[SUBMIT_TYPE] = "insert"
 
-    print(form.second_field.form.year.label.text)
-    # print(form.second_field.form.year.value)
-
     if form.validate_on_submit():
         name = str(form.first_field.data)
         form.first_field.data = ""
         start = form.second_field.data
-        print(form.second_field.data)
-        print(form.second_field.data)
         end = form.third_field.data
-        # form.third_field.data = {"month": "", "year": "", "day":""}
 
         sanitize_date(start)
         start = f"{start['year']}-{start['month']}-{start['day']}"
@@ -437,6 +431,10 @@ def add_character():
             session[SUBMIT_TYPE] = "update"
             session["update_page"] = CHARACTERS
             form.first_field.data = f"{res[1]}"
+            form.second_field.data = f"{res[2]}"
+            form.third_field.data = f"{res[3]}"
+            form.fourth_field.data = f"{res[4]}"
+            form.fifth_field.data = f"{res[5]}"
             header = f"Update {res[1]}"
 
     query_res = select_query(db, BASIC_SELECT_QUERIES[CHARACTERS], CHARACTERS)
