@@ -288,7 +288,7 @@ def add_location():
 
         data = (name, type)
         res = execute_query(db, query, data)
-        
+
         query_res = select_query(db, BASIC_SELECT_QUERIES[LOCATIONS], LOCATIONS)
         for item in query_res:
             item.table_values[1] = LOCATION_TYPE_DICT[item.table_values[1]]
@@ -493,7 +493,7 @@ def add_actor():
         form.birthday_field.data = str(res[2]).replace('-','/')
         form.imdb_field.data = res[3]
 
-        return render_template("AddActor.html", form=form, query_res=None,
+        return render_template("add_actor_form.html", form=form, query_res=None,
                            column_names=columns, query_has_value=False,
                            header="Edit New Actor", updating=True, id=id)
 
@@ -514,7 +514,7 @@ def add_actor():
 
         query_res = select_query(db, BASIC_SELECT_QUERIES[ACTORS], ACTORS)
 
-        return render_template("AddActor.html", form=form, query_res=query_res,
+        return render_template("add_actor_form.html", form=form, query_res=query_res,
                                column_names=columns, query_has_value=(len(query_res) > 0),
                                header=header, target="add-actors", updating=False)
 
@@ -532,7 +532,7 @@ def add_actor():
 
     query_res = select_query(db, BASIC_SELECT_QUERIES[ACTORS], ACTORS)
 
-    return render_template("AddActor.html", form=form, query_res=query_res,
+    return render_template("add_actor_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header=header, target="add-actors", updating=False)
 
@@ -554,7 +554,7 @@ def edit_actor():
 
 @app.route("/connect-actor-char", methods=["GET", "POST"])
 def link_actor_char():
-    return render_template("LinkActorChar.html")
+    return render_template("LinkActorChar.html", header="Enter a Character and Actor to link")
 
 
 @app.route("/connect-char-spec", methods=["GET", "POST"])

@@ -1,14 +1,12 @@
-{% extends "non_landing_page.html" %}
+{% extends "form_template.html" %}
 
-{% block inner_content %}
-<div class="jumbotron bg-dark text-light">
-<fieldset>
-    <legend>Enter a Character and Actor to link</legend>
-    <form action="POST">
-        <p><label for="char_name">Character Name: </label><input type="text"name = "char_name"></p>
-        <p><label for="actor_name">Actor Name: </label><input type="text"name = "actor_name"></p>
-        <p><input type="submit"></p>
-    </form>
-</fieldset>
+{% block content_form %}
+<div class="form-row">
+    <div class="form-group">
+        <label for="char_name">Character Name: </label><input type="text"name = "char_name">
+    </div>
+    <div class="form-group">
+        <label for="actor_name">Actor Name: </label><input type="text"name = "actor_name">
+    </div>
 </div>
 {% endblock %}

@@ -1,19 +1,18 @@
 {% extends "single_table_display.html" %}
 
 {% block content_form %}
-    <div class="jumbotron bg-dark text-light" style="font-family: stfont2">
-        <fieldset>
-            <legend>{{header}}</legend>
             {% if updating %}
             <form action="/edit-actors?id={{id}}" method="POST">
             {% else %}
             <form action=method="POST">
             {% endif %}
                 {{ form.hidden_tag() }}
-                <div class="form-group">
-                    <div class="form-row col-md-4">
-                    {{ form.fname_field.label }}{{ form.fname_field(class="form-control") }}
-                    {{ form.lname_field.label }}{{ form.lname_field(class="form-control") }}                   
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                    {{ form.fname_field.label }}{{ form.fname_field(class="form-control", placeholder=form.fname_field.label.text) }}
+                    </div>
+                    <div class="form-group col-md-4">
+                    {{ form.lname_field.label }}{{ form.lname_field(class="form-control", placeholder=form.lname_field.label.text) }}
                     </div>
                     <div class="form-row col-md-3">
                         {{ form.birthday_field.label }}{{ form.birthday_field(class="form-control") }}
@@ -26,6 +25,4 @@
                     </div>
                 </div>                  
             </form>
-        </fieldset>
-    </div>
 {% endblock %}

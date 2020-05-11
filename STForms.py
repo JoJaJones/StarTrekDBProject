@@ -98,7 +98,7 @@ class AddLocationToCharacter(FlaskForm):
 class AddActorForm(FlaskForm):
     fname_field    = StringField("First name", validators=[validators.Required()])
     lname_field    = StringField("Last name", validators=[validators.Optional()])
-    birthday_field = StringField(label="Date", id='datepick', validators=[validators.Optional()])
+    birthday_field = StringField(label="Birthday", id='datepick', validators=[validators.Optional()])
     imdb_field     = StringField("IMDB link", validators=[validators.Optional()])
     submit         = SubmitField("Submit")
 
