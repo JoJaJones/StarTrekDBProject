@@ -287,22 +287,23 @@ def add_location():
 
     print(form.second_field.data)
 
-    # TODO *********************************************************************
     if form.validate_on_submit():
         name = str(form.first_field.data)
         form.first_field.data = ""
         type = form.second_field.data
-        form.second_field.data = ""
-        print(type)
+        form.second_field.data = None
 
+        if session[SUBMIT_TYPE] == "insert":
+            query = f"INSERT INTO {LOCATIONS}(name, type) VALUES (%s, %s)"
+        else:
+            query = f"UPDATE {LOCATIONS} SET name = %s, type = %s WHERE id = {session['update_id']}"
+            session[SUBMIT_TYPE] = "insert"
 
-
-        # query = "INSERT INTO series(name, start_date, end_date) VALUES (%s, %s, %s)"
-        # data = (name, start, end)
-        # res = execute_query(db, query, data)
+        data = (name, type)
+        res = execute_query(db, query, data)
 
     if "delete_no" in request.args:
-        delete_row(SERIES, db, request.args["delete_no"])
+        delete_row(LOCATIONS, db, request.args["delete_no"])
 
     if "update_no" in request.args:  # TODO
         query = f"SELECT * FROM {LOCATIONS} WHERE id = {request.args['update_no']}"
@@ -313,7 +314,6 @@ def add_location():
             session["update_page"] = LOCATIONS
             form.first_field.data = f"{res[1]}"
             header = f"Update {res[1]}"
-    # TODO *********************************************************************
 
     query_res = select_query(db, BASIC_SELECT_QUERIES[LOCATIONS], LOCATIONS)
     return render_template("add_location_form.html", form=form, query_res=query_res,
