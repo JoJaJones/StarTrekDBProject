@@ -317,12 +317,37 @@ def browse_actors():
     query_res = select_query(db, BASIC_SELECT_QUERIES[ACTORS], ACTORS)
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
-                           header="Add New Species", target="add-species")
+                           header="", target="add-actors")
 
-
-@app.route("/add-actor", methods=["GET", "POST"])
+@app.route("/add-actors", methods=["GET", "POST"])
 def add_actor():
-    return render_template("AddActor.html")
+    form = AddActorForm()
+    query_res = []
+    db = connect_to_database()
+    columns = VIEW_COLUMNS[ACTORS]
+
+    if form.validate_on_submit():
+        fname = str(form.fname_field.data)
+        form.fname_field.data = ""
+        lname = str(form.lname_field.data)
+        form.lname_field.data = ""
+        birthday = str(form.birthday_field.data).replace('/','-')
+        form.birthday_field.data = ""
+        imdb = str(form.imdb_field.data)
+        form.imdb_field.data = ""
+        
+        query = f"INSERT INTO {ACTORS}(fname,lname,birthday,imdb) VALUES (%s, %s, %s, %s)"
+        data = tuple([fname,lname,birthday,imdb])
+        execute_query(db, query, data)
+
+    if "delete_no" in request.args:
+        delete_row(ACTORS, db, request.args["delete_no"])
+
+    query_res = select_query(db, BASIC_SELECT_QUERIES[ACTORS], ACTORS)
+
+    return render_template("AddActor.html", form=form, query_res=query_res,
+                           column_names=columns, query_has_value=(len(query_res) > 0),
+                           header="Add New Actor", target="add-actors")
 
 
 @app.route("/connect-actor-char", methods=["GET", "POST"])
