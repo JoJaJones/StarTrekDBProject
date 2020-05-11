@@ -53,12 +53,11 @@ def browse_species():
 @app.route("/add-species", methods=["GET", "POST"])
 def add_species():
     form = SingleFieldForm()
-    form.first_field.label = "Species Name: "
-    query_res = []
+    form.first_field.label.text = "Species Name"
+
     db = connect_to_database()
     columns = VIEW_COLUMNS[SPECIES]
     header = "Add New Species"
-
 
     if SUBMIT_TYPE in session:
         sub_type = session[SUBMIT_TYPE]
@@ -71,7 +70,7 @@ def add_species():
         if sub_type == INSERT:
             query = "INSERT INTO species(name) VALUES (%s)"
         else:
-            query = ""
+            query = f"UPDATE species SET name = %s WHERE id = {session['update_id']}"
         data = tuple([name])
         res = execute_query(db, query, data)
 
@@ -81,8 +80,10 @@ def add_species():
     if "update_no" in request.args:
         query = f"SELECT * FROM {SPECIES} WHERE id = {request.args['update_no']}"
         res = execute_query(db, query).fetchone()
-        print(res)
-
+        session["update_id"] = res[0]
+        session[SUBMIT_TYPE] = "update"
+        form.first_field.data = f"{res[1]}"
+        header = f"Update {res[1]}"
 
     query_res = select_query(db, BASIC_SELECT_QUERIES[SPECIES], SPECIES)
 
