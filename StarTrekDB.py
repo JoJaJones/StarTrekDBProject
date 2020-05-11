@@ -288,6 +288,14 @@ def add_location():
 
         data = (name, type)
         res = execute_query(db, query, data)
+        
+        query_res = select_query(db, BASIC_SELECT_QUERIES[LOCATIONS], LOCATIONS)
+        for item in query_res:
+            item.table_values[1] = LOCATION_TYPE_DICT[item.table_values[1]]
+
+        return render_template("add_location_form.html", form=form, query_res=query_res,
+                               column_names=columns, query_has_value=(len(query_res) > 0),
+                               header=header, target="add-location")
 
     if "delete_no" in request.args:
         delete_row(LOCATIONS, db, request.args["delete_no"])
