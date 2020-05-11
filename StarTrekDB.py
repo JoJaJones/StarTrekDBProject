@@ -196,9 +196,13 @@ def add_series():
         name = str(form.first_field.data)
         form.first_field.data = ""
         start = form.second_field.data
-        form.second_field.clear()
+        form.second_field.year.data = ""
+        form.second_field.month.data = ""
+        form.second_field.day.data = ""
         end = form.third_field.data
-        form.third_field.clear()
+        form.third_field.year.data = ""
+        form.third_field.month.data = ""
+        form.third_field.day.data = ""
 
         sanitize_date(start)
         start = f"{start['year']}-{start['month']}-{start['day']}"
