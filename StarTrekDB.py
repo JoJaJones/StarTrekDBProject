@@ -68,10 +68,11 @@ def add_species():
     if form.validate_on_submit():
         name = str(form.first_field.data)
         form.first_field.data = ""
+
         if session[SUBMIT_TYPE] == "insert":
-            query = "INSERT INTO species(name) VALUES (%s)"
+            query = f"INSERT INTO {SPECIES}(name) VALUES (%s)"
         else:
-            query = f"UPDATE species SET name = %s WHERE id = {session['update_id']}"
+            query = f"UPDATE {SPECIES} SET name = %s WHERE id = {session['update_id']}"
             session[SUBMIT_TYPE] = "insert"
         data = tuple([name])
         res = execute_query(db, query, data)
@@ -129,9 +130,19 @@ def add_affiliation():
         name = str(form.first_field.data)
         form.first_field.data = ""
 
-        query = "INSERT INTO affiliations(name) VALUES (%s)"
+        if session[SUBMIT_TYPE] == "insert":
+            query = f"INSERT INTO {AFFILIATIONS}(name) VALUES (%s)"
+        else:
+            query = f"UPDATE {AFFILIATIONS} SET name = %s WHERE id = {session['update_id']}"
+            session[SUBMIT_TYPE] = "insert"
         data = tuple([name])
         res = execute_query(db, query, data)
+
+        query_res = select_query(db, BASIC_SELECT_QUERIES[AFFILIATIONS], AFFILIATIONS)
+
+        return render_template("single_field_add_form.html", form=form, query_res=query_res,
+                               column_names=columns, query_has_value=(len(query_res) > 0),
+                               header=header, target="add-affiliations")
 
     if "delete_no" in request.args:
         delete_row(AFFILIATIONS, db, request.args["delete_no"])
@@ -193,9 +204,22 @@ def add_series():
         sanitize_date(end)
         end = f"{end['year']}-{end['month']}-{end['day']}"
 
-        query = "INSERT INTO series(name, start_date, end_date) VALUES (%s, %s, %s)"
-        data = (name, start, end)
+        if session[SUBMIT_TYPE] == "insert":
+            query = f"INSERT INTO {SERIES}(name, start_date, end_date) VALUES (%s, %s, %s)"
+        else:
+            query = f"UPDATE {SERIES} SET name = %s, start_date = %s, end_date = %s WHERE id = {session['update_id']}"
+            session[SUBMIT_TYPE] = "insert"
+        data = tuple([name])
         res = execute_query(db, query, data)
+
+        query_res = select_query(db, BASIC_SELECT_QUERIES[SERIES], SERIES)
+        for item in query_res:
+            for i in range(1, 3):
+                item.reformat_date(i)
+
+        return render_template("add_series_form.html", form=form, query_res=query_res,
+                               column_names=columns, query_has_value=(len(query_res) > 0),
+                               header=header, target="add-series")
 
     if "delete_no" in request.args:
         delete_row(SERIES, db, request.args["delete_no"])
@@ -203,6 +227,7 @@ def add_series():
     if "update_no" in request.args:  # TODO
         query = f"SELECT * FROM {SPECIES} WHERE id = {request.args['update_no']}"
         res = execute_query(db, query).fetchone()
+        print(res)
         session["update_id"] = res[0]
         session[SUBMIT_TYPE] = "update"
         session["update_page"] = SPECIES
@@ -467,10 +492,17 @@ def add_actor():
         form.birthday_field.data = ""
         imdb = str(form.imdb_field.data)
         form.imdb_field.data = ""
-        
+
+
         query = f"INSERT INTO {ACTORS} (fname,lname,birthday,imdb) VALUES (%s, %s, %s, %s)"
         data = tuple([fname,lname,birthday,imdb])
         execute_query(db, query, data)
+
+        query_res = select_query(db, BASIC_SELECT_QUERIES[ACTORS], ACTORS)
+
+        return render_template("AddActor.html", form=form, query_res=query_res,
+                               column_names=columns, query_has_value=(len(query_res) > 0),
+                               header=header, target="add-actors", updating=False)
 
     if "delete_no" in request.args:
         delete_row(ACTORS, db, request.args["delete_no"])
