@@ -75,7 +75,6 @@ def add_species():
             session[SUBMIT_TYPE] = "insert"
         data = tuple([name])
         res = execute_query(db, query, data)
-        del session[SUBMIT_TYPE]
 
     if "delete_no" in request.args:
         delete_row(SPECIES, db, request.args["delete_no"])
