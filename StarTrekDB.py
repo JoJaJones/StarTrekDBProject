@@ -191,7 +191,7 @@ def add_series():
         session[SUBMIT_TYPE] = "insert"
 
     print(form.second_field.form.year.data)
-    print(form.second_field.form.year)
+    print(form.second_field.form.year.value)
 
     if form.validate_on_submit():
         name = str(form.first_field.data)
