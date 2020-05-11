@@ -190,25 +190,24 @@ def add_series():
     if UPDATE_PAGE in session and session[UPDATE_PAGE] != SERIES:
         session[SUBMIT_TYPE] = "insert"
 
-    print(form.second_field.form)
-    print(form.second_field.form.year)
-    print(form.second_field.form.year.label)
-    print(form.second_field.form.year.data)
-    print(form.second_field.form.year.label.text)
+    # print(form.second_field.form)
+    # print(form.second_field.form.year)
+    # print(form.second_field.form.year.label)
+    # print(form.second_field.form.year.data)
+    # print(form.second_field.form.year.label.text)
 
     if form.validate_on_submit():
         name = str(form.first_field.data)
         form.first_field.data = None
         start = form.second_field.data
-        form.second_field.year.data = None
-        form.second_field.month.data = None
-        form.second_field.day.data = None
+        form.second_field.form.year.data = None
+        form.second_field.form.month.data = None
+        form.second_field.form.day.data = None
         form.second_field.clear()
         end = form.third_field.data
-        form.third_field.year.data = None
-        form.third_field.month.data = None
-        form.third_field.day.data = None
-        form.third_field.clear()
+        form.third_field.form.year.data = None
+        form.third_field.form.month.data = None
+        form.third_field.form.day.data = None
 
         sanitize_date(start)
         start = f"{start['year']}-{start['month']}-{start['day']}"
