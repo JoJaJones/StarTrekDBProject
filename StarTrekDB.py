@@ -194,7 +194,7 @@ def add_series():
         name = str(form.first_field.data)
         form.first_field.data = ""
         start = form.second_field.data
-        print(form.second_field.year.data)
+        print(form.second_field.data)
         form.second_field.year.data = None
         print(form.second_field.year.data)
         form.second_field.month.data = None
