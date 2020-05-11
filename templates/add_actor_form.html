@@ -1,6 +1,6 @@
 {% extends "form_template.html" %}
 
-{% block content_form %}
+{% block form_specifics %}
             <!--{% if updating %}-->
             <!--<form action="/edit-actors?id={{id}}" method="POST">-->
             <!--{% else %}-->
@@ -8,10 +8,10 @@
             <!--{% endif %}-->
                 <!--{{ form.hidden_tag() }}-->
     <div class="form-row">
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-6">
         {{ form.fname_field.label }}{{ form.fname_field(class="form-control", placeholder=form.fname_field.label.text) }}
         </div>
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-6">
         {{ form.lname_field.label }}{{ form.lname_field(class="form-control", placeholder=form.lname_field.label.text) }}
         </div>
     </div>
