@@ -440,7 +440,7 @@ def browse_characters():
     # pass data necessary to generate table
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
-                           header=header, target="add-species")
+                           header="", target="add-species")
 
 
 @app.route("/add-character", methods=["GET", "POST"])
