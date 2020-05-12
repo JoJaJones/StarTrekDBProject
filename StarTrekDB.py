@@ -8,8 +8,61 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = SECRET
 
 
+"""
+add route function template:
+
+@app.route_name("/route-url", method=["POST","GET"])
+def route_function():
+    # create a form object
+    # set any form labels as needed
+    
+    # create db connection
+    db = connect_to_database()
+    
+    # set column names using the dictionary/constant in constants
+    columns = VIEW_COLUMNS[SPECIES]
+
+    # query any choices that need to be set before generating the form
+    
+    # check if form has been submit
+    if form.validate_on_submit():
+        # get data from form and set fields to empty
+        name = str(form.first_field.data)
+        form.first_field.data = ""
+
+        # process insert query
+        query = "INSERT INTO species(name) VALUES (%s)"
+        data = tuple([name])
+        res = execute_query(db, query, data)
+
+    # check url args for delete_no argument and process related delete query if present 
+    if "delete_no" in request.args:
+        delete_row(SPECIES, db, request.args["delete_no"])
+
+    # query updated data in the DB
+    query_res = select_query(db, BASIC_SELECT_QUERIES[SPECIES], SPECIES)
+
+    # return render and pass necessary arguments
+        # all add pages need form, query_res, column_names, query_has_value, header, and target
+        # form is used to create the form
+        # query_res and column_names are used to generate the table
+        # query_has_value is used to determine if there are any results to display before generating a table
+        # header is the text displayed at the top of the page
+        # target is for the delete/update buttons and should be set to the current route url without the /
+    return render_template("single_field_add_form.html", form=form, query_res=query_res,
+                           column_names=columns, query_has_value=(len(query_res) > 0),
+                           header="Add New Species", target="add-species")
+"""
+
+
 @app.route("/create-all-tables")
 def init_DB():
+    """
+    function to delete all existing tables and create new ones. Requires a password passed to the
+    url in the pass argument to process the DB reset
+
+    :return:
+    """
     password = request.args.get("pass")
     result = "Invalid password"
     if password in ("picard","kirk"):
@@ -40,10 +93,16 @@ def init_DB():
 
 @app.route("/browse-species", methods=["GET", "POST"])
 def browse_species():
+    # create database connection
     db = connect_to_database()
+
+    # set table columns using the dictionary in constants
     columns = VIEW_COLUMNS[SPECIES]
 
+    # get results of query
     query_res = select_query(db, BASIC_SELECT_QUERIES[SPECIES], SPECIES)
+
+    # pass data necessary to generate table
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="", target="add-species")
@@ -102,10 +161,16 @@ def add_species():
 
 @app.route("/browse-affiliations", methods=["GET", "POST"])
 def browse_affiliations():
+    # create database connection
     db = connect_to_database()
+
+    # set table columns using the dictionary in constants
     columns = VIEW_COLUMNS[AFFILIATIONS]
 
+    # get results of query
     query_res = select_query(db, BASIC_SELECT_QUERIES[AFFILIATIONS], AFFILIATIONS)
+
+    # pass data necessary to generate table
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="", target="add-species")
@@ -165,10 +230,16 @@ def add_affiliation():
 
 @app.route("/browse-series", methods=["GET", "POST"])
 def browse_series():
+    # create database connection
     db = connect_to_database()
+
+    # set table columns using the dictionary in constants
     columns = VIEW_COLUMNS[SERIES]
 
+    # get results of query
     query_res = select_query(db, BASIC_SELECT_QUERIES[SERIES], SERIES)
+
+    # pass data necessary to generate table
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="", target="add-species")
@@ -196,9 +267,11 @@ def add_series():
         start = form.second_field.data
         end = form.third_field.data
 
+        # validate the date data entered by the user and then format it for entry to DB
         sanitize_date(start)
         start = f"{start['year']}-{start['month']}-{start['day']}"
 
+        # validate the date data entered by the user and then format it for entry to DB
         sanitize_date(end)
         end = f"{end['year']}-{end['month']}-{end['day']}"
 
@@ -249,10 +322,16 @@ def add_series():
 
 @app.route("/browse-locations", methods=["GET", "POST"])
 def browse_locations():
+    # create database connection
     db = connect_to_database()
+
+    # set table columns using the dictionary in constants
     columns = VIEW_COLUMNS[LOCATIONS]
 
+    # get results of query
     query_res = select_query(db, BASIC_SELECT_QUERIES[LOCATIONS], LOCATIONS)
+
+    # pass data necessary to generate table
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="", target="add-species")
@@ -322,10 +401,14 @@ def add_location():
 
 @app.route("/browse-characters", methods=["GET", "POST"])
 def browse_characters():
+    # create database connection
     db = connect_to_database()
+
+    # set table columns using the dictionary in constants
     columns = VIEW_COLUMNS[CHARACTERS][:]
     header = "Add New Species"
 
+    # determine if species has data that might need to be displayed
     query = "SELECT id, name FROM species ORDER BY name"
     res = execute_query(db, query)
     species_list = []
@@ -335,6 +418,7 @@ def browse_characters():
     if display_species:
         columns.append("Species")
 
+    # determine if series has data that might need to be displayed
     query = "SELECT id, name FROM series ORDER BY name"
     res = execute_query(db, query)
     series_list = []
@@ -344,14 +428,16 @@ def browse_characters():
     if display_series:
         columns.append("Series")
 
+    # get results of query
     query_res = select_query(db, BASIC_SELECT_QUERIES[CHARACTERS], CHARACTERS)
-    for item in query_res:
+    for item in query_res:  # append blank spaces to characters if species and series exist
         # TODO add queries to set these values instead of adding a blank value to the data set
         if display_series:
             item.temp_char_buffer()
         if display_species:
             item.temp_char_buffer()
 
+    # pass data necessary to generate table
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header=header, target="add-species")
@@ -363,7 +449,7 @@ def add_character():
         session[SUBMIT_TYPE] = "insert"
 
     form = CharacterForm()
-    query_res = []
+
     db = connect_to_database()
     columns = VIEW_COLUMNS[CHARACTERS][:]
 
@@ -462,10 +548,16 @@ def add_character():
 
 @app.route("/browse-actors", methods=["GET", "POST"])
 def browse_actors():
+    # create database connection
     db = connect_to_database()
+
+    # set table columns using the dictionary in constants
     columns = VIEW_COLUMNS[ACTORS]
 
+    # get results of query
     query_res = select_query(db, BASIC_SELECT_QUERIES[ACTORS], ACTORS)
+
+    # pass data necessary to generate table
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header="", target="add-actors")
