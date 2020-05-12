@@ -173,7 +173,7 @@ def browse_affiliations():
     # pass data necessary to generate table
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
-                           header="", target="add-species")
+                           header="", target="add-affiliations")
 
 @app.route("/add-affiliations", methods=["GET", "POST"])
 def add_affiliation():
@@ -334,7 +334,7 @@ def browse_locations():
     # pass data necessary to generate table
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
-                           header="", target="add-species")
+                           header="", target="add-location")
 
 
 @app.route("/add-location", methods=["GET", "POST"])
@@ -440,7 +440,7 @@ def browse_characters():
     # pass data necessary to generate table
     return render_template("single_table_display.html", form=False, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
-                           header="", target="add-species")
+                           header="", target="add-characters")
 
 
 @app.route("/add-character", methods=["GET", "POST"])
