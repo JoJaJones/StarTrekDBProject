@@ -7,12 +7,12 @@
             <form method="POST">
                 <div class="row">
                     <div class="form-group col-md-6">
-                        <label for="char_name">Character Name: </label>
-                        <input type="text" class="form-control" id= "char_name">
+                        <label for="{{field_one_text}}">{{field_one_text}}</label>
+                        <input type="text" class="form-control" id= "{{field_one_text}}" placeholder="{{field_one_text.lower()}}">
                     </div>
                     <div class="form-group col-md-6">
-                        <label for="actor_name">Actor Name: </label>
-                        <input type="text" class="form-control" id = "actor_name">
+                        <label for="{{field_two_text}}">{{field_two_text}}</label>
+                        <input type="text" class="form-control" id ="{{field_two_text}}" placeholder="{{field_two_text.lower()}}">
                     </div>
                 </div>
                 <div class="form-row">

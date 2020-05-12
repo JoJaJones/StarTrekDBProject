@@ -550,27 +550,32 @@ def edit_actor():
 
 @app.route("/connect-actor-char", methods=["GET", "POST"])
 def link_actor_char():
-    return render_template("LinkActorChar.html", header="Enter a Character and Actor to link", form=True)
+    return render_template("link_relationships.html", header="Enter a Character and Actor to link", form=True,
+                           field_one_text="Character Name", field_two_text="Actor Name")
 
 
 @app.route("/connect-char-spec", methods=["GET", "POST"])
 def link_char_species():
-    return render_template("LinkCharSpecies.html")
+    return render_template("link_relationships.html", header="Enter a Character and Species to link", form=True,
+                           field_one_text="Character Name", field_two_text="Species Name")
 
 
 @app.route("/connect-char-aff", methods=["GET", "POST"])
 def link_char_aff():
-    return render_template("LinkCharAff.html")
+    return render_template("link_relationships.html", header="Enter a Character and Affiliation to link", form=True,
+                           field_one_text="Character Name", field_two_text="Affiliation Name")
 
 
 @app.route("/connect-char-series", methods=["GET", "POST"])
 def link_char_series():
-    return render_template("LinkCharSeries.html")
+    return render_template("link_relationships.html", header="Enter a Character and Series to link", form=True,
+                           field_one_text="Character Name", field_two_text="Series Name")
 
 
 @app.route("/connect-location", methods=["GET", "POST"])
 def link_to_location():
-    return render_template("LinkCharSeriesLocation.html")
+    return render_template("link_three.html", header="Enter a Character/Series combination to link to a Location", form=True,
+                           field_one_text="Character Name", field_two_text="Character Name", field_three_text="Location Name")
 
 
 @app.route("/create-table")
