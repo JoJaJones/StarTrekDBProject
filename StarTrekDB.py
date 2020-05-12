@@ -406,7 +406,7 @@ def browse_characters():
 
     # set table columns using the dictionary in constants
     columns = VIEW_COLUMNS[CHARACTERS][:]
-    header = "Add New Species"
+    header = "Add New Character"
 
     # determine if species has data that might need to be displayed
     query = "SELECT id, name FROM species ORDER BY name"
