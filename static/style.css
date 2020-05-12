@@ -110,7 +110,7 @@ td > input.btn.btn-danger{
 }
 
 .col-md-4.right {
-    text-align: right;
+    margin-left: auto;
 }
 
 .scoll-content {
