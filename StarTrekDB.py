@@ -550,7 +550,7 @@ def edit_actor():
 
 @app.route("/connect-actor-char", methods=["GET", "POST"])
 def link_actor_char():
-    return render_template("LinkActorChar.html", header="Enter a Character and Actor to link")
+    return render_template("LinkActorChar.html", header="Enter a Character and Actor to link", form=True)
 
 
 @app.route("/connect-char-spec", methods=["GET", "POST"])
