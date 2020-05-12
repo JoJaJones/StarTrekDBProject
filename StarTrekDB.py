@@ -498,6 +498,8 @@ def add_actor():
         else:
             query = f"UPDATE {ACTORS} SET fname = %s, lname = %s, birthday = %s, imdb = %s WHERE id = {session['update_id']}"
             session[SUBMIT_TYPE] = "insert"
+
+        print(birthday)
         data = tuple([fname,lname,birthday,imdb])
         execute_query(db, query, data)
 
