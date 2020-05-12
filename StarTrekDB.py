@@ -483,20 +483,6 @@ def add_actor():
     if UPDATE_PAGE in session and session[UPDATE_PAGE] != ACTORS:
         session[SUBMIT_TYPE] = "insert"
 
-    if "update_no" in request.args:
-        id = request.args['update_no']
-        query = f"SELECT fname,lname,birthday,imdb FROM {ACTORS} WHERE id={id}"
-        res = execute_query(db, query).fetchall()
-        res = res[0]
-        form.fname_field.data = res[0]
-        form.lname_field.data = res[1]
-        form.birthday_field.data = str(res[2]).replace('-','/')
-        form.imdb_field.data = res[3]
-
-        return render_template("add_actor_form.html", form=form, query_res=None,
-                           column_names=columns, query_has_value=False,
-                           header=f"Update {res[0]} {res[1]}", special_action='action="/edit-actors?id={{id}}"', id=id)
-
     if form.validate_on_submit():
         fname = str(form.fname_field.data)
         form.fname_field.data = ""
@@ -507,8 +493,11 @@ def add_actor():
         imdb = str(form.imdb_field.data)
         form.imdb_field.data = ""
 
-
-        query = f"INSERT INTO {ACTORS} (fname,lname,birthday,imdb) VALUES (%s, %s, %s, %s)"
+        if session[SUBMIT_TYPE] == "insert":
+            query = f"INSERT INTO {LOCATIONS}(fname, lname, birthday, imdb) VALUES (%s, %s)"
+        else:
+            query = f"UPDATE {LOCATIONS} SET fname = %s, lname = %s, birthday = %s, imdb = %s WHERE id = {session['update_id']}"
+            session[SUBMIT_TYPE] = "insert"
         data = tuple([fname,lname,birthday,imdb])
         execute_query(db, query, data)
 
@@ -516,25 +505,30 @@ def add_actor():
 
         return render_template("add_actor_form.html", form=form, query_res=query_res,
                                column_names=columns, query_has_value=(len(query_res) > 0),
-                               header=header, target="add-actors", special_action='')
+                               header=header, target="add-actors")
 
     if "delete_no" in request.args:
         delete_row(ACTORS, db, request.args["delete_no"])
 
     if "update_no" in request.args:  # TODO
-        query = f"SELECT * FROM {SPECIES} WHERE id = {request.args['update_no']}"
+        query = f"SELECT * FROM {ACTORS} WHERE id = {request.args['update_no']}"
         res = execute_query(db, query).fetchone()
-        session["update_id"] = res[0]
-        session[SUBMIT_TYPE] = "update"
-        session["update_page"] = SPECIES
-        form.first_field.data = f"{res[1]}"
-        header = f"Update {res[1]}"
+        if res is not None:
+            session["update_id"] = res[0]
+            session[SUBMIT_TYPE] = "update"
+            session["update_page"] = ACTORS
+            form.fname_field.data = res[1]
+            form.lname_field.data = res[2]
+            print(res[3])
+            form.birthday_field.data = res[3]
+            form.imdb_field.data = res[4]
+            header = f"Update {res[1]} {res[2]}"
 
     query_res = select_query(db, BASIC_SELECT_QUERIES[ACTORS], ACTORS)
 
     return render_template("add_actor_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
-                           header=header, target="add-actors", special_action='')
+                           header=header, target="add-actors")
 
 @app.route("/edit-actors", methods=["GET", "POST"])
 def edit_actor():
