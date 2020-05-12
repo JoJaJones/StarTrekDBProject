@@ -494,9 +494,9 @@ def add_actor():
         form.imdb_field.data = ""
 
         if session[SUBMIT_TYPE] == "insert":
-            query = f"INSERT INTO {LOCATIONS}(fname, lname, birthday, imdb) VALUES (%s, %s)"
+            query = f"INSERT INTO {ACTORS}(fname, lname, birthday, imdb) VALUES (%s, %s)"
         else:
-            query = f"UPDATE {LOCATIONS} SET fname = %s, lname = %s, birthday = %s, imdb = %s WHERE id = {session['update_id']}"
+            query = f"UPDATE {ACTORS} SET fname = %s, lname = %s, birthday = %s, imdb = %s WHERE id = {session['update_id']}"
             session[SUBMIT_TYPE] = "insert"
         data = tuple([fname,lname,birthday,imdb])
         execute_query(db, query, data)
