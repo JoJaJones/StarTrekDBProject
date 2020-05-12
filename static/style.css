@@ -109,7 +109,7 @@ td > input.btn.btn-danger{
     padding-bottom: 1.5rem;
 }
 
-.row.right {
+.col-md-4.right {
     text-align: right;
 }
 
