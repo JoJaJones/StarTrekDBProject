@@ -575,7 +575,7 @@ def link_char_series():
 @app.route("/connect-location", methods=["GET", "POST"])
 def link_to_location():
     return render_template("link_three.html", header="Enter a Character/Series combination to link to a Location", form=True,
-                           field_one_text="Character Name", field_two_text="Character Name", field_three_text="Location Name")
+                           field_one_text="Character Name", field_two_text="Series Name", field_three_text="Location Name")
 
 
 @app.route("/create-table")
