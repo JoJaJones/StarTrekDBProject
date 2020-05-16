@@ -27,6 +27,7 @@ TABLES = {
                  "id int(11) NOT NULL AUTO_INCREMENT,"
                  "fname varchar(255) NOT NULL,"
                  "lname varchar(255) DEFAULT NULL,"
+                 "alias varchar(255) NOT NULL"
                  "title varchar(255) DEFAULT NULL,"
                  "description text DEFAULT NULL,"
                  "biography text DEFAULT NULL,"
@@ -87,7 +88,7 @@ TABLES = {
 
 BASIC_SELECT_QUERIES = {
     SPECIES: f"SELECT id, name FROM {SPECIES} ORDER BY name",
-    CHARACTERS: f"SELECT id, fname, lname, title FROM {CHARACTERS} ORDER BY fname",
+    CHARACTERS: f"SELECT id, fname, lname, alias, title FROM {CHARACTERS} ORDER BY fname",
     AFFILIATIONS: f"SELECT id, name FROM {AFFILIATIONS} ORDER BY name",
     ACTORS: f"SELECT id, fname, lname, birthday, imdb FROM {ACTORS} ORDER BY fname",
     SERIES: f"SELECT id, name, start_date, end_date FROM {SERIES} ORDER BY name",
