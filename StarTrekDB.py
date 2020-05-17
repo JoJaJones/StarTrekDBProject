@@ -266,21 +266,35 @@ def add_series():
         form.first_field.data = ""
         start = form.second_field.data
         end = form.third_field.data
-
+       
         # validate the date data entered by the user and then format it for entry to DB
-        sanitize_date(start)
+        start_valid = sanitize_date(start)
         start = f"{start['year']}-{start['month']}-{start['day']}"
 
         # validate the date data entered by the user and then format it for entry to DB
-        sanitize_date(end)
+        end_valid = sanitize_date(end)
         end = f"{end['year']}-{end['month']}-{end['day']}"
-
-        if session[SUBMIT_TYPE] == "insert":
-            query = f"INSERT INTO {SERIES}(name, start_date, end_date) VALUES (%s, %s, %s)"
+        
+        # Alter queries & data if fields are missing
+        if start_valid and end_valid:
+            case = 0
+            data = (name, start, end)
+        elif start_valid:
+            case = 1
+            data = (name, start)
+        elif end_valid:
+            case = 2
+            data = (name, end)
         else:
-            query = f"UPDATE {SERIES} SET name = %s, start_date = %s, end_date = %s WHERE id = {session['update_id']}"
+            case = 3
+            data = (name)    
+        
+        if session[SUBMIT_TYPE] == "insert":
+            query = SERIES_INSERT_QUERIES[case]
+        else:
+            data = data + tuple([session["update_id"]])
+            query = SERIES_UPDATE_QUERIES[case]            
             session[SUBMIT_TYPE] = "insert"
-        data = (name, start, end)
         res = execute_query(db, query, data)
 
         query_res = select_query(db, BASIC_SELECT_QUERIES[SERIES], SERIES)
@@ -296,18 +310,20 @@ def add_series():
     if "update_no" in request.args:
         query = f"SELECT * FROM {SERIES} WHERE id = {request.args['update_no']}"
         res = execute_query(db, query).fetchone()
-
         if res is not None:
             session["update_id"] = res[0]
             session[SUBMIT_TYPE] = "update"
             session["update_page"] = SERIES
             form.first_field.data = f"{res[1]}"
-            form.second_field.form.year.data = res[2].year
-            form.second_field.form.month.data = res[2].month
-            form.second_field.form.day.data = res[2].day
-            form.third_field.form.year.data = res[3].year
-            form.third_field.form.month.data = res[3].month
-            form.third_field.form.day.data = res[3].day
+            # Dates could be empty
+            if res[2]:
+                form.second_field.form.year.data = res[2].year
+                form.second_field.form.month.data = res[2].month
+                form.second_field.form.day.data = res[2].day
+            if res[3]:
+                form.third_field.form.year.data = res[3].year
+                form.third_field.form.month.data = res[3].month
+                form.third_field.form.day.data = res[3].day
             header = f"Update {res[1]}"
 
     query_res = select_query(db, BASIC_SELECT_QUERIES[SERIES], SERIES)
