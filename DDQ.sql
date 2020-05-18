@@ -113,7 +113,7 @@ VALUES
 ('Worf','Worf','Lieutenant');
 
 -- actors data
--- (fname, lname, birthday date, imdb, cid)
+-- (fname, lname, birthday, imdb, cid)
 INSERT INTO actors
 (fname,lname,birthday,imdb,cid)
 VALUES
