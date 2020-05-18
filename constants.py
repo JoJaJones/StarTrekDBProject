@@ -76,14 +76,33 @@ TABLES = {
                    "ON DELETE CASCADE ON UPDATE CASCADE,"
                    "PRIMARY KEY (cid, sid))engine=innoDB;",
 
+    CHAR_AFFILS: f"CREATE TABLE {CHAR_AFFILS} ("
+                  "cid int(11) NOT NULL,"
+                  "aid int(11) NOT NULL,"
+                 f"FOREIGN KEY (cid) REFERENCES {CHARACTERS}(id) "
+                  "ON DELETE CASCADE ON UPDATE CASCADE,"
+                 f"FOREIGN KEY (aid) REFERENCES {AFFILIATIONS}(id) "
+                  "ON DELETE CASCADE ON UPDATE CASCADE,"
+                  "PRIMARY KEY (cid, aid))engine=innoDB;",
+
     CHAR_SERIES: f"CREATE TABLE {CHAR_SERIES} ("
+                  "id int(11) NOT NULL AUTO_INCREMENT,"
                   "cid int(11) NOT NULL,"
                   "sid int(11) NOT NULL,"
                  f"FOREIGN KEY (cid) REFERENCES {CHARACTERS}(id) "
                   "ON DELETE CASCADE ON UPDATE CASCADE,"
                  f"FOREIGN KEY (sid) REFERENCES {SERIES}(id) "
                   "ON DELETE CASCADE ON UPDATE CASCADE,"
-                  "PRIMARY KEY (cid, sid))engine=innoDB;"
+                  "PRIMARY KEY (id))engine=innoDB;",
+      
+    CHAR_SERIES_LOCS: f"CREATE TABLE {CHAR_SERIES_LOCS} ("
+                       "csid int(11) NOT NULL,"
+                       "lid int(11) NOT NULL,"
+                      f"FOREIGN KEY (csid) REFERENCES {CHAR_SERIES}(id) "
+                       "ON DELETE CASCADE ON UPDATE CASCADE,"
+                      f"FOREIGN KEY (lid) REFERENCES {LOCATIONS}(id) "
+                       "ON DELETE CASCADE ON UPDATE CASCADE,"
+                       "PRIMARY KEY (csid, lid))engine=innoDB;"
 }
 
 BASIC_SELECT_QUERIES = {
