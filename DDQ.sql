@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS characters_species;
 DROP TABLE IF EXISTS actors;
 
 	
-DROP TABLE IF EXISTS characters;
+-- DROP TABLE IF EXISTS characters;
 CREATE TABLE characters (
 	id int(11) NOT NULL AUTO_INCREMENT,
 	fname varchar(255) NOT NULL,
@@ -27,26 +27,26 @@ CREATE TABLE actors (
 	FOREIGN KEY (cid) REFERENCES characters(id) ON DELETE CASCADE ON UPDATE CASCADE,
 	PRIMARY KEY(id))engine=innoDB;
 
-DROP TABLE IF EXISTS affiliations;
+-- DROP TABLE IF EXISTS affiliations;
 CREATE TABLE affiliations (
 	id int(11) NOT NULL AUTO_INCREMENT,
 	name varchar(255) NOT NULL,
 	PRIMARY KEY(id))engine=innoDB;
 
-DROP TABLE IF EXISTS species;
+-- DROP TABLE IF EXISTS species;
 CREATE TABLE species (
 	id int(11) NOT NULL AUTO_INCREMENT,
 	name varchar(255) NOT NULL,
 	PRIMARY KEY (id))engine=innoDB;
 
-DROP TABLE IF EXISTS locations;
+-- DROP TABLE IF EXISTS locations;
 CREATE TABLE locations (
 	id int(11) NOT NULL AUTO_INCREMENT,
 	name varchar(255) NOT NULL,
 	type varchar(255),
 	PRIMARY KEY (id))engine=innoDB;
 
-DROP TABLE IF EXISTS series;
+-- DROP TABLE IF EXISTS series;
 CREATE TABLE series (
 	id int(11) NOT NULL AUTO_INCREMENT,
 	name varchar(255) NOT NULL,
@@ -54,7 +54,7 @@ CREATE TABLE series (
 	end_date DATE DEFAULT NULL,
 	PRIMARY KEY (id))engine=innoDB;
 
-DROP TABLE IF EXISTS characters_species;
+-- DROP TABLE IF EXISTS characters_species;
 CREATE TABLE characters_species (
 	cid int(11) NOT NULL,
 	sid int(11) NOT NULL,
@@ -62,7 +62,7 @@ CREATE TABLE characters_species (
 	FOREIGN KEY (sid) REFERENCES species(id) ON DELETE CASCADE ON UPDATE CASCADE,
 	PRIMARY KEY (cid, sid))engine=innoDB;
 
-DROP TABLE IF EXISTS characters_affiliations;
+-- DROP TABLE IF EXISTS characters_affiliations;
 CREATE TABLE characters_affiliations (
 	cid int(11) NOT NULL,
 	aid int(11) NOT NULL,
@@ -70,7 +70,7 @@ CREATE TABLE characters_affiliations (
 	FOREIGN KEY (aid) REFERENCES affiliations(id) ON DELETE CASCADE ON UPDATE CASCADE,
 	PRIMARY KEY (cid, aid))engine=innoDB;
 
-DROP TABLE IF EXISTS characters_series;
+-- DROP TABLE IF EXISTS characters_series;
 CREATE TABLE characters_series (
 	id int(11) NOT NULL AUTO_INCREMENT,
 	cid int(11) NOT NULL,
@@ -79,7 +79,7 @@ CREATE TABLE characters_series (
 	FOREIGN KEY (sid) REFERENCES series(id) ON DELETE CASCADE ON UPDATE CASCADE,
 	PRIMARY KEY (id))engine=innoDB;
 
-DROP TABLE IF EXISTS characters_series_locations;
+-- DROP TABLE IF EXISTS characters_series_locations;
 CREATE TABLE characters_series_locations (
 	csid int(11) NOT NULL,
 	lid int(11) NOT NULL,
@@ -118,7 +118,8 @@ INSERT INTO actors
 (fname,lname,birthday,imdb,cid)
 VALUES
 ('William','Shatner','1931-03-22','https://www.imdb.com/name/nm0000638/',(SELECT id from characters WHERE lname='Kirk')),
-('George','Takei','1937-04-20','https://www.imdb.com/name/nm0001786/',(SELECT id from characters WHERE lname='Sulu'));
+('George','Takei','1937-04-20','https://www.imdb.com/name/nm0001786/',(SELECT id from characters WHERE lname='Sulu')),
+('Leonard', 'Nimoy', '1931-03-26', 'https://www.imdb.com/name/nm0000559/', (SELECT id FROM characters WHERE alias='Spock'));
 INSERT INTO actors
 (fname,lname,birthday)
 VALUES
