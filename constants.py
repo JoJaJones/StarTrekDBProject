@@ -27,7 +27,7 @@ TABLES = {
                  "id int(11) NOT NULL AUTO_INCREMENT,"
                  "fname varchar(255) NOT NULL,"
                  "lname varchar(255) DEFAULT NULL,"
-                 "alias varchar(255) NOT NULL"
+                 "alias varchar(255) NOT NULL,"
                  "title varchar(255) DEFAULT NULL,"
                  "description text DEFAULT NULL,"
                  "biography text DEFAULT NULL,"
