@@ -64,7 +64,7 @@ SELECT C.id, C.fname, C.lname, C.title FROM characters C
 		AND S.id in (:list_of_selected_series)
 		AND L.id in (:list_of_selected_locations)
 		AND A.id in (:list_of_selected_actors)
-	ORDER BY C.fname;
+	GROUP BY C.fname, C.lname;
 
 --Search Series
 SELECT name, start_date, end_date FROM series WHERE :user_input IN name
