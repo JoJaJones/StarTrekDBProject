@@ -116,7 +116,7 @@ BASIC_SELECT_QUERIES = {
 
 VIEW_COLUMNS = {
     SPECIES: ["Species"],
-    CHARACTERS: ["First Name", "Last Name", "Title"],
+    CHARACTERS: ["First Name", "Last Name", "Alias", "Title"],
     AFFILIATIONS: ["Affiliation"],
     SERIES: ["Series", "Start Date", "End Date"],
     LOCATIONS: ["Name", "Type"],

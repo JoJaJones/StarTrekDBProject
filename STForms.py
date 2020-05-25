@@ -102,3 +102,20 @@ class AddActorForm(FlaskForm):
     imdb_field     = StringField("IMDB link", validators=[validators.Optional()])
     submit         = SubmitField("Submit")
 
+class SearchByFnameForm(FlaskForm):
+    fname_field    = StringField("First name", validators=[validators.Required()])
+    submit         = SubmitField("Search")
+
+class SearchByLnameForm(FlaskForm):
+    lname_field    = StringField("Last name", validators=[validators.Required()])
+    submit         = SubmitField("Search")
+
+class FilterBySpecies(FlaskForm):
+    species_field = SelectMultipleField("Species", coerce=int, validators=[validators.Optional()])
+    submit        = SubmitField("Search")
+
+class FilterBySeries(FlaskForm):
+    series_field = SelectMultipleField("Species", coerce=int, validators=[validators.Optional()])
+    submit       = SubmitField("Search")
+
+

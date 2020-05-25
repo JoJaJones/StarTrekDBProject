@@ -1,0 +1,60 @@
+{% extends "non_landing_page.html" %}
+
+{% block inner_content %}
+<div class="jumbotron bg-dark text-light" style="font-family: stfont2">
+  <fieldset>
+      <legend>{{header}}</legend>
+      <form method="POST">
+        <div class="form-group">
+          {{ FnameSearchForm.hidden_tag() }}
+          {{ FnameSearchForm.fname_field.label }}{{ FnameSearchForm.fname_field(class="tight-box") }}{{ FnameSearchForm.submit(class="btn btn-info") }}
+        </div>        
+      </form>
+      <form method="POST">
+        <div class="form-group">
+          {{ LnameSearchForm.hidden_tag() }}
+          {{ LnameSearchForm.lname_field.label }}{{ LnameSearchForm.lname_field(class="tight-box") }}{{ LnameSearchForm.submit(class="btn btn-info") }}
+        </div>       
+      </form>
+      <form method="POST">
+        <div class="form-group">
+          {{ SpeciesFilterForm.hidden_tag() }}
+          {{ SpeciesFilterForm.species_field.label }}{{ SpeciesFilterForm.species_field(class="tight-box") }}{{ SpeciesFilterForm.submit(class="btn btn-info") }}
+        </div>       
+      </form>      
+  </fieldset>
+</div>
+<div class="jumbotron bg-dark text-light federation">
+    <div class="container">
+        <form method="POST">
+            {% if query_has_value %}
+                <table class="table table-hover table-dark table-bordered" id="dark-table">
+                    <thead>
+                        <tr>
+                            {% for value in column_names %}
+                                <th scope="col">{{value}}</th>
+                            {% endfor %}
+                            <th scope="col" colspan="2" class="w-25"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in query_res %}
+                    <tr>
+                        {% for cell in item.table_values %}
+                            <td class="align-middle">{{cell}}</td>
+                        {% endfor %}
+                        <td class="align-middle" style="max-width: 25%;"><input type="submit" name="info_button" class="btn btn-outline-info btn-sm" value="More Info"
+                          formaction="/character-display/{{item.id}}" style="width: 100%;"></td>
+                        <td class="align-middle" style="max-width: 25%;"><input type="submit" name="update_button" class="btn btn-outline-info btn-sm" value="Update {{item.name}}"
+                                   formaction="/{{target}}?update_no={{item.id}}" style="width: 100%;"></td>
+                        <td class="align-middle" style="max-width: 25%;"><input type="submit" name="delete_button" class="btn btn-outline-danger btn-sm" value="Delete"
+                                   formaction="/{{target}}?delete_no={{item.id}}" style="width: 100%;"></td>
+                    </tr>
+                    </tbody>                            
+                    {% endfor %}
+                </table>
+            {% endif %}
+        </form>
+    </div>
+</div>
+{% endblock %}
