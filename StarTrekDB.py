@@ -48,48 +48,60 @@ def index():
     db = connect_to_database()
     header = 'Browse Characters'
     columns = VIEW_COLUMNS[CHARACTERS][:]
-    submitted = False
-    FnameSearchForm = SearchByFnameForm()
-    LnameSearchForm = SearchByLnameForm()
-    SpeciesFilterForm = FilterBySpecies()
-    # Populate species list with query
-    query = "SELECT id, name FROM species ORDER BY name"
-    res = execute_query(db, query)
-    species_list = []
-    for species in res:
-        species_list.append((species[0], species[1]))
-    SpeciesFilterForm.species_field.choices = species_list    
+    form = CharacterSearchForm()    
 
-    if FnameSearchForm.validate_on_submit():        
-        submitted = True
-        fname = str(FnameSearchForm.fname_field.data)
-        query_res = select_query(db, f"SELECT id, fname, lname, alias, title FROM {CHARACTERS} WHERE fname='{fname}' ORDER BY fname", CHARACTERS)
-    elif LnameSearchForm.validate_on_submit():
-        submitted = True
-        lname = str(LnameSearchForm.lname_field.data)
-        query_res = select_query(db, f"SELECT id, fname, lname, alias, title FROM {CHARACTERS} WHERE lname='{lname}' ORDER BY fname", CHARACTERS)
-    elif SpeciesFilterForm.validate_on_submit():
-        submitted = True
-        species = SpeciesFilterForm.species_field.data
-        speciesList = ""
-        for e in species:
-            speciesList += str(e)
-        speciesList = ','.join(speciesList)
-        query = f"SELECT DISTINCT C.id, fname, lname, alias, title FROM {CHARACTERS} C \
-                  JOIN characters_species CS ON CS.cid=C.id \
-                  JOIN species S ON S.id=CS.sid WHERE S.id in ({speciesList}) ORDER BY fname"
-        print(query)
+    # Populate lists with query results
+    form.actors.choices = get_search_list(db, ACTORS)   
+    form.species.choices = get_search_list(db, SPECIES)
+    form.affiliations.choices = get_search_list(db, AFFILIATIONS)
+    form.series.choices = get_search_list(db, SERIES)
+
+    if "clear" in request.args:
+        form.fname.data = ''
+        form.fname.data = ''
+        form.actors.data = []
+        form.species.data = []
+        form.affiliations.data = []
+        form.series.data = []
+        return redirect(url_for('index'))
+
+    if form.validate_on_submit():
+        query = get_character_search_query(form)
         query_res = select_query(db, query, CHARACTERS)
+    else:
+        query_res = select_query(db, BASIC_SELECT_QUERIES[CHARACTERS], CHARACTERS)                
 
-    # Get basic character info for the columns defined in VIEW_COLUMNS
-    if not submitted:
-        query_res = select_query(db, BASIC_SELECT_QUERIES[CHARACTERS], CHARACTERS)
+    return render_template("search_table_display.html", form=form, query_res=query_res,
+                            column_names=columns, query_has_value=(len(query_res) > 0),
+                            header=header, target="add-character")
 
-    # pass data necessary to generate table
-    return render_template("search_table_display.html", FnameSearchForm=FnameSearchForm, LnameSearchForm=LnameSearchForm,
-                            SpeciesFilterForm=SpeciesFilterForm, query_res=query_res, column_names=columns, query_has_value=(len(query_res) > 0),
-                            header=header, target="/add-characters")
+@app.route("/character-display/<int:id>", methods=["GET","POST"])
+def display_character(id):
+    db = connect_to_database()
+    # Get all info about selected character and Display it
 
+    # character table info
+    query = f"SELECT fname, lname, alias, title, description, biography FROM {CHARACTERS} WHERE id={id}"
+    res_character = execute_query(db, query).fetchone()
+
+    # species table info
+    query = f"SELECT S.name FROM {CHARACTERS} C JOIN {CHAR_SPECIES} CS ON CS.cid=C.id JOIN {SPECIES} S ON S.id=CS.sid WHERE C.id={id}"
+    species_list = execute_query(db, query).fetchall()
+
+    # affiliations table info
+    query = f"SELECT A.name FROM {CHARACTERS} C JOIN {CHAR_AFFILS} CA ON CA.cid=C.id JOIN {AFFILIATIONS} A ON A.id=CA.aid WHERE C.id={id}"
+    affiliations_list = execute_query(db, query).fetchall()
+
+    # series table info
+    query = f"SELECT S.name FROM {CHARACTERS} C JOIN {CHAR_SERIES} CS ON CS.cid=C.id JOIN {SERIES} S ON S.id=CS.sid WHERE C.id={id}"
+    series_list = execute_query(db, query).fetchall()
+
+    # actors table info
+    query = f"SELECT A.fname, A.lname FROM {CHARACTERS} C JOIN {ACTORS} A ON A.cid=C.id WHERE C.id={id}"
+    actor_list = execute_query(db, query).fetchall()
+
+    return render_template("character_display.html",res_character=res_character, species_list=species_list,
+                            affiliations_list=affiliations_list, series_list=series_list, actor_list=actor_list)
 
 @app.route("/add-species", methods=["GET", "POST"])
 def add_species():
@@ -143,22 +155,6 @@ def add_species():
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header=header, target="add-species")
 
-@app.route("/browse-affiliations", methods=["GET", "POST"])
-def browse_affiliations():
-    # create database connection
-    db = connect_to_database()
-
-    # set table columns using the dictionary in constants
-    columns = VIEW_COLUMNS[AFFILIATIONS]
-
-    # get results of query
-    query_res = select_query(db, BASIC_SELECT_QUERIES[AFFILIATIONS], AFFILIATIONS)
-
-    # pass data necessary to generate table
-    return render_template("single_table_display.html", form=False, query_res=query_res,
-                           column_names=columns, query_has_value=(len(query_res) > 0),
-                           header="", target="add-affiliations")
-
 @app.route("/add-affiliations", methods=["GET", "POST"])
 def add_affiliation():
     if SUBMIT_TYPE not in session:
@@ -211,22 +207,6 @@ def add_affiliation():
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header=header, target="add-affiliations")
 
-
-@app.route("/browse-series", methods=["GET", "POST"])
-def browse_series():
-    # create database connection
-    db = connect_to_database()
-
-    # set table columns using the dictionary in constants
-    columns = VIEW_COLUMNS[SERIES]
-
-    # get results of query
-    query_res = select_query(db, BASIC_SELECT_QUERIES[SERIES], SERIES)
-
-    # pass data necessary to generate table
-    return render_template("single_table_display.html", form=False, query_res=query_res,
-                           column_names=columns, query_has_value=(len(query_res) > 0),
-                           header="", target="add-series")
 
 @app.route("/add-series", methods=["GET", "POST"])
 def add_series():
@@ -320,23 +300,6 @@ def add_series():
                            header=header, target="add-series")
 
 
-@app.route("/browse-locations", methods=["GET", "POST"])
-def browse_locations():
-    # create database connection
-    db = connect_to_database()
-
-    # set table columns using the dictionary in constants
-    columns = VIEW_COLUMNS[LOCATIONS]
-
-    # get results of query
-    query_res = select_query(db, BASIC_SELECT_QUERIES[LOCATIONS], LOCATIONS)
-
-    # pass data necessary to generate table
-    return render_template("single_table_display.html", form=False, query_res=query_res,
-                           column_names=columns, query_has_value=(len(query_res) > 0),
-                           header="", target="add-location")
-
-
 @app.route("/add-location", methods=["GET", "POST"])
 def add_location():
     if SUBMIT_TYPE not in session:
@@ -397,50 +360,6 @@ def add_location():
     return render_template("add_location_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header=header, target="add-location")
-
-
-@app.route("/browse-characters", methods=["GET", "POST"])
-def browse_characters():
-    # create database connection
-    db = connect_to_database()
-
-    # set table columns using the dictionary in constants
-    columns = VIEW_COLUMNS[CHARACTERS][:]
-
-
-    # determine if species has data that might need to be displayed
-    query = "SELECT id, name FROM species ORDER BY name"
-    res = execute_query(db, query)
-    species_list = []
-    for species in res:
-        species_list.append((species[0], species[1]))
-    display_species = len(species_list) > 0
-    if display_species:
-        columns.append("Species")
-
-    # determine if series has data that might need to be displayed
-    query = "SELECT id, name FROM series ORDER BY name"
-    res = execute_query(db, query)
-    series_list = []
-    for series in res:
-        series_list.append((series[0], series[1]))
-    display_series = len(series_list) > 0
-    if display_series:
-        columns.append("Series")
-
-    # get results of query
-    query_res = select_query(db, BASIC_SELECT_QUERIES[CHARACTERS], CHARACTERS)
-    for item in query_res:  # append blank spaces to characters if species and series exist
-        # TODO add queries to set these values instead of adding a blank value to the data set
-        if display_series:
-            item.temp_char_buffer()
-        if display_species:
-            item.temp_char_buffer()
-
-    # pass data necessary to generate table
-    return render_template("single_table_display.html", form=False, query_res=query_res,
-                           column_names=columns, query_has_value=(len(query_res) > 0),
-                           header="", target="add-characters")
 
 
 @app.route("/add-character", methods=["GET", "POST"])
@@ -545,24 +464,6 @@ def add_character():
                            header=header, display_species=display_species,
                            display_series=display_series, target="add-character")
 
-
-
-@app.route("/browse-actors", methods=["GET", "POST"])
-def browse_actors():
-    # create database connection
-    db = connect_to_database()
-
-    # set table columns using the dictionary in constants
-    columns = VIEW_COLUMNS[ACTORS]
-
-    # get results of query
-    query_res = select_query(db, BASIC_SELECT_QUERIES[ACTORS], ACTORS)
-
-    # pass data necessary to generate table
-    return render_template("single_table_display.html", form=False, query_res=query_res,
-                           column_names=columns, query_has_value=(len(query_res) > 0),
-                           header="", target="add-actors")
-
 @app.route("/add-actors", methods=["GET", "POST"])
 def add_actor():
     if SUBMIT_TYPE not in session:
@@ -592,7 +493,6 @@ def add_actor():
             query = f"UPDATE {ACTORS} SET fname = %s, lname = %s, birthday = %s, imdb = %s WHERE id = {session['update_id']}"
             session[SUBMIT_TYPE] = "insert"
 
-        print(birthday)
         data = tuple([fname,lname,birthday,imdb])
         execute_query(db, query, data)
 
@@ -624,22 +524,6 @@ def add_actor():
     return render_template("add_actor_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header=header, target="add-actors")
-
-@app.route("/edit-actors", methods=["GET", "POST"])
-def edit_actor():
-    db = connect_to_database()
-    form = AddActorForm()
-    id = request.args['id']
-    fname = str(form.fname_field.data)
-    lname = str(form.lname_field.data)
-    birthday = str(form.birthday_field.data).replace('/','-')
-    imdb = str(form.imdb_field.data)
-    query = f"UPDATE {ACTORS} SET fname=(%s),lname=(%s),birthday=(%s),imdb=(%s) WHERE id={id}"
-    data = tuple([fname,lname,birthday,imdb])
-    execute_query(db, query, data)   
-
-    return redirect(url_for('add_actor'))
-
 
 @app.route("/connect-actor-char", methods=["GET", "POST"])
 def link_actor_char():
@@ -785,6 +669,80 @@ def select_query(connection, query, data_type):
 
     return query_res
 
+def get_search_list(db, table):
+    if table==ACTORS:
+        query = f"SELECT id, CONCAT_WS(' ', fname, IFNULL(lname,'')) AS name FROM {table} ORDER BY fname"
+    else:
+        query = f"SELECT id, name FROM {table} ORDER BY name"
+    res = execute_query(db, query)
+    result_list = []
+    for item in res:
+        result_list.append((item[0], item[1]))
+    return result_list
+
+def get_character_search_query(form):
+    # form assumes fields fname, lname, actors, species, affiliations, and series
+    whereString = ''
+    query = f"SELECT DISTINCT C.id, C.fname, C.lname, C.alias, C.title FROM {CHARACTERS} C"
+
+    fname = str(form.fname.data)
+    if fname:
+        if whereString:
+            whereString += f" AND C.fname='{fname}'"
+        else:
+            whereString += f" WHERE C.fname='{fname}'"
+
+    lname = str(form.lname.data)
+    if lname:
+        if whereString:
+            whereString += f" AND C.lname='{lname}'"
+        else:
+            whereString += f" WHERE C.lname='{lname}'"
+
+    actorList = ''
+    for e in form.actors.data:
+        actorList += str(e)
+    if actorList:
+        query += f" JOIN {ACTORS} A ON A.cid=C.id"
+        if whereString:
+            whereString += f" AND A.id in ({','.join(actorList)})"
+        else:
+            whereString += f" WHERE A.id in ({','.join(actorList)})"
+
+    speciesList = ''
+    for e in form.species.data:
+        speciesList += str(e)
+    if speciesList:
+        query += f" JOIN {CHAR_SPECIES} CS ON CS.cid=C.id JOIN {SPECIES} S ON S.id=CS.sid"
+        if whereString:
+            whereString += f" AND S.id in ({','.join(speciesList)})"
+        else:
+            whereString += f" WHERE S.id in ({','.join(speciesList)})"
+
+    affiliationsList = ''
+    for e in form.affiliations.data:
+        affiliationsList += str(e)
+    if affiliationsList:
+        query += f" JOIN {CHAR_AFFILS} CA ON CA.cid=C.id JOIN {AFFILIATIONS} AFF ON AFF.id=CA.aid"
+        if whereString:
+            whereString += f" AND AFF.id in ({','.join(affiliationsList)})"
+        else:
+            whereString += f" WHERE AFF.id in ({','.join(affiliationsList)})"
+
+    seriesList = ''
+    for e in form.series.data:
+        seriesList += str(e)
+    if seriesList:
+        query += f" JOIN {CHAR_SERIES} CSR ON CSR.cid=C.id JOIN {SERIES} SR ON SR.id=CSR.sid"
+        if whereString:
+            whereString += f" AND SR.id in ({','.join(seriesList)})"
+        else:
+            whereString += f" WHERE SR.id in ({','.join(seriesList)})"   
+
+    query += f"{whereString} ORDER BY fname"
+
+    return query
+    
 # TODO implement
 def load_data_page(row_item):
     print(row_item, row_item.id)

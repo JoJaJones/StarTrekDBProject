@@ -124,6 +124,20 @@ td > input.btn.btn-danger{
 }
 
 .tight-box {
-    margin-left: 5px;
-    margin-right: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+span.info_label {
+    color: #17a2b8;
+}
+
+ul.dashed {
+    list-style-type: none;
+}
+
+ul.dashed > li:before {
+    content: "–"; /* en dash here */
+    position: absolute;
+    margin-left: -1.1em; 
 }

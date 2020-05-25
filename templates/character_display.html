@@ -1,0 +1,65 @@
+{% extends "non_landing_page.html" %}
+
+{% block inner_content %}
+<div class="jumbotron bg-dark text-light" style="font-family: stfont2">
+  <div class="container">
+    <p><span class="info_label"><b>Name:</b></span>
+    {{res_character[0]}} 
+    {% if res_character[1] %}
+       {{res_character[1]}}
+    {% endif %}</p>
+    {% if res_character[2] %}
+      <p><span class="info_label"><b>Alias:</b></span>
+      {{res_character[2]}}</p>
+    {% endif %}
+    {% if res_character[3] %}
+      <p><span class="info_label"><b>Title:</b></span>
+      {{res_character[3]}}</p>
+    {% endif %}
+    {% if species_list %}
+      <p><span class="info_label"><b>Species:</b></span>
+      {% for species in species_list %}
+      {% if loop.last %}
+      {{species[0]}}
+      {% else %}
+      {{species[0]}}, 
+      {% endif %}
+      {% endfor %}</p>
+    {% endif %}
+    {% if affiliations_list %}
+      <p><span class="info_label"><b>Affiliations:</b></span>
+      {% for affil in affiliations_list %}
+      {% if loop.last %}
+      {{affil[0]}}
+      {% else %}
+      {{affil[0]}}, 
+      {% endif %}
+      {% endfor %}</p>
+    {% endif %}
+    {% if actor_list %}
+      <p><span class="info_label"><b>Actor List:</b></span></p>
+      <ul  class="dashed">
+        {% for actor in actor_list %}
+        <li>{{actor[0]}}{% if actor[1] %} {{actor[1]}}{% endif %}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    {% if series_list %}
+      <p><span class="info_label"><b>Series Appearances:</b></span></p>
+      <ul  class="dashed">
+        {% for series in series_list %}
+        <li>{{series[0]}}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    {% if res_character[4] %}
+      <p><span class="info_label"><b>Description:</b></span>
+      {{res_character[4]}}</p>
+    {% endif %}
+    {% if res_character[5] %}
+      <p><span class="info_label"><b>Biography:</b></span>
+      {{res_character[5]}}</p>
+    {% endif %}
+  </div>       
+</div>
+{% endblock %}
