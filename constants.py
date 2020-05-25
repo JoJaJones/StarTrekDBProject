@@ -16,6 +16,7 @@ CHAR_SPECIES     = "characters_species"
 CHAR_AFFILS      = "characters_affiliations"
 CHAR_SERIES      = "characters_series"
 CHAR_SERIES_LOCS = "characters_series_locations"
+CHAR_ACTORS      = "characters_actors" # Not an actual table
 
 TABLES_LIST = [CHARACTERS, AFFILIATIONS, SPECIES, LOCATIONS, SERIES, ACTORS,
                CHAR_SPECIES, CHAR_AFFILS, CHAR_SERIES, CHAR_SERIES_LOCS]
@@ -120,7 +121,8 @@ VIEW_COLUMNS = {
     AFFILIATIONS: ["Affiliation"],
     SERIES: ["Series", "Start Date", "End Date"],
     LOCATIONS: ["Name", "Type"],
-    ACTORS: ["First Name", "Last Name", "Birthday", "IMDB"]
+    ACTORS: ["First Name", "Last Name", "Birthday", "IMDB"],
+    CHAR_ACTORS: ["Character Name", "Actor Name"]
 }
 
 SERIES_INSERT_QUERIES ={

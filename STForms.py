@@ -110,3 +110,8 @@ class CharacterSearchForm(FlaskForm):
     series = SelectMultipleField("Series", coerce=int, validators=[validators.Optional()])
     affiliations  = SelectMultipleField("Affiliations", coerce=int, validators=[validators.Optional()])
     submit = SubmitField("Search")
+
+class CharacterActorLinkForm(FlaskForm):
+    characters = SelectField("Characters", coerce=int, validators=[validators.Required()])
+    actors = SelectField("Actors", coerce=int, validators=[validators.Required()])
+    submit = SubmitField("Add Link")

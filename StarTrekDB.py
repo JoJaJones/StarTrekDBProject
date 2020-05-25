@@ -103,265 +103,6 @@ def display_character(id):
     return render_template("character_display.html",res_character=res_character, species_list=species_list,
                             affiliations_list=affiliations_list, series_list=series_list, actor_list=actor_list)
 
-@app.route("/add-species", methods=["GET", "POST"])
-def add_species():
-    if SUBMIT_TYPE not in session:
-        session[SUBMIT_TYPE] = "insert"
-
-    form = SingleFieldForm()
-    form.first_field.label.text = "Species Name"
-
-    db = connect_to_database()
-    columns = VIEW_COLUMNS[SPECIES]
-    header = "Add New Species"
-
-    if UPDATE_PAGE in session and session[UPDATE_PAGE] != SPECIES:
-        session[SUBMIT_TYPE] = "insert"
-
-    if form.validate_on_submit():
-        name = str(form.first_field.data)
-        form.first_field.data = ""
-
-        if session[SUBMIT_TYPE] == "insert":
-            query = f"INSERT INTO {SPECIES}(name) VALUES (%s)"
-        else:
-            query = f"UPDATE {SPECIES} SET name = %s WHERE id = {session['update_id']}"
-            session[SUBMIT_TYPE] = "insert"
-        data = tuple([name])
-        res = execute_query(db, query, data)
-
-        query_res = select_query(db, BASIC_SELECT_QUERIES[SPECIES], SPECIES)
-
-        return render_template("single_field_add_form.html", form=form, query_res=query_res,
-                               column_names=columns, query_has_value=(len(query_res) > 0),
-                               header=header, target="add-species")
-
-    if "delete_no" in request.args:
-        delete_row(SPECIES, db, request.args["delete_no"])
-
-    if "update_no" in request.args:
-        query = f"SELECT * FROM {SPECIES} WHERE id = {request.args['update_no']}"
-        res = execute_query(db, query).fetchone()
-        if res is not None:
-            session["update_id"] = res[0]
-            session[SUBMIT_TYPE] = "update"
-            session["update_page"] = SPECIES
-            form.first_field.data = f"{res[1]}"
-            header = f"Update {res[1]}"
-
-    query_res = select_query(db, BASIC_SELECT_QUERIES[SPECIES], SPECIES)
-
-    return render_template("single_field_add_form.html", form=form, query_res=query_res,
-                           column_names=columns, query_has_value=(len(query_res) > 0),
-                           header=header, target="add-species")
-
-@app.route("/add-affiliations", methods=["GET", "POST"])
-def add_affiliation():
-    if SUBMIT_TYPE not in session:
-        session[SUBMIT_TYPE] = "insert"
-
-    form = SingleFieldForm()
-    form.first_field.label.text = "Affiliation Name"
-    query_res = []
-    db = connect_to_database()
-    columns = VIEW_COLUMNS[AFFILIATIONS]
-    header = "Add New Affiliation"
-
-    if UPDATE_PAGE in session and session[UPDATE_PAGE] != AFFILIATIONS:
-        session[SUBMIT_TYPE] = "insert"
-
-    if form.validate_on_submit():
-        name = str(form.first_field.data)
-        form.first_field.data = ""
-
-        if session[SUBMIT_TYPE] == "insert":
-            query = f"INSERT INTO {AFFILIATIONS}(name) VALUES (%s)"
-        else:
-            query = f"UPDATE {AFFILIATIONS} SET name = %s WHERE id = {session['update_id']}"
-            session[SUBMIT_TYPE] = "insert"
-        data = tuple([name])
-        res = execute_query(db, query, data)
-
-        query_res = select_query(db, BASIC_SELECT_QUERIES[AFFILIATIONS], AFFILIATIONS)
-
-        return render_template("single_field_add_form.html", form=form, query_res=query_res,
-                               column_names=columns, query_has_value=(len(query_res) > 0),
-                               header=header, target="add-affiliations")
-
-    if "delete_no" in request.args:
-        delete_row(AFFILIATIONS, db, request.args["delete_no"])
-
-    if "update_no" in request.args:
-        query = f"SELECT * FROM {AFFILIATIONS} WHERE id = {request.args['update_no']}"
-        res = execute_query(db, query).fetchone()
-        if res is not None:
-            session["update_id"] = res[0]
-            session[SUBMIT_TYPE] = "update"
-            session["update_page"] = AFFILIATIONS
-            form.first_field.data = f"{res[1]}"
-            header = f"Update {res[1]}"
-
-    query_res = select_query(db, BASIC_SELECT_QUERIES[AFFILIATIONS], AFFILIATIONS)
-
-    return render_template("single_field_add_form.html", form=form, query_res=query_res,
-                           column_names=columns, query_has_value=(len(query_res) > 0),
-                           header=header, target="add-affiliations")
-
-
-@app.route("/add-series", methods=["GET", "POST"])
-def add_series():
-    if SUBMIT_TYPE not in session:
-        session[SUBMIT_TYPE] = "insert"
-
-    form = SeriesForm()
-    form.second_field.label.text = "Series Start Date"
-
-    form.third_field.label.text = "Series End Date"
-
-    db = connect_to_database()
-    columns = VIEW_COLUMNS[SERIES]
-    header = "Add New Series"
-
-    if UPDATE_PAGE in session and session[UPDATE_PAGE] != SERIES:
-        session[SUBMIT_TYPE] = "insert"
-
-    if form.validate_on_submit():
-        name = str(form.first_field.data)
-        form.first_field.data = ""
-        start = form.second_field.data
-        end = form.third_field.data
-       
-        # validate the date data entered by the user and then format it for entry to DB
-        start_valid = sanitize_date(start)
-        start = f"{start['year']}-{start['month']}-{start['day']}"
-
-        # validate the date data entered by the user and then format it for entry to DB
-        end_valid = sanitize_date(end)
-        end = f"{end['year']}-{end['month']}-{end['day']}"
-        
-        # Alter queries & data if fields are missing
-        if start_valid and end_valid:
-            case = 0
-            data = (name, start, end)
-        elif start_valid:
-            case = 1
-            data = (name, start)
-        elif end_valid:
-            case = 2
-            data = (name, end)
-        else:
-            case = 3
-            data = (name)    
-        
-        if session[SUBMIT_TYPE] == "insert":
-            query = SERIES_INSERT_QUERIES[case]
-        else:
-            data = data + tuple([session["update_id"]])
-            query = SERIES_UPDATE_QUERIES[case]            
-            session[SUBMIT_TYPE] = "insert"
-        res = execute_query(db, query, data)
-
-        query_res = select_query(db, BASIC_SELECT_QUERIES[SERIES], SERIES)
-        for item in query_res:
-            for i in range(1, 3):
-                item.reformat_date(i)
-
-        return redirect(url_for("add_series"))
-
-    if "delete_no" in request.args:
-        delete_row(SERIES, db, request.args["delete_no"])
-
-    if "update_no" in request.args:
-        query = f"SELECT * FROM {SERIES} WHERE id = {request.args['update_no']}"
-        res = execute_query(db, query).fetchone()
-        if res is not None:
-            session["update_id"] = res[0]
-            session[SUBMIT_TYPE] = "update"
-            session["update_page"] = SERIES
-            form.first_field.data = f"{res[1]}"
-            # Dates could be empty
-            if res[2]:
-                form.second_field.form.year.data = res[2].year
-                form.second_field.form.month.data = res[2].month
-                form.second_field.form.day.data = res[2].day
-            if res[3]:
-                form.third_field.form.year.data = res[3].year
-                form.third_field.form.month.data = res[3].month
-                form.third_field.form.day.data = res[3].day
-            header = f"Update {res[1]}"
-
-    query_res = select_query(db, BASIC_SELECT_QUERIES[SERIES], SERIES)
-    for item in query_res:
-        for i in range(1, 3):
-            item.reformat_date(i)
-
-    return render_template("add_series_form.html", form=form, query_res=query_res,
-                           column_names=columns, query_has_value=(len(query_res) > 0),
-                           header=header, target="add-series")
-
-
-@app.route("/add-location", methods=["GET", "POST"])
-def add_location():
-    if SUBMIT_TYPE not in session:
-        session[SUBMIT_TYPE] = "insert"
-
-    form = LocationForm()
-    form.first_field.label = "Location Name"
-    form.second_field.label = "Location Type"
-    columns = VIEW_COLUMNS[LOCATIONS]
-    header = "Add New Location"
-
-    db = connect_to_database()
-
-    if UPDATE_PAGE in session and session[UPDATE_PAGE] != LOCATIONS:
-        session[SUBMIT_TYPE] = "insert"
-
-    if form.validate_on_submit():
-        name = str(form.first_field.data)
-        form.first_field.data = ""
-        type = form.second_field.data
-        form.second_field.data = None
-
-        if session[SUBMIT_TYPE] == "insert":
-            query = f"INSERT INTO {LOCATIONS}(name, type) VALUES (%s, %s)"
-        else:
-            query = f"UPDATE {LOCATIONS} SET name = %s, type = %s WHERE id = {session['update_id']}"
-            session[SUBMIT_TYPE] = "insert"
-
-        data = (name, type)
-        res = execute_query(db, query, data)
-
-        query_res = select_query(db, BASIC_SELECT_QUERIES[LOCATIONS], LOCATIONS)
-        for item in query_res:
-            item.table_values[1] = LOCATION_TYPE_DICT[item.table_values[1]]
-
-        return render_template("add_location_form.html", form=form, query_res=query_res,
-                               column_names=columns, query_has_value=(len(query_res) > 0),
-                               header=header, target="add-location")
-
-    if "delete_no" in request.args:
-        delete_row(LOCATIONS, db, request.args["delete_no"])
-
-    if "update_no" in request.args:  # TODO
-        query = f"SELECT * FROM {LOCATIONS} WHERE id = {request.args['update_no']}"
-        res = execute_query(db, query).fetchone()
-        if res is not None:
-            session["update_id"] = res[0]
-            session[SUBMIT_TYPE] = "update"
-            session["update_page"] = LOCATIONS
-            form.first_field.data = f"{res[1]}"
-            form.second_field.data = f"{res[2]}"
-            header = f"Update {res[1]}"
-
-    query_res = select_query(db, BASIC_SELECT_QUERIES[LOCATIONS], LOCATIONS)
-    for item in query_res:
-        item.table_values[1] = LOCATION_TYPE_DICT[item.table_values[1]]
-
-    return render_template("add_location_form.html", form=form, query_res=query_res,
-                           column_names=columns, query_has_value=(len(query_res) > 0),
-                           header=header, target="add-location")
-
-
 @app.route("/add-character", methods=["GET", "POST"])
 def add_character():
     if SUBMIT_TYPE not in session:
@@ -525,10 +266,288 @@ def add_actor():
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header=header, target="add-actors")
 
+@app.route("/add-series", methods=["GET", "POST"])
+def add_series():
+    if SUBMIT_TYPE not in session:
+        session[SUBMIT_TYPE] = "insert"
+
+    form = SeriesForm()
+    form.second_field.label.text = "Series Start Date"
+
+    form.third_field.label.text = "Series End Date"
+
+    db = connect_to_database()
+    columns = VIEW_COLUMNS[SERIES]
+    header = "Add New Series"
+
+    if UPDATE_PAGE in session and session[UPDATE_PAGE] != SERIES:
+        session[SUBMIT_TYPE] = "insert"
+
+    if form.validate_on_submit():
+        name = str(form.first_field.data)
+        form.first_field.data = ""
+        start = form.second_field.data
+        end = form.third_field.data
+       
+        # validate the date data entered by the user and then format it for entry to DB
+        start_valid = sanitize_date(start)
+        start = f"{start['year']}-{start['month']}-{start['day']}"
+
+        # validate the date data entered by the user and then format it for entry to DB
+        end_valid = sanitize_date(end)
+        end = f"{end['year']}-{end['month']}-{end['day']}"
+        
+        # Alter queries & data if fields are missing
+        if start_valid and end_valid:
+            case = 0
+            data = (name, start, end)
+        elif start_valid:
+            case = 1
+            data = (name, start)
+        elif end_valid:
+            case = 2
+            data = (name, end)
+        else:
+            case = 3
+            data = (name)    
+        
+        if session[SUBMIT_TYPE] == "insert":
+            query = SERIES_INSERT_QUERIES[case]
+        else:
+            data = data + tuple([session["update_id"]])
+            query = SERIES_UPDATE_QUERIES[case]            
+            session[SUBMIT_TYPE] = "insert"
+        res = execute_query(db, query, data)
+
+        query_res = select_query(db, BASIC_SELECT_QUERIES[SERIES], SERIES)
+        for item in query_res:
+            for i in range(1, 3):
+                item.reformat_date(i)
+
+        return redirect(url_for("add_series"))
+
+    if "delete_no" in request.args:
+        delete_row(SERIES, db, request.args["delete_no"])
+
+    if "update_no" in request.args:
+        query = f"SELECT * FROM {SERIES} WHERE id = {request.args['update_no']}"
+        res = execute_query(db, query).fetchone()
+        if res is not None:
+            session["update_id"] = res[0]
+            session[SUBMIT_TYPE] = "update"
+            session["update_page"] = SERIES
+            form.first_field.data = f"{res[1]}"
+            # Dates could be empty
+            if res[2]:
+                form.second_field.form.year.data = res[2].year
+                form.second_field.form.month.data = res[2].month
+                form.second_field.form.day.data = res[2].day
+            if res[3]:
+                form.third_field.form.year.data = res[3].year
+                form.third_field.form.month.data = res[3].month
+                form.third_field.form.day.data = res[3].day
+            header = f"Update {res[1]}"
+
+    query_res = select_query(db, BASIC_SELECT_QUERIES[SERIES], SERIES)
+    for item in query_res:
+        for i in range(1, 3):
+            item.reformat_date(i)
+
+    return render_template("add_series_form.html", form=form, query_res=query_res,
+                           column_names=columns, query_has_value=(len(query_res) > 0),
+                           header=header, target="add-series")
+
+@app.route("/add-species", methods=["GET", "POST"])
+def add_species():
+    if SUBMIT_TYPE not in session:
+        session[SUBMIT_TYPE] = "insert"
+
+    form = SingleFieldForm()
+    form.first_field.label.text = "Species Name"
+
+    db = connect_to_database()
+    columns = VIEW_COLUMNS[SPECIES]
+    header = "Add New Species"
+
+    if UPDATE_PAGE in session and session[UPDATE_PAGE] != SPECIES:
+        session[SUBMIT_TYPE] = "insert"
+
+    if form.validate_on_submit():
+        name = str(form.first_field.data)
+        form.first_field.data = ""
+
+        if session[SUBMIT_TYPE] == "insert":
+            query = f"INSERT INTO {SPECIES}(name) VALUES (%s)"
+        else:
+            query = f"UPDATE {SPECIES} SET name = %s WHERE id = {session['update_id']}"
+            session[SUBMIT_TYPE] = "insert"
+        data = tuple([name])
+        res = execute_query(db, query, data)
+
+        query_res = select_query(db, BASIC_SELECT_QUERIES[SPECIES], SPECIES)
+
+        return render_template("single_field_add_form.html", form=form, query_res=query_res,
+                               column_names=columns, query_has_value=(len(query_res) > 0),
+                               header=header, target="add-species")
+
+    if "delete_no" in request.args:
+        delete_row(SPECIES, db, request.args["delete_no"])
+
+    if "update_no" in request.args:
+        query = f"SELECT * FROM {SPECIES} WHERE id = {request.args['update_no']}"
+        res = execute_query(db, query).fetchone()
+        if res is not None:
+            session["update_id"] = res[0]
+            session[SUBMIT_TYPE] = "update"
+            session["update_page"] = SPECIES
+            form.first_field.data = f"{res[1]}"
+            header = f"Update {res[1]}"
+
+    query_res = select_query(db, BASIC_SELECT_QUERIES[SPECIES], SPECIES)
+
+    return render_template("single_field_add_form.html", form=form, query_res=query_res,
+                           column_names=columns, query_has_value=(len(query_res) > 0),
+                           header=header, target="add-species")
+
+@app.route("/add-location", methods=["GET", "POST"])
+def add_location():
+    if SUBMIT_TYPE not in session:
+        session[SUBMIT_TYPE] = "insert"
+
+    form = LocationForm()
+    form.first_field.label = "Location Name"
+    form.second_field.label = "Location Type"
+    columns = VIEW_COLUMNS[LOCATIONS]
+    header = "Add New Location"
+
+    db = connect_to_database()
+
+    if UPDATE_PAGE in session and session[UPDATE_PAGE] != LOCATIONS:
+        session[SUBMIT_TYPE] = "insert"
+
+    if form.validate_on_submit():
+        name = str(form.first_field.data)
+        form.first_field.data = ""
+        type = form.second_field.data
+        form.second_field.data = None
+
+        if session[SUBMIT_TYPE] == "insert":
+            query = f"INSERT INTO {LOCATIONS}(name, type) VALUES (%s, %s)"
+        else:
+            query = f"UPDATE {LOCATIONS} SET name = %s, type = %s WHERE id = {session['update_id']}"
+            session[SUBMIT_TYPE] = "insert"
+
+        data = (name, type)
+        res = execute_query(db, query, data)
+
+        query_res = select_query(db, BASIC_SELECT_QUERIES[LOCATIONS], LOCATIONS)
+        for item in query_res:
+            item.table_values[1] = LOCATION_TYPE_DICT[item.table_values[1]]
+
+        return render_template("add_location_form.html", form=form, query_res=query_res,
+                               column_names=columns, query_has_value=(len(query_res) > 0),
+                               header=header, target="add-location")
+
+    if "delete_no" in request.args:
+        delete_row(LOCATIONS, db, request.args["delete_no"])
+
+    if "update_no" in request.args:  # TODO
+        query = f"SELECT * FROM {LOCATIONS} WHERE id = {request.args['update_no']}"
+        res = execute_query(db, query).fetchone()
+        if res is not None:
+            session["update_id"] = res[0]
+            session[SUBMIT_TYPE] = "update"
+            session["update_page"] = LOCATIONS
+            form.first_field.data = f"{res[1]}"
+            form.second_field.data = f"{res[2]}"
+            header = f"Update {res[1]}"
+
+    query_res = select_query(db, BASIC_SELECT_QUERIES[LOCATIONS], LOCATIONS)
+    for item in query_res:
+        item.table_values[1] = LOCATION_TYPE_DICT[item.table_values[1]]
+
+    return render_template("add_location_form.html", form=form, query_res=query_res,
+                           column_names=columns, query_has_value=(len(query_res) > 0),
+                           header=header, target="add-location")
+
+@app.route("/add-affiliations", methods=["GET", "POST"])
+def add_affiliation():
+    if SUBMIT_TYPE not in session:
+        session[SUBMIT_TYPE] = "insert"
+
+    form = SingleFieldForm()
+    form.first_field.label.text = "Affiliation Name"
+    query_res = []
+    db = connect_to_database()
+    columns = VIEW_COLUMNS[AFFILIATIONS]
+    header = "Add New Affiliation"
+
+    if UPDATE_PAGE in session and session[UPDATE_PAGE] != AFFILIATIONS:
+        session[SUBMIT_TYPE] = "insert"
+
+    if form.validate_on_submit():
+        name = str(form.first_field.data)
+        form.first_field.data = ""
+
+        if session[SUBMIT_TYPE] == "insert":
+            query = f"INSERT INTO {AFFILIATIONS} (name) VALUES (%s)"
+        else:
+            query = f"UPDATE {AFFILIATIONS} SET name = %s WHERE id = {session['update_id']}"
+            session[SUBMIT_TYPE] = "insert"
+        data = tuple([name])
+        res = execute_query(db, query, data)
+
+        query_res = select_query(db, BASIC_SELECT_QUERIES[AFFILIATIONS], AFFILIATIONS)
+
+        return render_template("single_field_add_form.html", form=form, query_res=query_res,
+                               column_names=columns, query_has_value=(len(query_res) > 0),
+                               header=header, target="add-affiliations")
+
+    if "delete_no" in request.args:
+        delete_row(AFFILIATIONS, db, request.args["delete_no"])
+
+    if "update_no" in request.args:
+        query = f"SELECT * FROM {AFFILIATIONS} WHERE id = {request.args['update_no']}"
+        res = execute_query(db, query).fetchone()
+        if res is not None:
+            session["update_id"] = res[0]
+            session[SUBMIT_TYPE] = "update"
+            session["update_page"] = AFFILIATIONS
+            form.first_field.data = f"{res[1]}"
+            header = f"Update {res[1]}"
+
+    query_res = select_query(db, BASIC_SELECT_QUERIES[AFFILIATIONS], AFFILIATIONS)
+
+    return render_template("single_field_add_form.html", form=form, query_res=query_res,
+                           column_names=columns, query_has_value=(len(query_res) > 0),
+                           header=header, target="add-affiliations")
+
 @app.route("/connect-actor-char", methods=["GET", "POST"])
 def link_actor_char():
-    return render_template("link_relationships.html", header="Enter a Character and Actor to link", form=True,
-                           field_one_text="Character Name", field_two_text="Actor Name")
+    # Make full list of characters and actors, have buttons to add/remove relationship
+    header = "Select a Character and Actor to Link"
+    columns = VIEW_COLUMNS[CHAR_ACTORS]
+    db = connect_to_database()
+    form = CharacterActorLinkForm()
+    form.characters.choices = get_search_list(db, CHARACTERS)
+    form.actors.choices = get_search_list(db, ACTORS)
+
+    if form.validate_on_submit():
+        query = f"UPDATE {ACTORS} SET cid={form.characters.data} WHERE id={form.actors.data}"
+        execute_query(db, query)
+        return redirect(url_for('link_actor_char'))
+
+    if "delete_no" in request.args:
+        query = f"UPDATE {ACTORS} SET cid=NULL WHERE id={request.args['delete_no']}"
+        execute_query(db, query)
+    
+    query = f"SELECT A.id, CONCAT_WS(' ', C.fname, IFNULL(C.lname,'')), CONCAT_WS(' ', A.fname, IFNULL(A.lname,'')) FROM {CHARACTERS} C \
+              JOIN {ACTORS} A ON A.cid=C.id ORDER BY C.fname"
+    query_res = select_query(db, query, ACTORS)
+
+    return render_template("dual_field_link_form.html", header=header, form=form,
+                            query_res=query_res, column_names=columns, query_has_value=(len(query_res) > 0),
+                            target='connect-actor-char')
 
 
 @app.route("/connect-char-spec", methods=["GET", "POST"])
@@ -670,7 +689,9 @@ def select_query(connection, query, data_type):
     return query_res
 
 def get_search_list(db, table):
-    if table==ACTORS:
+    if table==CHARACTERS:
+        query = f"SELECT id, CONCAT_WS(' ', fname, IFNULL(lname,'')) AS name FROM {table} ORDER BY fname"
+    elif table==ACTORS:
         query = f"SELECT id, CONCAT_WS(' ', fname, IFNULL(lname,'')) AS name FROM {table} ORDER BY fname"
     else:
         query = f"SELECT id, name FROM {table} ORDER BY name"

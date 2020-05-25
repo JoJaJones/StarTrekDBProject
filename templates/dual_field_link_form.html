@@ -1,0 +1,25 @@
+{% extends "single_table_display_no_update.html" %}
+
+{% block content_form %}
+  <div class="jumbotron bg-dark text-light" style="font-family: stfont2">
+  <fieldset>
+    <legend>{{header}}</legend>
+    <form method="POST">
+      {{ form.hidden_tag() }}
+      <div class="form-row">
+        <div class="col-md-4">
+        {{ form.characters.label }}{{ form.characters(class="form-control") }}
+        </div>
+        <div class="col-md-4">
+        {{ form.actors.label }}{{ form.actors(class="form-control") }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-2 my-2">
+            {{ form.submit(class="btn btn-info", style="width: 100%;") }}
+        </div>
+      </div>
+    </form>
+  </fieldset>
+</div>
+{% endblock %}

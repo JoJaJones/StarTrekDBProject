@@ -1,0 +1,38 @@
+{% extends "non_landing_page.html" %}
+
+{% block inner_content %}
+{% if form %}
+    {% block content_form %}
+
+    {% endblock %}
+{% endif %}
+<div class="jumbotron bg-dark text-light federation">
+    <div class="container">
+        <form method="POST">
+            {% if query_has_value %}
+                <table class="table table-hover table-dark table-bordered" id="dark-table">
+                    <thead>
+                        <tr>
+                            {% for value in column_names %}
+                                <th scope="col" class="info_label">{{value}}</th>
+                            {% endfor %}
+                            <th scope="col" colspan="1" class="w-25"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in query_res %}
+                    <tr>
+                        {% for cell in item.table_values %}
+                            <td class="align-middle">{{cell}}</td>
+                        {% endfor %}
+                        <td class="align-middle" style="max-width: 25%;"><input type="submit" name="delete_button" class="btn btn-outline-danger btn-sm" value="Unlink"
+                                   formaction="/{{target}}?delete_no={{item.id}}" style="width: 100%;"></td>
+                    </tr>
+                    </tbody>                            
+                    {% endfor %}
+                </table>
+            {% endif %}
+        </form>
+    </div>
+</div>
+{% endblock %}
