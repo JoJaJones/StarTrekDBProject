@@ -524,16 +524,17 @@ def add_affiliation():
 
 @app.route("/connect-actor-char", methods=["GET", "POST"])
 def link_actor_char():
-    # Make full list of characters and actors, have buttons to add/remove relationship
     header = "Select a Character and Actor to Link"
     columns = VIEW_COLUMNS[CHAR_ACTORS]
     db = connect_to_database()
-    form = CharacterActorLinkForm()
-    form.characters.choices = get_search_list(db, CHARACTERS)
-    form.actors.choices = get_search_list(db, ACTORS)
+    form = LinkForm()
+    form.entity1.label = "Characters"
+    form.entity2.label = "Actors"
+    form.entity1.choices = get_search_list(db, CHARACTERS)
+    form.entity2.choices = get_search_list(db, ACTORS)
 
     if form.validate_on_submit():
-        query = f"UPDATE {ACTORS} SET cid={form.characters.data} WHERE id={form.actors.data}"
+        query = f"UPDATE {ACTORS} SET cid={form.entity1.data} WHERE id={form.entity2.data}"
         execute_query(db, query)
         return redirect(url_for('link_actor_char'))
 
@@ -552,20 +553,113 @@ def link_actor_char():
 
 @app.route("/connect-char-spec", methods=["GET", "POST"])
 def link_char_species():
-    return render_template("link_relationships.html", header="Enter a Character and Species to link", form=True,
-                           field_one_text="Character Name", field_two_text="Species Name")
+    header = "Select a Character and Species to Link"
+    columns = VIEW_COLUMNS[CHAR_SPECIES]
+    db = connect_to_database()
+    form = LinkForm()
+    form.entity1.label = "Characters"
+    form.entity2.label = "Species"
+    form.entity1.choices = get_search_list(db, CHARACTERS)
+    form.entity2.choices = get_search_list(db, SPECIES)
+
+    if form.validate_on_submit():
+        # Check to see if relationship already exists
+        cid = form.entity1.data
+        sid = form.entity2.data
+        query = f"SELECT * FROM {CHAR_SPECIES} WHERE cid={cid} AND sid={sid}"
+        res = execute_query(db, query).fetchone()
+        if not res:            
+            query = f"INSERT INTO {CHAR_SPECIES} (cid,sid) VALUES ({cid},{sid})"
+            execute_query(db, query)
+        return redirect(url_for('link_char_species'))
+
+    if "delete_no" in request.args:
+        cidsid = request.args['delete_no'].split('-')
+        query = f"DELETE FROM {CHAR_SPECIES} WHERE cid={cidsid[0]} AND sid={cidsid[1]}"
+        execute_query(db, query)
+    
+    query = f"SELECT CONCAT_WS('-',CS.cid,CS.sid), CONCAT_WS(' ', C.fname, IFNULL(C.lname,'')), S.name FROM {CHAR_SPECIES} CS \
+              JOIN {CHARACTERS} C ON C.id=CS.cid \
+              JOIN {SPECIES} S ON S.id=CS.sid ORDER BY C.fname"
+    query_res = select_query(db, query, CHAR_SPECIES)
+
+    return render_template("dual_field_link_form.html", header=header, form=form,
+                            query_res=query_res, column_names=columns, query_has_value=(len(query_res) > 0),
+                            target='connect-char-spec')
 
 
 @app.route("/connect-char-aff", methods=["GET", "POST"])
 def link_char_aff():
-    return render_template("link_relationships.html", header="Enter a Character and Affiliation to link", form=True,
-                           field_one_text="Character Name", field_two_text="Affiliation Name")
+    header = "Select a Character and Affiliation to Link"
+    columns = VIEW_COLUMNS[CHAR_AFFILS]
+    db = connect_to_database()
+    form = LinkForm()
+    form.entity1.label = "Characters"
+    form.entity2.label = "Affiliations"
+    form.entity1.choices = get_search_list(db, CHARACTERS)
+    form.entity2.choices = get_search_list(db, AFFILIATIONS)
+
+    if form.validate_on_submit():
+        # Check to see if relationship already exists
+        cid = form.entity1.data
+        aid = form.entity2.data
+        query = f"SELECT * FROM {CHAR_AFFILS} WHERE cid={cid} AND aid={aid}"
+        res = execute_query(db, query).fetchone()
+        if not res:
+            query = f"INSERT INTO {CHAR_AFFILS} (cid,aid) VALUES ({cid},{aid})"
+            execute_query(db, query)
+        return redirect(url_for('link_char_aff'))
+
+    if "delete_no" in request.args:
+        cidaid = request.args['delete_no'].split('-')
+        query = f"DELETE FROM {CHAR_AFFILS} WHERE cid={cidaid[0]} AND aid={cidaid[1]}"
+        execute_query(db, query)
+    
+    query = f"SELECT CONCAT_WS('-',CA.cid,CA.aid), CONCAT_WS(' ', C.fname, IFNULL(C.lname,'')), A.name FROM {CHAR_AFFILS} CA \
+              JOIN {CHARACTERS} C ON C.id=CA.cid \
+              JOIN {AFFILIATIONS} A ON A.id=CA.aid ORDER BY C.fname"
+    query_res = select_query(db, query, CHAR_AFFILS)
+
+    return render_template("dual_field_link_form.html", header=header, form=form,
+                            query_res=query_res, column_names=columns, query_has_value=(len(query_res) > 0),
+                            target='connect-char-aff')
 
 
 @app.route("/connect-char-series", methods=["GET", "POST"])
 def link_char_series():
-    return render_template("link_relationships.html", header="Enter a Character and Series to link", form=True,
-                           field_one_text="Character Name", field_two_text="Series Name")
+    header = "Select a Character and Series to Link"
+    columns = VIEW_COLUMNS[CHAR_SERIES]
+    db = connect_to_database()
+    form = LinkForm()
+    form.entity1.label = "Characters"
+    form.entity2.label = "Series"
+    form.entity1.choices = get_search_list(db, CHARACTERS)
+    form.entity2.choices = get_search_list(db, SERIES)
+
+    if form.validate_on_submit():
+        # Check to see if relationship already exists
+        cid = form.entity1.data
+        sid = form.entity2.data
+        query = f"SELECT * FROM {CHAR_SERIES} WHERE cid={cid} AND sid={sid}"
+        res = execute_query(db, query).fetchone()
+        if not res:            
+            query = f"INSERT INTO {CHAR_SERIES} (cid,sid) VALUES ({cid},{sid})"
+            execute_query(db, query)
+        return redirect(url_for('link_char_series'))
+
+    if "delete_no" in request.args:
+        cidsid = request.args['delete_no'].split('-')
+        query = f"DELETE FROM {CHAR_SERIES} WHERE cid={cidsid[0]} AND sid={cidsid[1]}"
+        execute_query(db, query)
+    
+    query = f"SELECT CONCAT_WS('-',CS.cid,CS.sid), CONCAT_WS(' ', C.fname, IFNULL(C.lname,'')), S.name FROM {CHAR_SERIES} CS \
+              JOIN {CHARACTERS} C ON C.id=CS.cid \
+              JOIN {SERIES} S ON S.id=CS.sid ORDER BY C.fname"
+    query_res = select_query(db, query, CHAR_SPECIES)
+
+    return render_template("dual_field_link_form.html", header=header, form=form,
+                            query_res=query_res, column_names=columns, query_has_value=(len(query_res) > 0),
+                            target='connect-char-series')
 
 
 @app.route("/connect-location", methods=["GET", "POST"])

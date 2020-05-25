@@ -122,7 +122,10 @@ VIEW_COLUMNS = {
     SERIES: ["Series", "Start Date", "End Date"],
     LOCATIONS: ["Name", "Type"],
     ACTORS: ["First Name", "Last Name", "Birthday", "IMDB"],
-    CHAR_ACTORS: ["Character Name", "Actor Name"]
+    CHAR_ACTORS: ["Character Name", "Actor Name"],
+    CHAR_SPECIES: ["Character Name", "Species Name"],
+    CHAR_AFFILS: ["Character Name", "Affiliation Name"],
+    CHAR_SERIES: ["Character Name", "Series Name"]
 }
 
 SERIES_INSERT_QUERIES ={
