@@ -125,7 +125,8 @@ VIEW_COLUMNS = {
     CHAR_ACTORS: ["Character Name", "Actor Name"],
     CHAR_SPECIES: ["Character Name", "Species Name"],
     CHAR_AFFILS: ["Character Name", "Affiliation Name"],
-    CHAR_SERIES: ["Character Name", "Series Name"]
+    CHAR_SERIES: ["Character Name", "Series Name"],
+    CHAR_SERIES_LOCS: ["Character/Series Name", "Location Name"]
 }
 
 SERIES_INSERT_QUERIES ={

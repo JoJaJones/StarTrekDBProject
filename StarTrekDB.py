@@ -119,8 +119,9 @@ def add_character():
     species_list = []
     for species in res:
         species_list.append((species[0], species[1]))
-    form.sixth_field.choices = species_list
-    display_species = len(species_list) > 0
+    form.seventh_field.choices = species_list
+    #display_species = len(species_list) > 0
+    display_species = False
     if display_species:
         columns.append("Species")
 
@@ -129,8 +130,9 @@ def add_character():
     series_list = []
     for series in res:
         series_list.append((series[0], series[1]))
-    form.seventh_field.choices = series_list
-    display_series = len(series_list) > 0
+    form.eighth_field.choices = series_list
+    #display_series = len(series_list) > 0
+    display_series = False
     if display_series:
         columns.append("Series")
 
@@ -144,33 +146,37 @@ def add_character():
         form.second_field.data = ""
         title = form.third_field.data
         form.third_field.data = ""
-        desc = form.fourth_field.data
+        alias = form.fourth_field.data
         form.fourth_field.data = ""
-        bio = form.fifth_field.data
+        desc = form.fifth_field.data
         form.fifth_field.data = ""
+        bio = form.sixth_field.data
+        form.sixth_field.data = ""
 
-        query = "INSERT INTO characters(fname, lname, title, description, biography) VALUES (%s, %s, %s, %s, %s)"
-        data = (first_name, last_name, title, desc, bio)
+        query = "INSERT INTO characters(fname, lname, title, description, biography) VALUES (%s, %s, %s, %s, %s, %s)"
+        data = (first_name, last_name, alias, title, desc, bio)
         res = execute_query(db, query, data)
 
-        query = f"SELECT id, fname, lname, title FROM characters " \
+        query = f"SELECT id, fname, lname, alias title FROM characters " \
                 f"WHERE fname = '{first_name}'"
         if last_name:
             query += f" AND lname = '{last_name}'"
+        if alias:
+            query += f" AND alias = '{alias}'"
         if title:
             query += f" AND title = '{title}'"
         query += ";"
 
         res = execute_query(db, query).fetchone()
 
-        species = form.sixth_field.data
-        form.sixth_field.data = []
+        species = form.seventh_field.data
+        form.seventh_field.data = []
         query_template = "INSERT INTO characters_species(cid, sid) VALUES (%s, %s)"
         for spec_id in species:
             link_tables(query_template, db, res[0], spec_id)
 
-        series = form.seventh_field.data
-        form.seventh_field.data = []
+        series = form.eighth_field.data
+        form.eighth_field.data = []
         query_template = "INSERT INTO characters_series(cid, sid) VALUES (%s, %s)"
         for ser_id in series:
             link_tables(query_template, db, res[0], ser_id)
@@ -190,6 +196,7 @@ def add_character():
             form.third_field.data = f"{res[3]}"
             form.fourth_field.data = f"{res[4]}"
             form.fifth_field.data = f"{res[5]}"
+            form.sixth_field.data = f"{res[6]}"
             header = f"Update {res[1]}"
 
     query_res = select_query(db, BASIC_SELECT_QUERIES[CHARACTERS], CHARACTERS)
@@ -648,11 +655,10 @@ def link_char_series():
         return redirect(url_for('link_char_series'))
 
     if "delete_no" in request.args:
-        cidsid = request.args['delete_no'].split('-')
-        query = f"DELETE FROM {CHAR_SERIES} WHERE cid={cidsid[0]} AND sid={cidsid[1]}"
+        query = f"DELETE FROM {CHAR_SERIES} WHERE id={request.args['delete_no']}"
         execute_query(db, query)
     
-    query = f"SELECT CONCAT_WS('-',CS.cid,CS.sid), CONCAT_WS(' ', C.fname, IFNULL(C.lname,'')), S.name FROM {CHAR_SERIES} CS \
+    query = f"SELECT CS.id, CONCAT_WS(' ', C.fname, IFNULL(C.lname,'')), S.name FROM {CHAR_SERIES} CS \
               JOIN {CHARACTERS} C ON C.id=CS.cid \
               JOIN {SERIES} S ON S.id=CS.sid ORDER BY C.fname"
     query_res = select_query(db, query, CHAR_SPECIES)
@@ -664,8 +670,41 @@ def link_char_series():
 
 @app.route("/connect-location", methods=["GET", "POST"])
 def link_to_location():
-    return render_template("link_three.html", header="Enter a Character/Series combination to link to a Location", form=True,
-                           field_one_text="Character Name", field_two_text="Series Name", field_three_text="Location Name")
+    header = "Select a Character-Series and Location to Link"
+    columns = VIEW_COLUMNS[CHAR_SERIES_LOCS]
+    db = connect_to_database()
+    form = LinkForm()
+    form.entity1.label = "Characters/Series"
+    form.entity2.label = "Locations"
+    form.entity1.choices = get_search_list(db, CHAR_SERIES)
+    form.entity2.choices = get_search_list(db, LOCATIONS)
+
+    if form.validate_on_submit():
+        # Check to see if relationship already exists
+        csid = form.entity1.data
+        lid = form.entity2.data
+        query = f"SELECT * FROM {CHAR_SERIES_LOCS} WHERE csid={csid} AND lid={lid}"
+        res = execute_query(db, query).fetchone()
+        if not res:            
+            query = f"INSERT INTO {CHAR_SERIES_LOCS} (csid,lid) VALUES ({csid},{lid})"
+            execute_query(db, query)
+        return redirect(url_for('link_to_location'))
+
+    if "delete_no" in request.args:
+        csidlid = request.args['delete_no'].split('-')
+        query = f"DELETE FROM {CHAR_SERIES_LOCS} WHERE csid={csidlid[0]} AND lid={csidlid[1]}"
+        execute_query(db, query)
+    
+    query = f"SELECT CONCAT_WS('-',CSL.csid,CSL.lid), CONCAT_WS(' / ', CONCAT_WS(' ', C.fname, IFNULL(C.lname,'')), S.name), L.name FROM {CHAR_SERIES_LOCS} CSL \
+              JOIN {LOCATIONS} L ON L.id=CSL.lid \
+              JOIN {CHAR_SERIES} CS ON CS.id=CSL.csid \
+              JOIN {CHARACTERS} C ON C.id=CS.cid \
+              JOIN {SERIES} S ON S.id=CS.sid ORDER BY C.fname"
+    query_res = select_query(db, query, CHAR_SPECIES)
+
+    return render_template("dual_field_link_form.html", header=header, form=form,
+                            query_res=query_res, column_names=columns, query_has_value=(len(query_res) > 0),
+                            target='connect-location')
 
 
 @app.route("/create-table")
@@ -784,9 +823,13 @@ def select_query(connection, query, data_type):
 
 def get_search_list(db, table):
     if table==CHARACTERS:
-        query = f"SELECT id, CONCAT_WS(' ', fname, IFNULL(lname,'')) AS name FROM {table} ORDER BY fname"
+        query = f"SELECT id, CONCAT_WS(' ', fname, IFNULL(lname,'')) FROM {table} ORDER BY fname"
     elif table==ACTORS:
-        query = f"SELECT id, CONCAT_WS(' ', fname, IFNULL(lname,'')) AS name FROM {table} ORDER BY fname"
+        query = f"SELECT id, CONCAT_WS(' ', fname, IFNULL(lname,'')) FROM {table} ORDER BY fname"
+    elif table==CHAR_SERIES:
+        query = f"SELECT CS.id, CONCAT_WS(' / ', CONCAT_WS(' ', C.fname, IFNULL(C.lname,'')), S.name) FROM {table} CS \
+                  JOIN {CHARACTERS} C ON C.id=CS.cid \
+                  JOIN {SERIES} S ON S.id=CS.sid ORDER BY C.fname"
     else:
         query = f"SELECT id, name FROM {table} ORDER BY name"
     res = execute_query(db, query)

@@ -36,6 +36,10 @@
       {% endif %}
       {% endfor %}</p>
     {% endif %}
+    {% if res_character[4] %}
+      <p><span class="info_label"><b>Description:</b></span>
+      {{res_character[4]}}</p>
+    {% endif %}
     {% if actor_list %}
       <p><span class="info_label"><b>Actor List:</b></span></p>
       <ul  class="dashed">
@@ -51,11 +55,7 @@
         <li>{{series[0]}}</li>
         {% endfor %}
       </ul>
-    {% endif %}
-    {% if res_character[4] %}
-      <p><span class="info_label"><b>Description:</b></span>
-      {{res_character[4]}}</p>
-    {% endif %}
+    {% endif %}    
     {% if res_character[5] %}
       <p><span class="info_label"><b>Biography:</b></span><br>
       {{res_character[5]}}</p>

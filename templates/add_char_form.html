@@ -2,31 +2,34 @@
 
 {% block form_specifics %}
     <div class="form-row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             {{ form.first_field(class="form-control", placeholder=form.first_field.label.text) }}
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             {{ form.second_field(class="form-control", placeholder=form.second_field.label.text) }}
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             {{ form.third_field(class="form-control", placeholder=form.third_field.label.text) }}
         </div>
-    </div>
-    <div class="form-group">
-        {{ form.fourth_field.label }}{{ form.fourth_field(class="form-control") }}
+        <div class="col-md-3">
+            {{ form.fourth_field(class="form-control", placeholder=form.fourth_field.label.text) }}
+        </div>
     </div>
     <div class="form-group">
         {{ form.fifth_field.label }}{{ form.fifth_field(class="form-control") }}
     </div>
+    <div class="form-group">
+        {{ form.sixth_field.label }}{{ form.sixth_field(class="form-control") }}
+    </div>
     <div class="form-row">
         {% if display_species %}
             <div class="form-group col-md-6">
-                {{ form.sixth_field.label }}{{ form.sixth_field(class="form-control") }}
+                {{ form.seventh_field.label }}{{ form.seventh_field(class="form-control") }}
             </div>
         {% endif %}
         {% if display_series %}
             <div class="form-group col-md-6">
-                {{ form.seventh_field.label }}{{ form.seventh_field(class="form-control") }}
+                {{ form.eighth_field.label }}{{ form.eighth_field(class="form-control") }}
             </div>
         {% endif %}
     </div>
