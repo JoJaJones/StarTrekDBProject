@@ -237,5 +237,3 @@ PREPOPULATE = {
            "((SELECT id from characters WHERE lname='Uhura'),(SELECT id from series WHERE name='The Original Series'));"
 
 }
-
-
