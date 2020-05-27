@@ -145,24 +145,26 @@ SERIES_UPDATE_QUERIES ={
 
 PREPOPULATE = {
       1: f"INSERT INTO {CHARACTERS}"
-          "(fname,lname,title,description,biography)"
+          "(fname,lname,alias,title,description,biography)"
           "VALUES"
-          "('James','Kirk','Commanding Officer','Chief of Starfleet Operations','James Tiberius Kirk was born in Riverside, Iowa, on March 22, 2233');",
+          "('James','Kirk','Captain Kirk','Commanding Officer','Chief of Starfleet Operations','James Tiberius Kirk was born in Riverside, Iowa, on March 22, 2233');",
 
       2: f"INSERT INTO {CHARACTERS}"
-          "(fname,lname,title,description)"
+          "(fname,lname,alias,title,description)"
            "VALUES"
-         "('Hirakaru','Sulu','Captain','USS Enterprise helmsman');",
+         "('Hirakaru','Sulu','Captain Sulu','Captain','USS Enterprise helmsman');",
 
       3: f"INSERT INTO {CHARACTERS}"
-          "(fname,lname,title)"
+          "(fname,lname,alias,title)"
           "VALUES"
-          "('Nyota','Uhura','Lieutenant Commander');",
+          "('Nyota','Uhura','Uhura','Lieutenant Commander');",
 
       4: f"INSERT INTO {CHARACTERS}"
-          "(fname,title)"
+          "(fname,alias,title)"
           "VALUES"
-          "('Spock','Ambassador');",
+          "('Spock','Spock','Ambassador'),"
+          "('Borg Queen','Borg Queen','Queen'),"
+          "('Worf','Worf','Lieutenant');",
 
       5: f"INSERT INTO {ACTORS}"
           "(fname,lname,birthday,imdb,cid)"
