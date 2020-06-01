@@ -155,9 +155,13 @@ def add_character():
         form.first_field.data = ""
         last_name = form.second_field.data
         form.second_field.data = ""
-        alias = form.third_field.data
+        title = form.third_field.data
         form.third_field.data = ""
-        title = form.fourth_field.data
+        alias = form.fourth_field.data
+        if len(alias) == 0:
+            alias = last_name
+            if len(alias) == 0:
+                alias = first_name
         form.fourth_field.data = ""
         desc = form.fifth_field.data
         form.fifth_field.data = ""
