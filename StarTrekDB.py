@@ -251,8 +251,8 @@ def add_character():
             session["update_page"] = CHARACTERS
             form.first_field.data = f"{res[1]}"
             form.second_field.data = f"{res[2]}"
-            form.third_field.data = f"{res[3]}"
-            form.fourth_field.data = f"{res[4]}"
+            form.third_field.data = f"{res[4]}"
+            form.fourth_field.data = f"{res[3]}"
             form.fifth_field.data = f"{res[5]}"
             form.sixth_field.data = f"{res[6]}"
             header = f"Update {res[1]}"
