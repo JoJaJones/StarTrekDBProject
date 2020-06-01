@@ -15,8 +15,18 @@
         {{ form.lname_field.label }}{{ form.lname_field(class="form-control", placeholder=form.lname_field.label.text) }}
         </div>
     </div>
-    <div class="form-group">
-        {{ form.birthday_field.label }}{{ form.birthday_field(class="form-control") }}
+    {{ form.birthday_field.label }}
+    <div class="form-row">
+        <div class="col-md-4">
+            {{ form.birthday_field.form.month(class="form-control", placeholder=form.birthday_field.form.month.label.text) }}
+        </div>
+        <div class="col-md-4">
+            {{ form.birthday_field.form.day(class="form-control", placeholder=form.birthday_field.form.day.label.text) }}
+        </div>
+        <div class="col-md-4">
+
+            {{ form.birthday_field.form.year(class="form-control", placeholder=form.birthday_field.form.year.label.text) }}
+        </div>
     </div>
     <div class="form-group">
         {{ form.imdb_field.label }}{{ form.imdb_field(class="form-control") }}

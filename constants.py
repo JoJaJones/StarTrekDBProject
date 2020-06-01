@@ -130,17 +130,17 @@ VIEW_COLUMNS = {
 }
 
 SERIES_INSERT_QUERIES ={
-      0: f"INSERT INTO {SERIES}(name, start_date, end_date) VALUES (%s, %s, %s)",
-      1: f"INSERT INTO {SERIES}(name, start_date) VALUES (%s, %s)",
-      2: f"INSERT INTO {SERIES}(name, end_date) VALUES (%s, %s)",
-      3: f"INSERT INTO {SERIES}(name) VALUES (%s)"
+      0: f"INSERT INTO {SERIES} (name, start_date, end_date) VALUES (%s, %s, %s)",
+      1: f"INSERT INTO {SERIES} (name, start_date) VALUES (%s, %s)",
+      2: f"INSERT INTO {SERIES} (name, end_date) VALUES (%s, %s)",
+      3: f"INSERT INTO {SERIES} (name) VALUES (%s)"
 }
 
 SERIES_UPDATE_QUERIES ={
       0: f"UPDATE {SERIES} SET name = %s, start_date = %s, end_date = %s WHERE id = %s",
-      1: f"UPDATE {SERIES} SET name = %s, start_date = %s WHERE id = %s",
-      2: f"UPDATE {SERIES} SET name = %s, end_date = %s WHERE id = %s",
-      3: f"UPDATE {SERIES} SET name = %s WHERE id = %s"
+      1: f"UPDATE {SERIES} SET name = %s, start_date = %s, end_date = NULL WHERE id = %s",
+      2: f"UPDATE {SERIES} SET name = %s, start_date = NULL, end_date = %s WHERE id = %s",
+      3: f"UPDATE {SERIES} SET name = %s, start_date = NULL, end_date = NULL WHERE id = %s",
 }
 
 PREPOPULATE = {
@@ -222,20 +222,31 @@ PREPOPULATE = {
       12: f"INSERT INTO {CHAR_SPECIES}"
            "(cid,sid)"
            "VALUES"
-           "((SELECT id from characters WHERE lname='Kirk'),(SELECT id from species WHERE name='Human')),"
-           "((SELECT id from characters WHERE fname='Spock'),(SELECT id from species WHERE name='Vulcan')),"
-           "((SELECT id from characters WHERE fname='Spock'),(SELECT id from species WHERE name='Human')),"
-           "((SELECT id from characters WHERE lname='Sulu'),(SELECT id from species WHERE name='Human')),"
-           "((SELECT id from characters WHERE lname='Uhura'),(SELECT id from species WHERE name='Human'));",
+          f"((SELECT id from {CHARACTERS} WHERE lname='Kirk'),(SELECT id from {SPECIES} WHERE name='Human')),"
+          f"((SELECT id from {CHARACTERS} WHERE fname='Spock'),(SELECT id from {SPECIES} WHERE name='Vulcan')),"
+          f"((SELECT id from {CHARACTERS} WHERE fname='Spock'),(SELECT id from {SPECIES} WHERE name='Human')),"
+          f"((SELECT id from {CHARACTERS} WHERE lname='Sulu'),(SELECT id from {SPECIES} WHERE name='Human')),"
+          f"((SELECT id from {CHARACTERS} WHERE fname='Borg Queen'),(SELECT id from {SPECIES} WHERE name='Borg')),"
+          f"((SELECT id from {CHARACTERS} WHERE lname='Uhura'),(SELECT id from {SPECIES} WHERE name='Human'));",
+    
+      13: f"INSERT INTO {CHAR_AFFILS}"
+           "(cid,aid)"
+           "VALUES"
+          f"((SELECT id from {CHARACTERS} WHERE lname='Kirk'),(SELECT id from {AFFILIATIONS} WHERE name='Starfleet')),"
+          f"((SELECT id from {CHARACTERS} WHERE fname='Spock'),(SELECT id from {AFFILIATIONS} WHERE name='Starfleet')),"
+          f"((SELECT id from {CHARACTERS} WHERE lname='Sulu'),(SELECT id from {AFFILIATIONS} WHERE name='Starfleet')),"
+          f"((SELECT id from {CHARACTERS} WHERE lname='Uhura'),(SELECT id from {AFFILIATIONS} WHERE name='Starfleet')),"
+          f"((SELECT id from {CHARACTERS} WHERE fname='Borg Queen'),(SELECT id from {AFFILIATIONS} WHERE name='Borg')),"
+          f"((SELECT id from {CHARACTERS} WHERE fname='Worf'),(SELECT id from {AFFILIATIONS} WHERE name='Klingon'));",
 
-      13: f"INSERT INTO {CHAR_SERIES}"
+      14: f"INSERT INTO {CHAR_SERIES}"
            "(cid,sid)"
            "VALUES"
-           "((SELECT id from characters WHERE lname='Kirk'),(SELECT id from series WHERE name='The Original Series')),"
-           "((SELECT id from characters WHERE lname='Kirk'),(SELECT id from series WHERE name='The Next Generation')),"
-           "((SELECT id from characters WHERE fname='Spock'),(SELECT id from series WHERE name='The Original Series')),"
-           "((SELECT id from characters WHERE fname='Spock'),(SELECT id from series WHERE name='The Next Generation')),"
-           "((SELECT id from characters WHERE lname='Sulu'),(SELECT id from series WHERE name='The Original Series')),"
-           "((SELECT id from characters WHERE lname='Uhura'),(SELECT id from series WHERE name='The Original Series'));"
+          f"((SELECT id from {CHARACTERS} WHERE lname='Kirk'),(SELECT id from {SERIES} WHERE name='The Original Series')),"
+          f"((SELECT id from {CHARACTERS} WHERE lname='Kirk'),(SELECT id from {SERIES} WHERE name='The Next Generation')),"
+          f"((SELECT id from {CHARACTERS} WHERE fname='Spock'),(SELECT id from {SERIES} WHERE name='The Original Series')),"
+          f"((SELECT id from {CHARACTERS} WHERE fname='Spock'),(SELECT id from {SERIES} WHERE name='The Next Generation')),"
+          f"((SELECT id from {CHARACTERS} WHERE lname='Sulu'),(SELECT id from {SERIES} WHERE name='The Original Series')),"
+          f"((SELECT id from {CHARACTERS} WHERE lname='Uhura'),(SELECT id from {SERIES} WHERE name='The Original Series'));"
 
 }

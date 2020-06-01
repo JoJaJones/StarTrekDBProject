@@ -23,13 +23,18 @@
     </div>
     <div class="form-row">
         {% if display_species %}
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-4">
                 {{ form.seventh_field.label }}{{ form.seventh_field(class="form-control") }}
             </div>
         {% endif %}
-        {% if display_series %}
-            <div class="form-group col-md-6">
+        {% if display_affiliations %}
+            <div class="form-group col-md-4">
                 {{ form.eighth_field.label }}{{ form.eighth_field(class="form-control") }}
+            </div>
+        {% endif %}
+        {% if display_series %}
+            <div class="form-group col-md-4">
+                {{ form.ninth_field.label }}{{ form.ninth_field(class="form-control") }}
             </div>
         {% endif %}
     </div>

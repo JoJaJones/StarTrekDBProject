@@ -12,9 +12,7 @@ app.config["SECRET_KEY"] = "tempsecret"
 class DateSubForm(Form):
     month = IntegerField("MM", validators=[validators.Optional(), validators.NumberRange(1, 12)])
     day = IntegerField("DD", validators=[validators.Optional(), validators.number_range(1, 31)])
-    year = IntegerField("YYYY", validators=[validators.Optional(),
-                                              validators.number_range(1966,
-                                                                      message="Year must be 1966 or later")])
+    year = IntegerField("YYYY", validators=[validators.Optional(), validators.number_range(1966, message="Year must be 1966 or later")])
 
     def clear(self):
         self.month.data = None
@@ -40,8 +38,8 @@ class Row:
         self.set_name()
 
     def set_name(self):
-        if self.data_type == CHARACTERS and self.table_values[1] and len(self.table_values[1]) > 0:
-            self.name = self.table_values[1]
+        if self.data_type == CHARACTERS and self.table_values[2] and len(self.table_values[2]) > 0:
+            self.name = self.table_values[2]
         else:
             self.name = self.table_values[0]
 
@@ -85,7 +83,8 @@ class CharacterForm(FlaskForm):
     fifth_field = TextAreaField("Description", validators=[validators.Optional()])
     sixth_field = TextAreaField("Biography", validators=[validators.Optional()])
     seventh_field = SelectMultipleField("Species", coerce=int, validators=[validators.Optional()])
-    eighth_field = SelectMultipleField("Series", coerce=int, validators=[validators.Optional()])
+    eighth_field = SelectMultipleField("Affiliations", coerce=int, validators=[validators.Optional()])
+    ninth_field = SelectMultipleField("Series", coerce=int, validators=[validators.Optional()])
     # add_location = SubmitField("Add Location to Character")
     submit = SubmitField("Submit")
 
@@ -99,7 +98,7 @@ class AddLocationToCharacter(FlaskForm):
 class AddActorForm(FlaskForm):
     fname_field    = StringField("First name", validators=[validators.Required()])
     lname_field    = StringField("Last name", validators=[validators.Optional()])
-    birthday_field = StringField(label="Birthday", id='datepick', validators=[validators.Optional()])
+    birthday_field = FormField(DateSubForm)
     imdb_field     = StringField("IMDB link", validators=[validators.Optional()])
     submit         = SubmitField("Submit")
 

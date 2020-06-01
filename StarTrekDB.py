@@ -114,27 +114,38 @@ def add_character():
     columns = VIEW_COLUMNS[CHARACTERS][:]
     header = "Add New Character"
 
-    query = "SELECT id, name FROM species ORDER BY name"
+    # Get species list
+    query = f"SELECT id, name FROM {SPECIES} ORDER BY name"
     res = execute_query(db, query)
     species_list = []
     for species in res:
         species_list.append((species[0], species[1]))
     form.seventh_field.choices = species_list
-    #display_species = len(species_list) > 0
-    display_species = False
-    if display_species:
-        columns.append("Species")
-
+    display_species = len(species_list) > 0
+    """ if display_species:
+        columns.append("Species") """
+    
+    # Get affiliations list
+    query = f"SELECT id, name FROM {AFFILIATIONS} ORDER BY name"
+    res = execute_query(db, query)
+    affiliation_list = []
+    for affiliation in res:
+        affiliation_list.append((affiliation[0], affiliation[1]))
+    form.eighth_field.choices = affiliation_list
+    display_affiliations = len(affiliation_list) > 0
+    """ if display_species:
+        columns.append("Affiliations") """
+    
+    # Get series list
     query = "SELECT id, name FROM series ORDER BY name"
     res = execute_query(db, query)
     series_list = []
     for series in res:
         series_list.append((series[0], series[1]))
-    form.eighth_field.choices = series_list
-    #display_series = len(series_list) > 0
-    display_series = False
-    if display_series:
-        columns.append("Series")
+    form.ninth_field.choices = series_list
+    display_series = len(series_list) > 0
+    """ if display_series:
+        columns.append("Series") """
 
     if UPDATE_PAGE in session and session[UPDATE_PAGE] != CHARACTERS:
         session[SUBMIT_TYPE] = "insert"
@@ -152,40 +163,83 @@ def add_character():
         form.fifth_field.data = ""
         bio = form.sixth_field.data
         form.sixth_field.data = ""
-
-        query = "INSERT INTO characters(fname, lname, title, description, biography) VALUES (%s, %s, %s, %s, %s, %s)"
-        data = (first_name, last_name, alias, title, desc, bio)
-        res = execute_query(db, query, data)
-
-        query = f"SELECT id, fname, lname, alias title FROM characters " \
-                f"WHERE fname = '{first_name}'"
-        if last_name:
-            query += f" AND lname = '{last_name}'"
-        if alias:
-            query += f" AND alias = '{alias}'"
-        if title:
-            query += f" AND title = '{title}'"
-        query += ";"
-
-        res = execute_query(db, query).fetchone()
-
         species = form.seventh_field.data
         form.seventh_field.data = []
-        query_template = "INSERT INTO characters_species(cid, sid) VALUES (%s, %s)"
-        for spec_id in species:
-            link_tables(query_template, db, res[0], spec_id)
-
-        series = form.eighth_field.data
+        affiliations = form.eighth_field.data
         form.eighth_field.data = []
-        query_template = "INSERT INTO characters_series(cid, sid) VALUES (%s, %s)"
-        for ser_id in series:
-            link_tables(query_template, db, res[0], ser_id)
+        series = form.ninth_field.data
+        form.eighth_field.data = []
+
+
+        if session[SUBMIT_TYPE] == "insert":
+            query = f"INSERT INTO {CHARACTERS} (fname, lname, alias, title, description, biography) VALUES (%s, %s, %s, %s, %s, %s)"
+            data = (first_name, last_name, alias, title, desc, bio)
+            execute_query(db, query, data)
+            # Get the id created for the new row
+            query = f"SELECT id FROM {CHARACTERS} WHERE fname = '{first_name}'"
+            if last_name:
+                query += f" AND lname = '{last_name}'"
+            if alias:
+                query += f" AND alias = '{alias}'"
+            if title:
+                query += f" AND title = '{title}'"
+            query += ";"
+            res = execute_query(db, query).fetchone()
+            # Insert Char-Species Links            
+            query_template = f"INSERT INTO {CHAR_SPECIES} (cid, sid) VALUES (%s, %s)"
+            for spec_id in species:
+                link_tables(query_template, db, res[0], spec_id)
+            # Insert Char-Affiliation Links            
+            query_template = f"INSERT INTO {CHAR_AFFILS} (cid, aid) VALUES (%s, %s)"
+            for affil_id in affiliations:
+                link_tables(query_template, db, res[0], affil_id)
+            # Insert Char-Series Links            
+            query_template = f"INSERT INTO {CHAR_SERIES} (cid, sid) VALUES (%s, %s)"
+            for ser_id in series:
+                link_tables(query_template, db, res[0], ser_id)
+        else:
+            # Remove all links to species, affiliation, and series because they could be changed
+            # Note this will destroy the character-series-location relationships
+            # should porably do this by comparing the old vs the new selections (requires a refactor)
+            cid = session['update_id']
+            query = f"DELETE FROM {CHAR_SPECIES} WHERE cid={cid}"
+            execute_query(db, query)
+            query = f"DELETE FROM {CHAR_AFFILS} WHERE cid={cid}"
+            execute_query(db, query)
+            query = f"DELETE FROM {CHAR_SERIES} WHERE cid={cid}"
+            execute_query(db, query)
+            # Now perform the updates
+            query = f"UPDATE {CHARACTERS} SET fname = %s, lname = %s, alias = %s, title = %s, description = %s, biography = %s WHERE id = {cid}"
+            data = (first_name, last_name, alias, title, desc, bio)
+            execute_query(db, query, data)
+            # Insert Char-Species Links            
+            query_template = f"INSERT INTO {CHAR_SPECIES} (cid, sid) VALUES (%s, %s)"
+            for spec_id in species:
+                link_tables(query_template, db, cid, spec_id)
+            # Insert Char-Affiliation Links            
+            query_template = f"INSERT INTO {CHAR_AFFILS} (cid, aid) VALUES (%s, %s)"
+            for affil_id in affiliations:
+                link_tables(query_template, db, cid, affil_id)
+            # Insert Char-Series Links            
+            query_template = f"INSERT INTO {CHAR_SERIES} (cid, sid) VALUES (%s, %s)"
+            for ser_id in series:
+                link_tables(query_template, db, cid, ser_id)
+            session[SUBMIT_TYPE] = "insert"
+
+        query_res = select_query(db, BASIC_SELECT_QUERIES[CHARACTERS], CHARACTERS)
+
+        return render_template("add_char_form.html", form=form, query_res=query_res,
+                           column_names=columns, query_has_value=(len(query_res) > 0),
+                           header=header, display_species=display_species, display_affiliations=display_affiliations,
+                           display_series=display_series, target="add-character")
 
     if "delete_no" in request.args:
         delete_row(CHARACTERS, db, request.args["delete_no"])
+        return redirect(url_for('add_character'))
 
-    if "update_no" in request.args:  # TODO
-        query = f"SELECT * FROM {CHARACTERS} WHERE id = {request.args['update_no']}"
+    if "update_no" in request.args:
+        cid = request.args['update_no']
+        query = f"SELECT * FROM {CHARACTERS} WHERE id = {cid}"
         res = execute_query(db, query).fetchone()
         if res is not None:
             session["update_id"] = res[0]
@@ -198,18 +252,42 @@ def add_character():
             form.fifth_field.data = f"{res[5]}"
             form.sixth_field.data = f"{res[6]}"
             header = f"Update {res[1]}"
+        # Get species, affiliation, and series links
+        query = f"SELECT S.id FROM {SPECIES} S \
+                  JOIN {CHAR_SPECIES} CS ON CS.sid=S.id WHERE CS.cid={cid}"
+        res = execute_query(db, query).fetchall()
+        species_list = []
+        for species in res:
+            species_list.append(species[0])
+        form.seventh_field.data = species_list
+        print(f"species list = {species_list}")
+        query = f"SELECT A.id FROM {AFFILIATIONS} A \
+                  JOIN {CHAR_AFFILS} CA ON CA.aid=A.id WHERE CA.cid={cid}"
+        res = execute_query(db, query).fetchall()
+        affiliations_list = []
+        for affil in res:
+            affiliations_list.append(affil[0])
+        form.eighth_field.data = affiliations_list
+        print(f"affiliations list = {affiliations_list}")
+        query = f"SELECT S.id FROM {SERIES} S \
+                  JOIN {CHAR_SERIES} CS ON CS.sid=S.id WHERE CS.cid={cid}"
+        res = execute_query(db, query).fetchall()
+        series_list = []
+        for series in res:
+            series_list.append(series[0])
+        form.ninth_field.data = series_list        
 
     query_res = select_query(db, BASIC_SELECT_QUERIES[CHARACTERS], CHARACTERS)
-    for item in query_res:
+    """ for item in query_res:
         # TODO add queries to set these values instead of adding a blank value to the data set
         if display_series:
             item.temp_char_buffer()
         if display_species:
-            item.temp_char_buffer()
+            item.temp_char_buffer() """
 
     return render_template("add_char_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
-                           header=header, display_species=display_species,
+                           header=header, display_species=display_species, display_affiliations=display_affiliations,
                            display_series=display_series, target="add-character")
 
 @app.route("/add-actors", methods=["GET", "POST"])
@@ -218,6 +296,7 @@ def add_actor():
         session[SUBMIT_TYPE] = "insert"
 
     form = AddActorForm()
+    form.birthday_field.label.text = "Birthday"
     db = connect_to_database()
     columns = VIEW_COLUMNS[ACTORS]
     header = "Add New Actor"
@@ -230,18 +309,29 @@ def add_actor():
         form.fname_field.data = ""
         lname = str(form.lname_field.data)
         form.lname_field.data = ""
-        birthday = str(form.birthday_field.data).replace('/','-')
-        form.birthday_field.data = ""
+        birthday = form.birthday_field.data
+        birthday_valid = sanitize_date(birthday)
+        birthday = f"{birthday['year']}-{birthday['month']}-{birthday['day']}"
         imdb = str(form.imdb_field.data)
         form.imdb_field.data = ""
 
         if session[SUBMIT_TYPE] == "insert":
-            query = f"INSERT INTO {ACTORS}(fname, lname, birthday, imdb) VALUES (%s, %s)"
+            if birthday_valid:
+                query = f"INSERT INTO {ACTORS}(fname, lname, birthday, imdb) VALUES (%s, %s, %s, %s)"
+                data = tuple([fname, lname, birthday, imdb])
+            else:
+                query = f"INSERT INTO {ACTORS}(fname, lname, imdb) VALUES (%s, %s, %s)"
+                data = tuple([fname, lname, imdb])
         else:
-            query = f"UPDATE {ACTORS} SET fname = %s, lname = %s, birthday = %s, imdb = %s WHERE id = {session['update_id']}"
+            if birthday_valid:
+                query = f"UPDATE {ACTORS} SET fname = %s, lname = %s, birthday = %s, imdb = %s WHERE id = {session['update_id']}"
+                data = tuple([fname, lname, birthday, imdb])
+            else:
+                query = f"UPDATE {ACTORS} SET fname = %s, lname = %s, birthday = NULL, imdb = %s WHERE id = {session['update_id']}"
+                data = tuple([fname, lname, imdb])
             session[SUBMIT_TYPE] = "insert"
 
-        data = tuple([fname,lname,birthday,imdb])
+        
         execute_query(db, query, data)
 
         query_res = select_query(db, BASIC_SELECT_QUERIES[ACTORS], ACTORS)
@@ -252,6 +342,7 @@ def add_actor():
 
     if "delete_no" in request.args:
         delete_row(ACTORS, db, request.args["delete_no"])
+        return redirect(url_for('add_actor'))
 
     if "update_no" in request.args:  # TODO
         query = f"SELECT * FROM {ACTORS} WHERE id = {request.args['update_no']}"
@@ -262,8 +353,11 @@ def add_actor():
             session["update_page"] = ACTORS
             form.fname_field.data = res[1]
             form.lname_field.data = res[2]
-            print(res[3])
-            form.birthday_field.data = res[3]
+           # Dates could be empty
+            if res[3]:
+                form.birthday_field.form.year.data = res[3].year
+                form.birthday_field.form.month.data = res[3].month
+                form.birthday_field.form.day.data = res[3].day
             form.imdb_field.data = res[4]
             header = f"Update {res[1]} {res[2]}"
 
@@ -280,7 +374,6 @@ def add_series():
 
     form = SeriesForm()
     form.second_field.label.text = "Series Start Date"
-
     form.third_field.label.text = "Series End Date"
 
     db = connect_to_database()
@@ -294,7 +387,9 @@ def add_series():
         name = str(form.first_field.data)
         form.first_field.data = ""
         start = form.second_field.data
+        form.second_field.data['year'] = form.second_field.data['month'] = form.second_field.data['day'] = ''
         end = form.third_field.data
+        form.third_field.data['year'] = form.third_field.data['month'] = form.third_field.data['day'] = ''
        
         # validate the date data entered by the user and then format it for entry to DB
         start_valid = sanitize_date(start)
@@ -316,7 +411,7 @@ def add_series():
             data = (name, end)
         else:
             case = 3
-            data = (name)    
+            data = tuple([name])    
         
         if session[SUBMIT_TYPE] == "insert":
             query = SERIES_INSERT_QUERIES[case]
@@ -335,6 +430,7 @@ def add_series():
 
     if "delete_no" in request.args:
         delete_row(SERIES, db, request.args["delete_no"])
+        return redirect(url_for('add_series'))
 
     if "update_no" in request.args:
         query = f"SELECT * FROM {SERIES} WHERE id = {request.args['update_no']}"
@@ -399,6 +495,7 @@ def add_species():
 
     if "delete_no" in request.args:
         delete_row(SPECIES, db, request.args["delete_no"])
+        return redirect(url_for('add_species'))
 
     if "update_no" in request.args:
         query = f"SELECT * FROM {SPECIES} WHERE id = {request.args['update_no']}"
@@ -457,6 +554,7 @@ def add_location():
 
     if "delete_no" in request.args:
         delete_row(LOCATIONS, db, request.args["delete_no"])
+        return redirect(url_for('add_location'))
 
     if "update_no" in request.args:  # TODO
         query = f"SELECT * FROM {LOCATIONS} WHERE id = {request.args['update_no']}"
@@ -512,6 +610,7 @@ def add_affiliation():
 
     if "delete_no" in request.args:
         delete_row(AFFILIATIONS, db, request.args["delete_no"])
+        return redirect(url_for('add_affiliation'))
 
     if "update_no" in request.args:
         query = f"SELECT * FROM {AFFILIATIONS} WHERE id = {request.args['update_no']}"
@@ -548,6 +647,7 @@ def link_actor_char():
     if "delete_no" in request.args:
         query = f"UPDATE {ACTORS} SET cid=NULL WHERE id={request.args['delete_no']}"
         execute_query(db, query)
+        return redirect(url_for('link_actor_char'))
     
     query = f"SELECT A.id, CONCAT_WS(' ', C.fname, IFNULL(C.lname,'')), CONCAT_WS(' ', A.fname, IFNULL(A.lname,'')) FROM {CHARACTERS} C \
               JOIN {ACTORS} A ON A.cid=C.id ORDER BY C.fname"
@@ -584,6 +684,7 @@ def link_char_species():
         cidsid = request.args['delete_no'].split('-')
         query = f"DELETE FROM {CHAR_SPECIES} WHERE cid={cidsid[0]} AND sid={cidsid[1]}"
         execute_query(db, query)
+        return redirect(url_for('link_char_species'))
     
     query = f"SELECT CONCAT_WS('-',CS.cid,CS.sid), CONCAT_WS(' ', C.fname, IFNULL(C.lname,'')), S.name FROM {CHAR_SPECIES} CS \
               JOIN {CHARACTERS} C ON C.id=CS.cid \
@@ -621,6 +722,7 @@ def link_char_aff():
         cidaid = request.args['delete_no'].split('-')
         query = f"DELETE FROM {CHAR_AFFILS} WHERE cid={cidaid[0]} AND aid={cidaid[1]}"
         execute_query(db, query)
+        return redirect(url_for('link_char_aff'))
     
     query = f"SELECT CONCAT_WS('-',CA.cid,CA.aid), CONCAT_WS(' ', C.fname, IFNULL(C.lname,'')), A.name FROM {CHAR_AFFILS} CA \
               JOIN {CHARACTERS} C ON C.id=CA.cid \
@@ -657,6 +759,7 @@ def link_char_series():
     if "delete_no" in request.args:
         query = f"DELETE FROM {CHAR_SERIES} WHERE id={request.args['delete_no']}"
         execute_query(db, query)
+        return redirect(url_for('link_char_series'))
     
     query = f"SELECT CS.id, CONCAT_WS(' ', C.fname, IFNULL(C.lname,'')), S.name FROM {CHAR_SERIES} CS \
               JOIN {CHARACTERS} C ON C.id=CS.cid \
@@ -694,6 +797,7 @@ def link_to_location():
         csidlid = request.args['delete_no'].split('-')
         query = f"DELETE FROM {CHAR_SERIES_LOCS} WHERE csid={csidlid[0]} AND lid={csidlid[1]}"
         execute_query(db, query)
+        return redirect(url_for('link_to_location'))
     
     query = f"SELECT CONCAT_WS('-',CSL.csid,CSL.lid), CONCAT_WS(' / ', CONCAT_WS(' ', C.fname, IFNULL(C.lname,'')), S.name), L.name FROM {CHAR_SERIES_LOCS} CSL \
               JOIN {LOCATIONS} L ON L.id=CSL.lid \
@@ -722,13 +826,6 @@ def create_table():
     query = TABLES[table]
     results = execute_query(db, query)
     return f"{table} table created"
-
-
-
-@app.route("/char-search")
-def search_char():
-    return render_template("SearchChar.html")
-
 
 # TODO implement function to prevent SQL injections as needed
 def sanitze_input(user_input):
