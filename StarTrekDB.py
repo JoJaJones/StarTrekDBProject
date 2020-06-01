@@ -155,9 +155,9 @@ def add_character():
         form.first_field.data = ""
         last_name = form.second_field.data
         form.second_field.data = ""
-        title = form.third_field.data
+        alias = form.third_field.data
         form.third_field.data = ""
-        alias = form.fourth_field.data
+        title = form.fourth_field.data
         if len(alias) == 0:
             alias = last_name
             if len(alias) == 0:
@@ -251,8 +251,8 @@ def add_character():
             session["update_page"] = CHARACTERS
             form.first_field.data = f"{res[1]}"
             form.second_field.data = f"{res[2]}"
-            form.third_field.data = f"{res[4]}"
-            form.fourth_field.data = f"{res[3]}"
+            form.third_field.data = f"{res[3]}"
+            form.fourth_field.data = f"{res[4]}"
             form.fifth_field.data = f"{res[5]}"
             form.sixth_field.data = f"{res[6]}"
             header = f"Update {res[1]}"
