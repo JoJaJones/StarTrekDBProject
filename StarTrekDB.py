@@ -230,12 +230,7 @@ def add_character():
                 link_tables(query_template, db, cid, ser_id)
             session[SUBMIT_TYPE] = "insert"
 
-        query_res = select_query(db, BASIC_SELECT_QUERIES[CHARACTERS], CHARACTERS)
-
-        return render_template("add_char_form.html", form=form, query_res=query_res,
-                           column_names=columns, query_has_value=(len(query_res) > 0),
-                           header=header, display_species=display_species, display_affiliations=display_affiliations,
-                           display_series=display_series, target="add-character")
+        return redirect(url_for('add_character'))
 
     if "delete_no" in request.args:
         delete_row(CHARACTERS, db, request.args["delete_no"])
@@ -335,14 +330,7 @@ def add_actor():
                 data = tuple([fname, lname, imdb])
             session[SUBMIT_TYPE] = "insert"
 
-        
-        execute_query(db, query, data)
-
-        query_res = select_query(db, BASIC_SELECT_QUERIES[ACTORS], ACTORS)
-
-        return render_template("add_actor_form.html", form=form, query_res=query_res,
-                               column_names=columns, query_has_value=(len(query_res) > 0),
-                               header=header, target="add-actors")
+        return redirect(url_for('add_actor'))
 
     if "delete_no" in request.args:
         delete_row(ACTORS, db, request.args["delete_no"])
@@ -423,13 +411,8 @@ def add_series():
             data = data + tuple([session["update_id"]])
             query = SERIES_UPDATE_QUERIES[case]            
             session[SUBMIT_TYPE] = "insert"
+
         res = execute_query(db, query, data)
-
-        query_res = select_query(db, BASIC_SELECT_QUERIES[SERIES], SERIES)
-        for item in query_res:
-            for i in range(1, 3):
-                item.reformat_date(i)
-
         return redirect(url_for("add_series"))
 
     if "delete_no" in request.args:
@@ -490,12 +473,9 @@ def add_species():
             session[SUBMIT_TYPE] = "insert"
         data = tuple([name])
         res = execute_query(db, query, data)
-
-        query_res = select_query(db, BASIC_SELECT_QUERIES[SPECIES], SPECIES)
-
-        return render_template("single_field_add_form.html", form=form, query_res=query_res,
-                               column_names=columns, query_has_value=(len(query_res) > 0),
-                               header=header, target="add-species")
+    
+        return redirect(url_for('add_species'))
+        
 
     if "delete_no" in request.args:
         delete_row(SPECIES, db, request.args["delete_no"])
@@ -544,17 +524,9 @@ def add_location():
         else:
             query = f"UPDATE {LOCATIONS} SET name = %s, type = %s WHERE id = {session['update_id']}"
             session[SUBMIT_TYPE] = "insert"
-
         data = (name, type)
         res = execute_query(db, query, data)
-
-        query_res = select_query(db, BASIC_SELECT_QUERIES[LOCATIONS], LOCATIONS)
-        for item in query_res:
-            item.table_values[1] = LOCATION_TYPE_DICT[item.table_values[1]]
-
-        return render_template("add_location_form.html", form=form, query_res=query_res,
-                               column_names=columns, query_has_value=(len(query_res) > 0),
-                               header=header, target="add-location")
+        return redirect(url_for('add_location'))        
 
     if "delete_no" in request.args:
         delete_row(LOCATIONS, db, request.args["delete_no"])
@@ -605,12 +577,7 @@ def add_affiliation():
             session[SUBMIT_TYPE] = "insert"
         data = tuple([name])
         res = execute_query(db, query, data)
-
-        query_res = select_query(db, BASIC_SELECT_QUERIES[AFFILIATIONS], AFFILIATIONS)
-
-        return render_template("single_field_add_form.html", form=form, query_res=query_res,
-                               column_names=columns, query_has_value=(len(query_res) > 0),
-                               header=header, target="add-affiliations")
+        return redirect(url_for('add_affiliation'))
 
     if "delete_no" in request.args:
         delete_row(AFFILIATIONS, db, request.args["delete_no"])
