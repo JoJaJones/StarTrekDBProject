@@ -750,7 +750,7 @@ def link_char_series_loc():
     form = CSLLinkForm()
     form.entity1.choices = get_select_field_items(db, CHARACTERS)
     form.entity2.choices = get_select_field_items(db, SERIES)
-    form.entity3.choices = [-1, "None"] + get_select_field_items(db, LOCATIONS)
+    form.entity3.choices = [[-1, "None"]] + get_select_field_items(db, LOCATIONS)
 
     query_res = []
     query = "SELECT CS.id, L.id, C.fname, C.alias, C.lname, S.name, L.name FROM characters C INNER JOIN characters_series CS ON C.id = CS.cid INNER JOIN series S ON S.id = CS.sid LEFT JOIN characters_series_locations CSL ON CSL.csid = CS.id LEFT JOIN locations L ON L.id = CSL.lid;"
