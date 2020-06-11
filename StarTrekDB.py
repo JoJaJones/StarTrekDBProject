@@ -785,7 +785,7 @@ def link_char_series_loc():
             if res is not None:
                 query = f"INSERT INTO {CHAR_SERIES_LOCS} (csid, lid) VALUES  ({csid}, {lid})"
                 execute_query(db, query)
-                
+
         return redirect(url_for('link_char_series_loc'))
     #
     # if "delete_no" in request.args:
