@@ -356,7 +356,7 @@ def add_actor():
     query_res = select_query(db, BASIC_SELECT_QUERIES[ACTORS], ACTORS)
     for item in query_res:
         if item.table_values[3] is None:
-            item.table_values[3] = "#"
+            item.table_values[3] = ""
 
     return render_template("add_actor_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
