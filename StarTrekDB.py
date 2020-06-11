@@ -757,7 +757,7 @@ def link_char_series_loc():
             "FROM characters C INNER JOIN characters_series CS ON C.id = CS.c id " \
             "INNER JOIN series S ON S.id = CS.sid " \
             "LEFT JOIN characters_series_locations CSL ON CSL.csid = CS.id " \
-            "LEFT JOIN locations L ON L.id = CSL.lid"
+            "LEFT JOIN locations L ON L.id = CSL.lid;"
     query_res = select_query(db, query, "CSL")
 
     return render_template("link_csl.html", header=header, form=form, colum_names=columns,
