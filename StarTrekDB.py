@@ -782,7 +782,7 @@ def link_char_series_loc():
             query = f"SELECT * FROM {CHAR_SERIES_LOCS} WHERE csid={csid} AND lid={lid}"
             res = execute_query(db, query).fetchone()
 
-            if res is not None:
+            if res is None:
                 query = f"INSERT INTO {CHAR_SERIES_LOCS} (csid, lid) VALUES  ({csid}, {lid})"
                 execute_query(db, query)
 
