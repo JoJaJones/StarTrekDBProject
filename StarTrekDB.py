@@ -787,12 +787,16 @@ def link_char_series_loc():
                 execute_query(db, query)
 
         return redirect(url_for('link_char_series_loc'))
-    #
-    # if "delete_no" in request.args:
-    #     csidlid = request.args['delete_no'].split('-')
-    #     query = f"DELETE FROM {CHAR_SERIES_LOCS} WHERE csid={csidlid[0]} AND lid={csidlid[1]}"
-    #     execute_query(db, query)
-    #     return redirect(url_for('link_to_location'))
+
+    if "delete_no" in request.args:
+        ids = request.args['delete_no'].split('-')
+        if type(eval(ids[1])) == int:
+            query = f"DELETE FROM {CHAR_SERIES_LOCS} WHERE csid={ids[0]} AND lid={ids[1]}"
+        else:
+            query = f"DELETE FROM {CHAR_SERIES} WHERE id={ids[0]}"
+
+        execute_query(db, query)
+        return redirect(url_for('link_char_series_loc'))
 
     query_res = []
     query = "SELECT CS.id, L.id, C.fname, C.alias, C.lname, S.name, L.name FROM characters C INNER JOIN characters_series CS ON C.id = CS.cid INNER JOIN series S ON S.id = CS.sid LEFT JOIN characters_series_locations CSL ON CSL.csid = CS.id LEFT JOIN locations L ON L.id = CSL.lid ORDER BY C.alias;"
