@@ -287,7 +287,7 @@ def add_character():
     return render_template("add_char_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header=header, display_species=display_species, display_affiliations=display_affiliations,
-                           display_series=display_series, target="add-character")
+                           display_series=display_series, target="add-character", allow_update=True)
 
 @app.route("/add-actors", methods=["GET", "POST"])
 def add_actor():
@@ -354,10 +354,15 @@ def add_actor():
             header = f"Update {res[1]} {res[2]}"
 
     query_res = select_query(db, BASIC_SELECT_QUERIES[ACTORS], ACTORS)
+    for item in query_res:
+        if item.table_values[3] is None:
+            item.table_values[3] = ""
+        else:
+            item.table_values[3] = f"<a href='{item.table_values[3]}'>IMDB</a>"
 
     return render_template("add_actor_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
-                           header=header, target="add-actors")
+                           header=header, target="add-actors", allow_update=True)
 
 @app.route("/add-series", methods=["GET", "POST"])
 def add_series():
@@ -445,7 +450,7 @@ def add_series():
 
     return render_template("add_series_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
-                           header=header, target="add-series")
+                           header=header, target="add-series", allow_update=True)
 
 @app.route("/add-species", methods=["GET", "POST"])
 def add_species():
@@ -495,7 +500,7 @@ def add_species():
 
     return render_template("single_field_add_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
-                           header=header, target="add-species")
+                           header=header, target="add-species", allow_update=True)
 
 @app.route("/add-location", methods=["GET", "POST"])
 def add_location():
@@ -549,7 +554,7 @@ def add_location():
 
     return render_template("add_location_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
-                           header=header, target="add-location")
+                           header=header, target="add-location", allow_update=True)
 
 @app.route("/add-affiliations", methods=["GET", "POST"])
 def add_affiliation():
@@ -597,7 +602,7 @@ def add_affiliation():
 
     return render_template("single_field_add_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
-                           header=header, target="add-affiliations")
+                           header=header, target="add-affiliations", allow_update=True)
 
 @app.route("/connect-actor-char", methods=["GET", "POST"])
 def link_actor_char():
@@ -626,7 +631,7 @@ def link_actor_char():
 
     return render_template("dual_field_link_form.html", header=header, form=form,
                             query_res=query_res, column_names=columns, query_has_value=(len(query_res) > 0),
-                            target='connect-actor-char')
+                            target='connect-actor-char', allow_update=False)
 
 
 @app.route("/connect-char-spec", methods=["GET", "POST"])
@@ -664,7 +669,7 @@ def link_char_species():
 
     return render_template("dual_field_link_form.html", header=header, form=form,
                             query_res=query_res, column_names=columns, query_has_value=(len(query_res) > 0),
-                            target='connect-char-spec')
+                            target='connect-char-spec', allow_update=False)
 
 
 @app.route("/connect-char-aff", methods=["GET", "POST"])
@@ -702,7 +707,7 @@ def link_char_aff():
 
     return render_template("dual_field_link_form.html", header=header, form=form,
                             query_res=query_res, column_names=columns, query_has_value=(len(query_res) > 0),
-                            target='connect-char-aff')
+                            target='connect-char-aff', allow_update=False)
 
 
 @app.route("/connect-char-series", methods=["GET", "POST"])
@@ -739,7 +744,7 @@ def link_char_series():
 
     return render_template("dual_field_link_form.html", header=header, form=form,
                             query_res=query_res, column_names=columns, query_has_value=(len(query_res) > 0),
-                            target='connect-char-series')
+                            target='connect-char-series', allow_update=False)
 
 @app.route("/connect-csl", methods=["GET", "POST"])
 def link_char_series_loc():
@@ -757,7 +762,7 @@ def link_char_series_loc():
     query_res = select_query(db, query, "CSL")
 
     return render_template("link_csl.html", header=header, form=form, colum_names=columns,
-                           query_has_value=(len(query_res) > 0), target='connect-csl')
+                           query_has_value=(len(query_res) > 0), target='connect-csl', allow_update=False)
 
 @app.route("/connect-location", methods=["GET", "POST"])
 def link_to_location():
@@ -796,7 +801,7 @@ def link_to_location():
 
     return render_template("dual_field_link_form.html", header=header, form=form,
                             query_res=query_res, column_names=columns, query_has_value=(len(query_res) > 0),
-                            target='connect-location')
+                            target='connect-location', allow_update=False)
 
 
 @app.route("/create-table")
