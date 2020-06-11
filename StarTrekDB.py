@@ -762,7 +762,7 @@ def link_char_series_loc():
     for item in query_res:
         print(item.id, item.table_values)
 
-    return render_template("link_csl.html", header=header, form=form, colum_names=columns,
+    return render_template("link_csl.html", header=header, form=form, column_names=columns,
                            query_has_value=(len(query_res) > 0), target='connect-csl', allow_update=False)
 
 @app.route("/connect-location", methods=["GET", "POST"])
