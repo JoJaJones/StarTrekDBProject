@@ -756,7 +756,7 @@ def link_char_series():
 
 @app.route("/connect-csl", methods=["GET", "POST"])
 def link_char_series_loc():
-    header = "Select a relationship between character, series and location"
+    header = "Select a relationship between character, series, and location"
     columns = VIEW_COLUMNS[CHAR_SERIES_LOCS]
     db = connect_to_database()
 
