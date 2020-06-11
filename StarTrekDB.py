@@ -287,7 +287,8 @@ def add_character():
     return render_template("add_char_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
                            header=header, display_species=display_species, display_affiliations=display_affiliations,
-                           display_series=display_series, target="add-character", allow_update=True)
+                           display_series=display_series, target="add-character", allow_update=True,
+                           is_relationship=False)
 
 @app.route("/add-actors", methods=["GET", "POST"])
 def add_actor():
@@ -360,7 +361,8 @@ def add_actor():
 
     return render_template("add_actor_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
-                           header=header, target="add-actors", allow_update=True)
+                           header=header, target="add-actors", allow_update=True,
+                           is_relationship=False)
 
 @app.route("/add-series", methods=["GET", "POST"])
 def add_series():
@@ -448,7 +450,8 @@ def add_series():
 
     return render_template("add_series_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
-                           header=header, target="add-series", allow_update=True)
+                           header=header, target="add-series", allow_update=True,
+                           is_relationship=False)
 
 @app.route("/add-species", methods=["GET", "POST"])
 def add_species():
@@ -498,7 +501,8 @@ def add_species():
 
     return render_template("single_field_add_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
-                           header=header, target="add-species", allow_update=True)
+                           header=header, target="add-species", allow_update=True,
+                           is_relationship=False)
 
 @app.route("/add-location", methods=["GET", "POST"])
 def add_location():
@@ -552,7 +556,8 @@ def add_location():
 
     return render_template("add_location_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
-                           header=header, target="add-location", allow_update=True)
+                           header=header, target="add-location", allow_update=True,
+                           is_relationship=False)
 
 @app.route("/add-affiliations", methods=["GET", "POST"])
 def add_affiliation():
@@ -600,7 +605,8 @@ def add_affiliation():
 
     return render_template("single_field_add_form.html", form=form, query_res=query_res,
                            column_names=columns, query_has_value=(len(query_res) > 0),
-                           header=header, target="add-affiliations", allow_update=True)
+                           header=header, target="add-affiliations", allow_update=True,
+                           is_relationship=False)
 
 @app.route("/connect-actor-char", methods=["GET", "POST"])
 def link_actor_char():
@@ -629,7 +635,8 @@ def link_actor_char():
 
     return render_template("dual_field_link_form.html", header=header, form=form,
                             query_res=query_res, column_names=columns, query_has_value=(len(query_res) > 0),
-                            target='connect-actor-char', allow_update=False)
+                            target='connect-actor-char', allow_update=False,
+                           is_relationship=True)
 
 
 @app.route("/connect-char-spec", methods=["GET", "POST"])
@@ -667,7 +674,8 @@ def link_char_species():
 
     return render_template("dual_field_link_form.html", header=header, form=form,
                             query_res=query_res, column_names=columns, query_has_value=(len(query_res) > 0),
-                            target='connect-char-spec', allow_update=False)
+                            target='connect-char-spec', allow_update=False,
+                           is_relationship=True)
 
 
 @app.route("/connect-char-aff", methods=["GET", "POST"])
@@ -705,7 +713,8 @@ def link_char_aff():
 
     return render_template("dual_field_link_form.html", header=header, form=form,
                             query_res=query_res, column_names=columns, query_has_value=(len(query_res) > 0),
-                            target='connect-char-aff', allow_update=False)
+                            target='connect-char-aff', allow_update=False,
+                           is_relationship=True)
 
 
 @app.route("/connect-char-series", methods=["GET", "POST"])
@@ -742,7 +751,8 @@ def link_char_series():
 
     return render_template("dual_field_link_form.html", header=header, form=form,
                             query_res=query_res, column_names=columns, query_has_value=(len(query_res) > 0),
-                            target='connect-char-series', allow_update=False)
+                            target='connect-char-series', allow_update=False,
+                           is_relationship=True)
 
 @app.route("/connect-csl", methods=["GET", "POST"])
 def link_char_series_loc():
@@ -763,7 +773,8 @@ def link_char_series_loc():
         print(item.id, item.table_values)
 
     return render_template("link_csl.html", header=header, form=form, column_names=columns, query_res=query_res,
-                           query_has_value=(len(query_res) > 0), target='connect-csl', allow_update=False)
+                           query_has_value=(len(query_res) > 0), target='connect-csl', allow_update=False,
+                           is_relationship=True)
 
 @app.route("/connect-location", methods=["GET", "POST"])
 def link_to_location():
@@ -802,7 +813,8 @@ def link_to_location():
 
     return render_template("dual_field_link_form.html", header=header, form=form,
                             query_res=query_res, column_names=columns, query_has_value=(len(query_res) > 0),
-                            target='connect-location', allow_update=False)
+                            target='connect-location', allow_update=False,
+                           is_relationship=True)
 
 
 @app.route("/create-table")

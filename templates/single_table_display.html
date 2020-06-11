@@ -37,8 +37,13 @@
                         <td class="align-middle" style="max-width: 25%;"><input type="submit" name="delete_button" class="btn btn-outline-info btn-sm" value="Update {{item.name}}"
                                    formaction="/{{target}}?update_no={{item.id}}" style="width: 100%;"></td>
                         {% endif %}
-                        <td class="align-middle" style="max-width: 25%;"><input type="submit" name="delete_button" class="btn btn-outline-danger btn-sm" value="Delete {{item.name}}"
-                                   formaction="/{{target}}?delete_no={{item.id}}" style="width: 100%;"></td>
+                        {% if not is_relationship %}
+                            <td class="align-middle" style="max-width: 25%;"><input type="submit" name="delete_button" class="btn btn-outline-danger btn-sm" value="Delete {{item.name}}"
+                                       formaction="/{{target}}?delete_no={{item.id}}" style="width: 100%;"></td>
+                        {% else %}
+                            <td class="align-middle" style="max-width: 25%;"><input type="submit" name="delete_button" class="btn btn-outline-danger btn-sm" value="Delete Connection"
+                                       formaction="/{{target}}?delete_no={{item.id}}" style="width: 100%;"></td>
+                        {% endif %}
                     </tr>
                     </tbody>                            
                     {% endfor %}
