@@ -772,11 +772,21 @@ def link_char_series_loc():
         lid = form.entity3.data
         query = f"SELECT * FROM {CHAR_SERIES} WHERE cid={cid} AND sid={sid}"
         res = execute_query(db, query).fetchone()
-        print(res)
-    #     if not res:
-    #         query = f"INSERT INTO {CHAR_SERIES_LOCS} (csid,lid) VALUES ({csid},{lid})"
-    #         execute_query(db, query)
-    #     return redirect(url_for('link_to_location'))
+        if res is None:
+            query = f"INSERT INTO {CHAR_SERIES} (cid, sid) VALUES  ({cid}, {sid})"
+            execute_query(db, query)
+        if lid > 0:
+            query = f"SELECT * FROM {CHAR_SERIES} WHERE cid={cid} AND sid={sid}"
+            csid = execute_query(db, query).fetchone()[0]
+
+            query = f"SELECT * FROM {CHAR_SERIES_LOCS} WHERE csid={csid} AND sid={lid}"
+            res = execute_query(db, query).fetchone()
+
+            if res is not None:
+                query = f"INSERT INTO {CHAR_SERIES_LOCS} (csid, lid) VALUES  ({csid}, {lid})"
+                execute_query(db, query)
+                
+        return redirect(url_for('link_char_series_loc'))
     #
     # if "delete_no" in request.args:
     #     csidlid = request.args['delete_no'].split('-')
