@@ -26,7 +26,7 @@
                     <tr>
                         {% for cell in item.table_values %}
                             <td class="align-middle">
-                                {% if type(cell) == str and "IMDB" in cell %}
+                                {% if string(cell) and "IMDB" in cell %}
                                     <a href="{{cell}}">IMDB</a>
                                 {% else %}
                                     {{cell}}
