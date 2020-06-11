@@ -1,0 +1,15 @@
+{% extends "form_template.html" %}
+
+{% block form_specifics %}
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            {{ form.entity1.label }}{{ form.entity1(class="form-control") }}
+        </div>
+        <div class="form-group col-md-4">
+            {{ form.entity2.label }}{{ form.entity2(class="form-control") }}
+        </div>
+        <div class="form-group col-md-4">
+            {{ form.entity3.label }}{{ form.entity3(class="form-control") }}
+        </div>
+    </div>
+{% endblock %}
