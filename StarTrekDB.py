@@ -779,7 +779,7 @@ def link_char_series_loc():
             query = f"SELECT * FROM {CHAR_SERIES} WHERE cid={cid} AND sid={sid}"
             csid = execute_query(db, query).fetchone()[0]
 
-            query = f"SELECT * FROM {CHAR_SERIES_LOCS} WHERE csid={csid} AND sid={lid}"
+            query = f"SELECT * FROM {CHAR_SERIES_LOCS} WHERE csid={csid} AND lid={lid}"
             res = execute_query(db, query).fetchone()
 
             if res is not None:
