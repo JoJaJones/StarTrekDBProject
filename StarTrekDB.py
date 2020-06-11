@@ -912,8 +912,7 @@ def select_query(connection, query, data_type):
             query_res.append(Row(item[0], list(item[1:]), data_type))
         else:
             char_name = concat_char_name(item[2:5])
-            query_res.append(Row(f"{item[0]} {item[1]}", [char_name] + list(item[5:]), data_type))
-            print(f"{item[0]}-{item[1]}")
+            query_res.append(Row(f"{item[0]}-{item[1]}", [char_name] + list(item[5:]), data_type))
 
     return query_res
 
