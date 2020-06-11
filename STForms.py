@@ -96,7 +96,7 @@ class AddLocationToCharacter(FlaskForm):
 
 
 class AddActorForm(FlaskForm):
-    fname_field    = StringField("First name", validators=[validators.Required()])
+    fname_field    = StringField("First name", validators=[validators.DataRequired()])
     lname_field    = StringField("Last name", validators=[validators.Optional()])
     birthday_field = FormField(DateSubForm)
     imdb_field     = StringField("IMDB link", validators=[validators.Optional()])
@@ -112,6 +112,12 @@ class CharacterSearchForm(FlaskForm):
     submit = SubmitField("Search")
 
 class LinkForm(FlaskForm):
-    entity1 = SelectField("", coerce=int, validators=[validators.Required()])
-    entity2 = SelectField("", coerce=int, validators=[validators.Required()])
+    entity1 = SelectField("", coerce=int, validators=[validators.DataRequired()])
+    entity2 = SelectField("", coerce=int, validators=[validators.DataRequired()])
+    submit = SubmitField("Add Link")
+
+class LinkForm(FlaskForm):
+    entity1 = SelectField("Character", coerce=int, validators=[validators.DataRequired()])
+    entity2 = SelectField("Series", coerce=int, validators=[validators.DataRequired()])
+    entity3 = SelectField("Location", coerce=int, validators=[validators.DataRequired()])
     submit = SubmitField("Add Link")

@@ -51,10 +51,10 @@ def index():
     form = CharacterSearchForm()    
 
     # Populate lists with query results
-    form.actors.choices = get_search_list(db, ACTORS)   
-    form.species.choices = get_search_list(db, SPECIES)
-    form.affiliations.choices = get_search_list(db, AFFILIATIONS)
-    form.series.choices = get_search_list(db, SERIES)
+    form.actors.choices = get_select_field_items(db, ACTORS)
+    form.species.choices = get_select_field_items(db, SPECIES)
+    form.affiliations.choices = get_select_field_items(db, AFFILIATIONS)
+    form.series.choices = get_select_field_items(db, SERIES)
 
     if "clear" in request.args:
         form.fname.data = ''
@@ -607,8 +607,8 @@ def link_actor_char():
     form = LinkForm()
     form.entity1.label = "Characters"
     form.entity2.label = "Actors"
-    form.entity1.choices = get_search_list(db, CHARACTERS)
-    form.entity2.choices = get_search_list(db, ACTORS)
+    form.entity1.choices = get_select_field_items(db, CHARACTERS)
+    form.entity2.choices = get_select_field_items(db, ACTORS)
 
     if form.validate_on_submit():
         query = f"UPDATE {ACTORS} SET cid={form.entity1.data} WHERE id={form.entity2.data}"
@@ -637,8 +637,8 @@ def link_char_species():
     form = LinkForm()
     form.entity1.label = "Characters"
     form.entity2.label = "Species"
-    form.entity1.choices = get_search_list(db, CHARACTERS)
-    form.entity2.choices = get_search_list(db, SPECIES)
+    form.entity1.choices = get_select_field_items(db, CHARACTERS)
+    form.entity2.choices = get_select_field_items(db, SPECIES)
 
     if form.validate_on_submit():
         # Check to see if relationship already exists
@@ -675,8 +675,8 @@ def link_char_aff():
     form = LinkForm()
     form.entity1.label = "Characters"
     form.entity2.label = "Affiliations"
-    form.entity1.choices = get_search_list(db, CHARACTERS)
-    form.entity2.choices = get_search_list(db, AFFILIATIONS)
+    form.entity1.choices = get_select_field_items(db, CHARACTERS)
+    form.entity2.choices = get_select_field_items(db, AFFILIATIONS)
 
     if form.validate_on_submit():
         # Check to see if relationship already exists
@@ -713,8 +713,8 @@ def link_char_series():
     form = LinkForm()
     form.entity1.label = "Characters"
     form.entity2.label = "Series"
-    form.entity1.choices = get_search_list(db, CHARACTERS)
-    form.entity2.choices = get_search_list(db, SERIES)
+    form.entity1.choices = get_select_field_items(db, CHARACTERS)
+    form.entity2.choices = get_select_field_items(db, SERIES)
 
     if form.validate_on_submit():
         # Check to see if relationship already exists
@@ -742,6 +742,9 @@ def link_char_series():
                             target='connect-char-series')
 
 
+def link_char_series_loc():
+    header = "Select a relationship between character, series and location"
+
 @app.route("/connect-location", methods=["GET", "POST"])
 def link_to_location():
     header = "Select a Character-Series and Location to Link"
@@ -750,8 +753,8 @@ def link_to_location():
     form = LinkForm()
     form.entity1.label = "Characters/Series"
     form.entity2.label = "Locations"
-    form.entity1.choices = get_search_list(db, CHAR_SERIES)
-    form.entity2.choices = get_search_list(db, LOCATIONS)
+    form.entity1.choices = get_select_field_items(db, CHAR_SERIES)
+    form.entity2.choices = get_select_field_items(db, LOCATIONS)
 
     if form.validate_on_submit():
         # Check to see if relationship already exists
@@ -889,22 +892,41 @@ def select_query(connection, query, data_type):
 
     return query_res
 
-def get_search_list(db, table):
-    if table==CHARACTERS:
-        query = f"SELECT id, CONCAT_WS(' ', fname, IFNULL(lname,'')) FROM {table} ORDER BY fname"
-    elif table==ACTORS:
-        query = f"SELECT id, CONCAT_WS(' ', fname, IFNULL(lname,'')) FROM {table} ORDER BY fname"
-    elif table==CHAR_SERIES:
-        query = f"SELECT CS.id, CONCAT_WS(' / ', CONCAT_WS(' ', C.fname, IFNULL(C.lname,'')), S.name) FROM {table} CS \
-                  JOIN {CHARACTERS} C ON C.id=CS.cid \
-                  JOIN {SERIES} S ON S.id=CS.sid ORDER BY C.fname"
-    else:
-        query = f"SELECT id, name FROM {table} ORDER BY name"
+def get_select_field_items(db, table, attributes = None):
+    query = ""
+
+    if attributes is None:
+        if table == CHARACTERS:
+            attributes = ["id", "fname", "alias", "lname"]
+        elif table == ACTORS:
+            attributes = ["id", "fname", "lname"]
+        elif table == CHAR_SERIES:
+            query = f"SELECT CS.id, CONCAT_WS(' / ', CONCAT_WS(' ', C.fname, IFNULL(C.lname,'')), S.name) " \
+                    f"FROM {table} CS JOIN {CHARACTERS} C ON C.id=CS.cid " \
+                    f"JOIN {SERIES} S ON S.id=CS.sid ORDER BY C.fname"
+        else:
+            attributes = ["id", "name"]
+    elif attributes[0] != "id":
+        attributes = ["id"] + attributes
+
+    order_by = attributes[1]
+    attributes = (", ").join(attributes)
+
+    if len(query) == 0:
+        query = f"SELECT {attributes} FROM {table} ORDER BY {order_by}"
     res = execute_query(db, query)
+
     result_list = []
     for item in res:
-        result_list.append((item[0], item[1]))
+        id = item[0]
+        item_data = item[1:]
+        data_str = ""
+        for val in item_data:
+            if len(val) > 0 and val not in data_str:
+                data_str += val
+        result_list.append((id, data_str))
     return result_list
+
 
 def get_character_search_query(form):
     # form assumes fields fname, lname, actors, species, affiliations, and series
