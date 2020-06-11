@@ -909,10 +909,10 @@ def get_select_field_items(db, table, attributes = None):
     elif attributes[0] != "id":
         attributes = ["id"] + attributes
 
-    order_by = attributes[1]
-    attributes = (", ").join(attributes)
 
     if len(query) == 0:
+        order_by = attributes[1]
+        attributes = (", ").join(attributes)
         query = f"SELECT {attributes} FROM {table} ORDER BY {order_by}"
     res = execute_query(db, query)
 
