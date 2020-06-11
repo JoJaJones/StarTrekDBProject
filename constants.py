@@ -127,7 +127,7 @@ VIEW_COLUMNS = {
     CHAR_SPECIES: ["Character Name", "Species Name"],
     CHAR_AFFILS: ["Character Name", "Affiliation Name"],
     CHAR_SERIES: ["Character Name", "Series Name"],
-    CHARSERIES_LOC: ["Character/Series Name", "Location Name"],
+    CHARSERIES_LOCS: ["Character/Series Name", "Location Name"],
     CHAR_SERIES_LOCS: ["Character Name", "Series Name", "Location Name"]
 }
 
