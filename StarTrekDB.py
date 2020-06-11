@@ -935,7 +935,7 @@ def get_select_field_items(db, table, attributes = None):
         data_str = ""
         for val in item_data:
             if len(val) > 0 and val not in data_str:
-                data_str += val
+                data_str += " " + val
         result_list.append((id, data_str))
     return result_list
 
