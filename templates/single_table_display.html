@@ -14,7 +14,9 @@
                     <thead>
                         <tr>
                             {% for value in column_names %}
-                                <th scope="col">{{value}}</th>
+                                <th scope="col">
+                                    {{value}}
+                                </th>
                             {% endfor %}
                             <th scope="col" colspan="2" class="w-25"></th>
                         </tr>
@@ -23,7 +25,13 @@
                     {% for item in query_res %}
                     <tr>
                         {% for cell in item.table_values %}
-                            <td class="align-middle">{{cell}}</td>
+                            <td class="align-middle">
+                                {% if "IMDB" in column_names %}
+                                    <a href="{{cell}}">IMDB</a>
+                                {% else %}
+                                    {{cell}}
+                                {% endif %}
+                            </td>
                         {% endfor %}
                         {% if allow_update %}
                         <td class="align-middle" style="max-width: 25%;"><input type="submit" name="delete_button" class="btn btn-outline-info btn-sm" value="Update {{item.name}}"
