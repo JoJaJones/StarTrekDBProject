@@ -259,7 +259,7 @@ def add_character():
         for species in res:
             species_list.append(species[0])
         form.seventh_field.data = species_list
-        print(f"species list = {species_list}")
+
         query = f"SELECT A.id FROM {AFFILIATIONS} A \
                   JOIN {CHAR_AFFILS} CA ON CA.aid=A.id WHERE CA.cid={cid}"
         res = execute_query(db, query).fetchall()
@@ -267,7 +267,7 @@ def add_character():
         for affil in res:
             affiliations_list.append(affil[0])
         form.eighth_field.data = affiliations_list
-        print(f"affiliations list = {affiliations_list}")
+
         query = f"SELECT S.id FROM {SERIES} S \
                   JOIN {CHAR_SERIES} CS ON CS.sid=S.id WHERE CS.cid={cid}"
         res = execute_query(db, query).fetchall()
@@ -765,12 +765,28 @@ def link_char_series_loc():
     form.entity2.choices = get_select_field_items(db, SERIES)
     form.entity3.choices = [[-1, "None"]] + get_select_field_items(db, LOCATIONS)
 
+    if form.validate_on_submit():
+        # Check to see if relationship already exists
+        cid = form.entity1.data
+        sid = form.entity2.data
+        lid = form.entity3.data
+        query = f"SELECT * FROM {CHAR_SERIES} WHERE cid={cid} AND sid={sid}"
+        res = execute_query(db, query).fetchone()
+        print(res)
+    #     if not res:
+    #         query = f"INSERT INTO {CHAR_SERIES_LOCS} (csid,lid) VALUES ({csid},{lid})"
+    #         execute_query(db, query)
+    #     return redirect(url_for('link_to_location'))
+    #
+    # if "delete_no" in request.args:
+    #     csidlid = request.args['delete_no'].split('-')
+    #     query = f"DELETE FROM {CHAR_SERIES_LOCS} WHERE csid={csidlid[0]} AND lid={csidlid[1]}"
+    #     execute_query(db, query)
+    #     return redirect(url_for('link_to_location'))
+
     query_res = []
     query = "SELECT CS.id, L.id, C.fname, C.alias, C.lname, S.name, L.name FROM characters C INNER JOIN characters_series CS ON C.id = CS.cid INNER JOIN series S ON S.id = CS.sid LEFT JOIN characters_series_locations CSL ON CSL.csid = CS.id LEFT JOIN locations L ON L.id = CSL.lid ORDER BY C.alias;"
     query_res = select_query(db, query, "CSL")
-
-    for item in query_res:
-        print(item.id, item.table_values)
 
     return render_template("link_csl.html", header=header, form=form, column_names=columns, query_res=query_res,
                            query_has_value=(len(query_res) > 0), target='connect-csl', allow_update=False,
