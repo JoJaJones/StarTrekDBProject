@@ -756,8 +756,11 @@ def link_char_series_loc():
     form.entity3.choices = [[-1, "None"]] + get_select_field_items(db, LOCATIONS)
 
     query_res = []
-    query = "SELECT CS.id, L.id, C.fname, C.alias, C.lname, S.name, L.name FROM characters C INNER JOIN characters_series CS ON C.id = CS.cid INNER JOIN series S ON S.id = CS.sid LEFT JOIN characters_series_locations CSL ON CSL.csid = CS.id LEFT JOIN locations L ON L.id = CSL.lid;"
+    query = "SELECT CS.id, L.id, C.fname, C.alias, C.lname, S.name, L.name FROM characters C INNER JOIN characters_series CS ON C.id = CS.cid INNER JOIN series S ON S.id = CS.sid LEFT JOIN characters_series_locations CSL ON CSL.csid = CS.id LEFT JOIN locations L ON L.id = CSL.lid ORDER BY C.alias;"
     query_res = select_query(db, query, "CSL")
+
+    for item in query_res:
+        print(item.table_values)
 
     return render_template("link_csl.html", header=header, form=form, colum_names=columns,
                            query_has_value=(len(query_res) > 0), target='connect-csl', allow_update=False)
