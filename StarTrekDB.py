@@ -911,8 +911,9 @@ def select_query(connection, query, data_type):
         if data_type != "CSL":
             query_res.append(Row(item[0], list(item[1:]), data_type))
         else:
-            query_res.append(Row(f"{item[0]} {item[1]}", list(item[2:]), data_type))
-            print(f"{item[0]} {item[1]}")
+            char_name = concat_char_name(item[2:5])
+            query_res.append(Row(f"{item[0]} {item[1]}", [char_name] + list(item[5:]), data_type))
+            print(f"{item[0]}-{item[1]}")
 
     return query_res
 
@@ -944,13 +945,18 @@ def get_select_field_items(db, table, attributes = None):
     for item in res:
         id = item[0]
         item_data = item[1:]
-        data_str = ""
-        for val in item_data:
-            if len(val) > 0 and val not in data_str:
-                data_str += " " + val
+        data_str = concat_char_name(item_data)
         result_list.append((id, data_str))
+
     return result_list
 
+
+def concat_char_name(data_list):
+    data_str = ""
+    for val in data_list:
+        if len(val) > 0 and val not in data_str and val != "None":
+            data_str += " " + val
+    return data_str
 
 def get_character_search_query(form):
     # form assumes fields fname, lname, actors, species, affiliations, and series
