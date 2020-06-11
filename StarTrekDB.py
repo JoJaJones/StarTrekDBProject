@@ -760,7 +760,7 @@ def link_char_series_loc():
     query_res = select_query(db, query, "CSL")
 
     for item in query_res:
-        print(item.table_values)
+        print(item.id, item.table_values)
 
     return render_template("link_csl.html", header=header, form=form, colum_names=columns,
                            query_has_value=(len(query_res) > 0), target='connect-csl', allow_update=False)
