@@ -732,9 +732,9 @@ def link_char_series():
         execute_query(db, query)
         return redirect(url_for('link_char_series'))
     
-    query = f"SELECT CS.id, CONCAT_WS(' ', C.fname, IFNULL(C.lname,'')), S.name FROM {CHAR_SERIES} CS \
-              JOIN {CHARACTERS} C ON C.id=CS.cid \
-              JOIN {SERIES} S ON S.id=CS.sid ORDER BY C.fname"
+    query = f"SELECT CS.id, CONCAT_WS(' ', C.fname, IFNULL(C.lname,'')), S.name FROM {CHAR_SERIES} CS " \
+            f"JOIN {CHARACTERS} C ON C.id=CS.cid "\
+            f"JOIN {SERIES} S ON S.id=CS.sid ORDER BY C.fname"
     query_res = select_query(db, query, CHAR_SPECIES)
 
     return render_template("dual_field_link_form.html", header=header, form=form,
@@ -750,9 +750,15 @@ def link_char_series_loc():
     form = CSLLinkForm()
     form.entity1.choices = get_select_field_items(db, CHARACTERS)
     form.entity2.choices = get_select_field_items(db, SERIES)
-    form.entity3.choices = get_select_field_items(db, LOCATIONS)
+    form.entity3.choices = [-1, "None"] + get_select_field_items(db, LOCATIONS)
 
     query_res = []
+    query = "SELECT CS.id, L.id, C.fname, C.alias, C.lname, S.name, L.name" \
+            "FROM characters C INNER JOIN characters_series CS ON C.id = CS.c id" \
+            "INNER JOIN series S ON S.id = CS.sid" \
+            "LEFT JOIN characters_series_locations CSL ON CSL.csid = CS.id" \
+            "LEFT JOIN locations L ON L.id = CSL.lid"
+    query_res = select_query(db, query, "CSL")
 
     return render_template("link_csl.html", header=header, form=form, colum_names=columns,
                            query_has_value=(len(query_res) > 0), target='connect-csl')
@@ -900,7 +906,11 @@ def select_query(connection, query, data_type):
 
     # prepare and format the results
     for item in res:
-        query_res.append(Row(item[0], list(item[1:]), data_type))
+        if data_type != "CSL":
+            query_res.append(Row(item[0], list(item[1:]), data_type))
+        else:
+            query_res.append(Row(f"{item[0]} {item[1]}", list(item[2:]), data_type))
+            print(f"{item[0]} {item[1]}")
 
     return query_res
 
