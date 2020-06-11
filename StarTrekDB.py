@@ -741,14 +741,26 @@ def link_char_series():
                             query_res=query_res, column_names=columns, query_has_value=(len(query_res) > 0),
                             target='connect-char-series')
 
-
+@app.route("/connect-csl", methods=["GET", "POST"])
 def link_char_series_loc():
     header = "Select a relationship between character, series and location"
+    columns = VIEW_COLUMNS[CHAR_SERIES_LOCS]
+    db = connect_to_database()
+
+    form = CSLLinkForm()
+    form.entity1.choices = get_select_field_items(db, CHARACTERS)
+    form.entity2.choices = get_select_field_items(db, SERIES)
+    form.entity3.choices = get_select_field_items(db, LOCATIONS)
+
+    query_res = []
+
+    return render_template("link_csl.html", header=header, form=form, colum_names=columns,
+                           query_has_value=(len(query_res) > 0), target='connect-csl')
 
 @app.route("/connect-location", methods=["GET", "POST"])
 def link_to_location():
     header = "Select a Character-Series and Location to Link"
-    columns = VIEW_COLUMNS[CHAR_SERIES_LOCS]
+    columns = VIEW_COLUMNS[CHARSERIES_LOCS]
     db = connect_to_database()
     form = LinkForm()
     form.entity1.label = "Characters/Series"

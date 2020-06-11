@@ -116,7 +116,7 @@ class LinkForm(FlaskForm):
     entity2 = SelectField("", coerce=int, validators=[validators.DataRequired()])
     submit = SubmitField("Add Link")
 
-class LinkForm(FlaskForm):
+class CSLLinkForm(FlaskForm):
     entity1 = SelectField("Character", coerce=int, validators=[validators.DataRequired()])
     entity2 = SelectField("Series", coerce=int, validators=[validators.DataRequired()])
     entity3 = SelectField("Location", coerce=int, validators=[validators.DataRequired()])
