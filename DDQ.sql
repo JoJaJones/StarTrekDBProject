@@ -18,6 +18,7 @@ CREATE TABLE characters (
 	title varchar(255) DEFAULT NULL,
 	description text DEFAULT NULL,
 	biography text DEFAULT NULL,
+	UNIQUE(fname, lname, alias),
 	PRIMARY KEY(id))engine=innoDB;
 	
 CREATE TABLE actors (
@@ -90,11 +91,11 @@ CREATE TABLE characters_series_locations (
 INSERT INTO characters
 (fname,lname,alias,title,description,biography)
 VALUES
-('James','Kirk','Captain Kirk','Commanding Officer','Chief of Starfleet Operations','James Tiberius Kirk was born in Riverside, Iowa, on March 22, 2233');
+('James','Kirk','Kirk','Commanding Officer','Chief of Starfleet Operations','James Tiberius Kirk was born in Riverside, Iowa, on March 22, 2233');
 INSERT INTO characters
 (fname,lname,alias,title,description)
 VALUES
-('Hirakaru','Sulu','Captain Sulu','Captain','USS Enterprise helmsman');
+('Hirakaru','Sulu','Sulu','Captain','USS Enterprise helmsman');
 INSERT INTO characters
 (fname,lname,alias,title)
 VALUES

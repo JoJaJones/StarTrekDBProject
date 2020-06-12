@@ -719,43 +719,6 @@ def link_char_aff():
                            is_relationship=True)
 
 
-@app.route("/connect-char-series", methods=["GET", "POST"])
-def link_char_series():
-    header = "Select a Character and Series to Link"
-    columns = VIEW_COLUMNS[CHAR_SERIES]
-    db = connect_to_database()
-    form = LinkForm()
-    form.entity1.label = "Characters"
-    form.entity2.label = "Series"
-    form.entity1.choices = get_select_field_items(db, CHARACTERS)
-    form.entity2.choices = get_select_field_items(db, SERIES)
-
-    if form.validate_on_submit():
-        # Check to see if relationship already exists
-        cid = form.entity1.data
-        sid = form.entity2.data
-        query = f"SELECT * FROM {CHAR_SERIES} WHERE cid={cid} AND sid={sid}"
-        res = execute_query(db, query).fetchone()
-        if not res:            
-            query = f"INSERT INTO {CHAR_SERIES} (cid,sid) VALUES ({cid},{sid})"
-            execute_query(db, query)
-        return redirect(url_for('link_char_series'))
-
-    if "delete_no" in request.args:
-        query = f"DELETE FROM {CHAR_SERIES} WHERE id={request.args['delete_no']}"
-        execute_query(db, query)
-        return redirect(url_for('link_char_series'))
-    
-    query = f"SELECT CS.id, CONCAT_WS(' ', C.fname, IFNULL(C.lname,'')), S.name FROM {CHAR_SERIES} CS " \
-            f"JOIN {CHARACTERS} C ON C.id=CS.cid "\
-            f"JOIN {SERIES} S ON S.id=CS.sid ORDER BY C.fname"
-    query_res = select_query(db, query, CHAR_SPECIES)
-
-    return render_template("dual_field_link_form.html", header=header, form=form,
-                            query_res=query_res, column_names=columns, query_has_value=(len(query_res) > 0),
-                            target='connect-char-series', allow_update=False,
-                           is_relationship=True)
-
 @app.route("/connect-csl", methods=["GET", "POST"])
 def link_char_series_loc():
     header = "Select a relationship between character, series, and location"
@@ -806,46 +769,6 @@ def link_char_series_loc():
 
     return render_template("link_csl.html", header=header, form=form, column_names=columns, query_res=query_res,
                            query_has_value=(len(query_res) > 0), target='connect-csl', allow_update=False,
-                           is_relationship=True)
-
-@app.route("/connect-location", methods=["GET", "POST"])
-def link_to_location():
-    header = "Select a Character-Series and Location to Link"
-    columns = VIEW_COLUMNS[CHARSERIES_LOCS]
-    db = connect_to_database()
-    form = LinkForm()
-    form.entity1.label = "Characters/Series"
-    form.entity2.label = "Locations"
-    form.entity1.choices = get_select_field_items(db, CHAR_SERIES)
-    form.entity2.choices = get_select_field_items(db, LOCATIONS)
-
-    if form.validate_on_submit():
-        # Check to see if relationship already exists
-        csid = form.entity1.data
-        lid = form.entity2.data
-        query = f"SELECT * FROM {CHAR_SERIES_LOCS} WHERE csid={csid} AND lid={lid}"
-        res = execute_query(db, query).fetchone()
-        if not res:            
-            query = f"INSERT INTO {CHAR_SERIES_LOCS} (csid,lid) VALUES ({csid},{lid})"
-            execute_query(db, query)
-        return redirect(url_for('link_to_location'))
-
-    if "delete_no" in request.args:
-        csidlid = request.args['delete_no'].split('-')
-        query = f"DELETE FROM {CHAR_SERIES_LOCS} WHERE csid={csidlid[0]} AND lid={csidlid[1]}"
-        execute_query(db, query)
-        return redirect(url_for('link_to_location'))
-    
-    query = f"SELECT CONCAT_WS('-',CSL.csid,CSL.lid), CONCAT_WS(' / ', CONCAT_WS(' ', C.fname, IFNULL(C.lname,'')), S.name), L.name FROM {CHAR_SERIES_LOCS} CSL \
-              JOIN {LOCATIONS} L ON L.id=CSL.lid \
-              JOIN {CHAR_SERIES} CS ON CS.id=CSL.csid \
-              JOIN {CHARACTERS} C ON C.id=CS.cid \
-              JOIN {SERIES} S ON S.id=CS.sid ORDER BY C.fname"
-    query_res = select_query(db, query, CHAR_SPECIES)
-
-    return render_template("dual_field_link_form.html", header=header, form=form,
-                            query_res=query_res, column_names=columns, query_has_value=(len(query_res) > 0),
-                            target='connect-location', allow_update=False,
                            is_relationship=True)
 
 
