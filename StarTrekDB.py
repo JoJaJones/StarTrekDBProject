@@ -331,6 +331,7 @@ def add_actor():
                 data = tuple([fname, lname, imdb])
             session[SUBMIT_TYPE] = "insert"
 
+        execute_query(db, query)
         return redirect(url_for('add_actor'))
 
     if "delete_no" in request.args:
