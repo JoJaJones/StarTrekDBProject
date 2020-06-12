@@ -121,3 +121,10 @@ DELETE FROM characters_affiliations WHERE cid=:cidFromSelectedCharacterAffiliati
 
 -- Remove location link to character_series combo
 DELETE FROM characters_series_locations WHERE csid=:csid_from_selected_character_series AND sid=:sid_from_selected_character_series;
+
+-- Character Series Locations view populating query
+SELECT CS.id, L.id, C.fname, C.alias, C.lname, S.name, L.name
+FROM characters C INNER JOIN characters_series CS ON C.id = CS.cid
+INNER JOIN series S ON S.id = CS.sid
+LEFT JOIN characters_series_locations CSL ON CSL.csid = CS.id
+LEFT JOIN locations L ON L.id = CSL.lid ORDER BY C.alias;

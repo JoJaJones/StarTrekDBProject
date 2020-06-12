@@ -764,6 +764,7 @@ def link_char_series_loc():
         return redirect(url_for('link_char_series_loc'))
 
     query_res = []
+    # had weird bugs with this query when it was placed on multiple lines so left as 1 line for simplicity's sake
     query = "SELECT CS.id, L.id, C.fname, C.alias, C.lname, S.name, L.name FROM characters C INNER JOIN characters_series CS ON C.id = CS.cid INNER JOIN series S ON S.id = CS.sid LEFT JOIN characters_series_locations CSL ON CSL.csid = CS.id LEFT JOIN locations L ON L.id = CSL.lid ORDER BY C.alias;"
     query_res = select_query(db, query, "CSL")
 
