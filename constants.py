@@ -33,7 +33,7 @@ TABLES = {
                  "title varchar(255) DEFAULT NULL,"
                  "description text DEFAULT NULL,"
                  "biography text DEFAULT NULL,"
-                 "UNIQUE(fname, lname, alias),"
+                 "UNIQUE(fname, lname),"
                  "PRIMARY KEY(id))engine=innoDB;",
 
     ACTORS: f"CREATE TABLE {ACTORS} ("
