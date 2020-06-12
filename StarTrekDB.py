@@ -310,6 +310,7 @@ def add_actor():
         lname = str(form.lname_field.data)
         form.lname_field.data = ""
         birthday = form.birthday_field.data
+        print(birthday)
         birthday_valid = sanitize_date(birthday)
         birthday = f"{birthday['year']}-{birthday['month']}-{birthday['day']}"
         imdb = str(form.imdb_field.data)
