@@ -43,8 +43,13 @@ def init_DB():
 
     return result
 
+
 @app.route("/", methods=["GET","POST"])
 def index():
+    """
+    Landing page and search functionality
+    :return:
+    """
     db = connect_to_database()
     header = 'Browse Characters'
     columns = VIEW_COLUMNS[CHARACTERS][:]
@@ -105,6 +110,12 @@ def display_character(id):
 
 @app.route("/add-character", methods=["GET", "POST"])
 def add_character():
+    """
+    route to implement the functionality related to characters allowing for adding, updating, or deleting characters
+    utilizes read functionality to create a table for reference in the other functions
+    :return:
+    """
+
     if SUBMIT_TYPE not in session:
         session[SUBMIT_TYPE] = "insert"
 
@@ -175,7 +186,7 @@ def add_character():
         form.eighth_field.data = []
 
 
-        if session[SUBMIT_TYPE] == "insert":
+        if session[SUBMIT_TYPE] == "insert":  # insert new row
             query = f"INSERT INTO {CHARACTERS} (fname, lname, alias, title, description, biography) VALUES (%s, %s, %s, %s, %s, %s)"
             data = (first_name, last_name, alias, title, desc, bio)
             execute_query(db, query, data)
@@ -201,7 +212,7 @@ def add_character():
             query_template = f"INSERT INTO {CHAR_SERIES} (cid, sid) VALUES (%s, %s)"
             for ser_id in series:
                 link_tables(query_template, db, res[0], ser_id)
-        else:
+        else:  # update existing row
             # Remove all links to species, affiliation, and series because they could be changed
             # Note this will destroy the character-series-location relationships
             # should porably do this by comparing the old vs the new selections (requires a refactor)
@@ -232,7 +243,7 @@ def add_character():
 
         return redirect(url_for('add_character'))
 
-    if "delete_no" in request.args:
+    if "delete_no" in request.args:  # delete data then reload the page
         delete_row(CHARACTERS, db, request.args["delete_no"])
         return redirect(url_for('add_character'))
 
@@ -251,6 +262,7 @@ def add_character():
             form.fifth_field.data = f"{res[5]}"
             form.sixth_field.data = f"{res[6]}"
             header = f"Update {res[1]}"
+
         # Get species, affiliation, and series links
         query = f"SELECT S.id FROM {SPECIES} S \
                   JOIN {CHAR_SPECIES} CS ON CS.sid=S.id WHERE CS.cid={cid}"
@@ -292,6 +304,11 @@ def add_character():
 
 @app.route("/add-actors", methods=["GET", "POST"])
 def add_actor():
+    """
+        route to implement the functionality related to characters allowing for adding, updating, or deleting actors
+        utilizes read functionality to create a table for reference in the other functions
+        :return:
+        """
     if SUBMIT_TYPE not in session:
         session[SUBMIT_TYPE] = "insert"
 
@@ -368,6 +385,11 @@ def add_actor():
 
 @app.route("/add-series", methods=["GET", "POST"])
 def add_series():
+    """
+    route to implement the functionality related to characters allowing for adding, updating, or deleting series
+    utilizes read functionality to create a table for reference in the other functions
+    :return:
+    """
     if SUBMIT_TYPE not in session:
         session[SUBMIT_TYPE] = "insert"
 
@@ -457,6 +479,11 @@ def add_series():
 
 @app.route("/add-species", methods=["GET", "POST"])
 def add_species():
+    """
+    route to implement the functionality related to characters allowing for adding, updating, or deleting species
+    utilizes read functionality to create a table for reference in the other functions
+    :return:
+    """
     if SUBMIT_TYPE not in session:
         session[SUBMIT_TYPE] = "insert"
 
@@ -508,6 +535,11 @@ def add_species():
 
 @app.route("/add-location", methods=["GET", "POST"])
 def add_location():
+    """
+    route to implement the functionality related to characters allowing for adding, updating, or deleting locations
+    utilizes read functionality to create a table for reference in the other functions
+    :return:
+    """
     if SUBMIT_TYPE not in session:
         session[SUBMIT_TYPE] = "insert"
 
@@ -563,6 +595,11 @@ def add_location():
 
 @app.route("/add-affiliations", methods=["GET", "POST"])
 def add_affiliation():
+    """
+    route to implement the functionality related to characters allowing for adding, updating, or deleting affiliations
+    utilizes read functionality to create a table for reference in the other functions
+    :return:
+    """
     if SUBMIT_TYPE not in session:
         session[SUBMIT_TYPE] = "insert"
 
@@ -612,6 +649,11 @@ def add_affiliation():
 
 @app.route("/connect-actor-char", methods=["GET", "POST"])
 def link_actor_char():
+    """
+    route to implement the functionality related to characters allowing for adding or deleting links between actors/characters
+    utilizes read functionality to create a table for reference in the other functions
+    :return:
+    """
     header = "Select a Character and Actor to Link"
     columns = VIEW_COLUMNS[CHAR_ACTORS]
     db = connect_to_database()
@@ -643,6 +685,11 @@ def link_actor_char():
 
 @app.route("/connect-char-spec", methods=["GET", "POST"])
 def link_char_species():
+    """
+    route to implement the functionality related to characters allowing for adding or deleting links between species/characters
+    utilizes read functionality to create a table for reference in the other functions
+    :return:
+    """
     header = "Select a Character and Species to Link"
     columns = VIEW_COLUMNS[CHAR_SPECIES]
     db = connect_to_database()
@@ -682,6 +729,11 @@ def link_char_species():
 
 @app.route("/connect-char-aff", methods=["GET", "POST"])
 def link_char_aff():
+    """
+    route to implement the functionality related to characters allowing for adding or deleting links between affiliations/characters
+    utilizes read functionality to create a table for reference in the other functions
+    :return:
+    """
     header = "Select a Character and Affiliation to Link"
     columns = VIEW_COLUMNS[CHAR_AFFILS]
     db = connect_to_database()
@@ -721,6 +773,11 @@ def link_char_aff():
 
 @app.route("/connect-csl", methods=["GET", "POST"])
 def link_char_series_loc():
+    """
+    route to implement the functionality related to characters allowing for adding or deleting links between series/characters/locations
+    utilizes read functionality to create a table for reference in the other functions
+    :return:
+    """
     header = "Select a relationship between character, series, and location"
     columns = VIEW_COLUMNS[CHAR_SERIES_LOCS]
     db = connect_to_database()
@@ -885,6 +942,13 @@ def select_query(connection, query, data_type):
     return query_res
 
 def get_select_field_items(db, table, attributes = None):
+    """
+    Function to perform the get queries necessary to populate the dropdown menus
+    :param db:
+    :param table:
+    :param attributes:
+    :return:
+    """
     query = ""
 
     if attributes is None:
@@ -919,6 +983,11 @@ def get_select_field_items(db, table, attributes = None):
 
 
 def concat_char_name(data_list):
+    """
+    function to format character names for dropdown menu items
+    :param data_list:
+    :return:
+    """
     data_str = ""
     for val in data_list:
         if len(val) > 0 and val not in data_str and val != "None":
@@ -926,6 +995,11 @@ def concat_char_name(data_list):
     return data_str
 
 def get_character_search_query(form):
+    """
+    function to generate a query from the user's selected parameters
+    :param form:
+    :return:
+    """
     # form assumes fields fname, lname, actors, species, affiliations, and series
     whereString = ''
     query = f"SELECT DISTINCT C.id, C.fname, C.lname, C.alias, C.title FROM {CHARACTERS} C"
